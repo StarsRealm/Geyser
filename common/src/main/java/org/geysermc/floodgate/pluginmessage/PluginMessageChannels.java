@@ -33,6 +33,9 @@ public final class PluginMessageChannels {
     public static final String TRANSFER = "floodgate:transfer";
     public static final String PACKET = "floodgate:packet";
 
+    public static final String FABRIC_SYNC_REQUEST = "fabric:registry/sync/direct";
+    public static final String FABRIC_SYNC_COMPLETE = "fabric:registry/sync/complete";
+
     private static final byte[] FLOODGATE_REGISTER_DATA =
             String.join("\0", SKIN, FORM, TRANSFER, PACKET)
                     .getBytes(StandardCharsets.UTF_8);

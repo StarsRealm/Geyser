@@ -56,6 +56,13 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
     public void translate(GeyserSession session, ClientboundCustomPayloadPacket packet) {
         String channel = packet.getChannel();
 
+        if(channel.equals(PluginMessageChannels.FABRIC_SYNC_REQUEST) && !session.getFabricSync()) {
+            byte[] trueByteArray = new byte[1];
+            trueByteArray[0] = 1;
+            session.sendDownstreamPacket(new ServerboundCustomPayloadPacket(PluginMessageChannels.FABRIC_SYNC_COMPLETE, trueByteArray));
+            session.setFabricSync(true);
+        }
+
         if (channel.equals(Constants.PLUGIN_MESSAGE)) {
             ByteBuf buf = Unpooled.wrappedBuffer(packet.getData());
             ErosionPacket<?> erosionPacket = Packets.decode(buf);
