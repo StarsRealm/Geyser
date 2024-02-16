@@ -48,6 +48,7 @@ public class GeyserCustomItemData implements CustomItemData {
     private final boolean displayHandheld;
     private final int textureSize;
     private final CustomRenderOffsets renderOffsets;
+    private final int blockDefinition;
     private final Set<String> tags;
 
     public GeyserCustomItemData(String name,
@@ -58,6 +59,7 @@ public class GeyserCustomItemData implements CustomItemData {
                                 boolean displayHandheld,
                                 int textureSize,
                                 CustomRenderOffsets renderOffsets,
+                                int blockDefinition,
                                 Set<String> tags) {
         this.name = name;
         this.customItemOptions = customItemOptions;
@@ -67,6 +69,7 @@ public class GeyserCustomItemData implements CustomItemData {
         this.displayHandheld = displayHandheld;
         this.textureSize = textureSize;
         this.renderOffsets = renderOffsets;
+        this.blockDefinition = blockDefinition;
         this.tags = tags;
     }
 
@@ -106,6 +109,11 @@ public class GeyserCustomItemData implements CustomItemData {
     }
 
     @Override
+    public int blockDefinition() {
+        return 0;
+    }
+
+    @Override
     public CustomRenderOffsets renderOffsets() {
         return renderOffsets;
     }
@@ -125,6 +133,7 @@ public class GeyserCustomItemData implements CustomItemData {
         protected boolean displayHandheld = false;
         protected int textureSize = 16;
         protected CustomRenderOffsets renderOffsets = null;
+        protected int blockDefinition = 0;
         protected Set<String> tags = new HashSet<>();
 
         @Override
@@ -176,6 +185,12 @@ public class GeyserCustomItemData implements CustomItemData {
         }
 
         @Override
+        public CustomItemData.Builder blockDefinition(@Nullable int BlockDefinition) {
+            this.blockDefinition = blockDefinition;
+            return this;
+        }
+
+        @Override
         public Builder tags(@Nullable Set<String> tags) {
             this.tags = Objects.requireNonNullElseGet(tags, Set::of);
             return this;
@@ -193,7 +208,7 @@ public class GeyserCustomItemData implements CustomItemData {
             if (this.icon == null) {
                 this.icon = this.name;
             }
-            return new GeyserCustomItemData(this.name, this.customItemOptions, this.displayName, this.icon, this.allowOffhand, this.displayHandheld, this.textureSize, this.renderOffsets, this.tags);
+            return new GeyserCustomItemData(this.name, this.customItemOptions, this.displayName, this.icon, this.allowOffhand, this.displayHandheld, this.textureSize, this.renderOffsets, this.blockDefinition, this.tags);
         }
     }
 }

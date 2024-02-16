@@ -31,6 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtMapBuilder;
 import org.cloudburstmc.nbt.NbtType;
+import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.data.definitions.ItemDefinition;
 import org.cloudburstmc.protocol.bedrock.data.definitions.SimpleItemDefinition;
 import org.cloudburstmc.protocol.bedrock.data.inventory.ComponentItemData;
@@ -45,6 +46,7 @@ import org.geysermc.geyser.item.Items;
 import org.geysermc.geyser.item.components.WearableSlot;
 import org.geysermc.geyser.item.type.Item;
 import org.geysermc.geyser.network.GameProtocol;
+import org.geysermc.geyser.registry.BlockRegistries;
 import org.geysermc.geyser.registry.mappings.MappingsConfigReader;
 import org.geysermc.geyser.registry.type.GeyserMappingItem;
 import org.geysermc.geyser.registry.type.ItemMapping;
@@ -141,10 +143,15 @@ public class CustomItemRegistryPopulator {
         };
         Items.register(item, customItemData.javaId());
 
+        BlockDefinition definition = null;
+        if(customItemData.blockDefinition() != 0) {
+            definition = BlockRegistries.BLOCKS.get(protocolVersion).getBedrockBlock(customItemData.blockDefinition());
+        }
+
         ItemMapping customItemMapping = ItemMapping.builder()
                 .bedrockDefinition(new SimpleItemDefinition(customIdentifier, customItemId, true))
                 .bedrockData(0)
-                .bedrockBlockDefinition(null)
+                .bedrockBlockDefinition(definition)
                 .toolType(customItemData.toolType())
                 .toolTier(customItemData.toolTier())
                 .translationString(customItemData.translationString())
