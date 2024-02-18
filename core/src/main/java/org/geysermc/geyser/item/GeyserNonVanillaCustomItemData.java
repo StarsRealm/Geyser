@@ -29,6 +29,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.geysermc.geyser.api.item.custom.CustomItemData;
 import org.geysermc.geyser.api.item.custom.CustomItemOptions;
 import org.geysermc.geyser.api.item.custom.CustomRenderOffsets;
 import org.geysermc.geyser.api.item.custom.NonVanillaCustomItemData;
@@ -242,6 +243,11 @@ public final class GeyserNonVanillaCustomItemData extends GeyserCustomItemData i
         @Override
         public Builder renderOffsets(CustomRenderOffsets renderOffsets) {
             return (Builder) super.renderOffsets(renderOffsets);
+        }
+
+        @Override
+        public Builder blockDefinition(int BlockDefinition) {
+            return (Builder) super.blockDefinition(blockDefinition);
         }
 
         @Override
