@@ -51,6 +51,14 @@ public interface GeometryComponent {
     @Nullable Map<String, String> boneVisibility();
 
     /**
+     * These properties are part of Block Culling used within block JSON files.
+     * This helps the system determine how to change the appearance of this block.
+     *
+     * @return The identifier of culling.
+     */
+    @Nullable String culling();
+
+    /**
      * Creates a builder for GeometryComponent
      *
      * @return a builder for GeometryComponent.
@@ -63,6 +71,8 @@ public interface GeometryComponent {
         Builder identifier(@NonNull String identifier);
 
         Builder boneVisibility(@Nullable Map<String, String> boneVisibility);
+
+        Builder culling(@Nullable String culling);
 
         GeometryComponent build();
     }

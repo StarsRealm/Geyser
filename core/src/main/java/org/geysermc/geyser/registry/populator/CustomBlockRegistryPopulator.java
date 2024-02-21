@@ -8,6 +8,7 @@ import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtMapBuilder;
 import org.cloudburstmc.nbt.NbtType;
 import org.cloudburstmc.protocol.bedrock.codec.v594.Bedrock_v594;
+import org.cloudburstmc.protocol.bedrock.codec.v649.Bedrock_v649;
 import org.cloudburstmc.protocol.bedrock.data.BlockPropertyData;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.api.block.custom.CustomBlockData;
@@ -347,6 +348,9 @@ public class CustomBlockRegistryPopulator {
                     components.geometry().boneVisibility().entrySet().forEach(
                         entry -> boneVisibilityBuilder.putString(entry.getKey(), entry.getValue()));
                     geometryBuilder.putCompound("bone_visibility", boneVisibilityBuilder.build());
+                }
+                if(components.geometry().culling() != null && protocolVersion >= Bedrock_v649.CODEC.getProtocolVersion()) {
+                    geometryBuilder.putString("culling", components.geometry().culling());
                 }
             } else {
                 geometryBuilder.putString("value", components.geometry().identifier());
