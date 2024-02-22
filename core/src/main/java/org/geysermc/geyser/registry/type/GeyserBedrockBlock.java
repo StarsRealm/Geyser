@@ -32,21 +32,15 @@ import org.geysermc.geyser.util.HashUtils;
 public class GeyserBedrockBlock implements BlockDefinition {
     private final int runtimeId;
     private final NbtMap state;
-    private final int order;
 
-    public GeyserBedrockBlock(int order, NbtMap state) {
+    public GeyserBedrockBlock(NbtMap state) {
         this.runtimeId = HashUtils.createHash(state);
         this.state = state;
-        this.order = order;
     }
 
     @Override
     public int getRuntimeId() {
         return runtimeId;
-    }
-
-    public int getOrder() {
-        return order;
     }
 
     public NbtMap getState() {

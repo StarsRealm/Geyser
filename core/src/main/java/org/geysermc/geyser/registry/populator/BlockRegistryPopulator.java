@@ -132,6 +132,7 @@ public final class BlockRegistryPopulator {
             int protocolVersion = palette.valueInt();
             List<NbtMap> vanillaBlockStates;
             List<NbtMap> blockStates;
+            Int2ObjectMap<NbtMap> blockStatsMap = new Int2ObjectOpenHashMap<>();
             try (InputStream stream = GeyserImpl.getInstance().getBootstrap().getResourceOrThrow(String.format("bedrock/block_palette.%s.nbt", palette.key()));
                  NBTInputStream nbtInputStream = new NBTInputStream(new DataInputStream(new GZIPInputStream(stream)), true, true)) {
                 NbtMap blockPalette = (NbtMap) nbtInputStream.readTag();
@@ -179,9 +180,10 @@ public final class BlockRegistryPopulator {
                 if (blockStateOrderedMap.containsKey(tag)) {
                     throw new AssertionError("Duplicate block states in Bedrock palette: " + tag);
                 }
-                GeyserBedrockBlock block = new GeyserBedrockBlock(i,tag);
+                GeyserBedrockBlock block = new GeyserBedrockBlock(tag);
                 blockStateOrderedMap.put(tag, block);
                 bedrockRuntimeMap.put(block.getRuntimeId(), block);
+                blockStatsMap.put(block.getRuntimeId(), tag);
             }
             bedrockRuntimeMap.trim();
 
@@ -283,7 +285,7 @@ public final class BlockRegistryPopulator {
 
                 // Get the tag needed for non-empty flower pots
                 if (entry.getValue().get("pottable") != null) {
-                    flowerPotBlocks.put(cleanJavaIdentifier.intern(), blockStates.get(bedrockDefinition.getOrder()));
+                    flowerPotBlocks.put(cleanJavaIdentifier.intern(), blockStatsMap.get(bedrockDefinition.getRuntimeId()));
                 }
 
                 javaToVanillaBedrockBlocks[javaRuntimeId] = vanillaBedrockDefinition;
