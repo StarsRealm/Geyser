@@ -1583,6 +1583,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         startGamePacket.setAuthoritativeMovementMode(AuthoritativeMovementMode.CLIENT);
         startGamePacket.setRewindHistorySize(0);
         startGamePacket.setServerAuthoritativeBlockBreaking(false);
+        startGamePacket.setBlockNetworkIdsHashed(true);
 
         upstream.sendPacket(startGamePacket);
     }

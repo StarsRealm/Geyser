@@ -173,16 +173,17 @@ public final class BlockRegistryPopulator {
             // New since 1.16.100 - find the block runtime ID by the order given to us in the block palette,
             // as we no longer send a block palette
             Object2ObjectMap<NbtMap, GeyserBedrockBlock> blockStateOrderedMap = new Object2ObjectOpenHashMap<>(blockStates.size());
-            GeyserBedrockBlock[] bedrockRuntimeMap = new GeyserBedrockBlock[blockStates.size()];
+            Int2ObjectOpenHashMap<GeyserBedrockBlock> bedrockRuntimeMap = new Int2ObjectOpenHashMap<>(blockStates.size());
             for (int i = 0; i < blockStates.size(); i++) {
                 NbtMap tag = blockStates.get(i);
                 if (blockStateOrderedMap.containsKey(tag)) {
                     throw new AssertionError("Duplicate block states in Bedrock palette: " + tag);
                 }
-                GeyserBedrockBlock block = new GeyserBedrockBlock(i, tag);
+                GeyserBedrockBlock block = new GeyserBedrockBlock(i,tag);
                 blockStateOrderedMap.put(tag, block);
-                bedrockRuntimeMap[i] = block;
+                bedrockRuntimeMap.put(block.getRuntimeId(), block);
             }
+            bedrockRuntimeMap.trim();
 
             Object2ObjectMap<CustomBlockState, GeyserBedrockBlock> customBlockStateDefinitions = Object2ObjectMaps.emptyMap();
             Int2ObjectMap<GeyserBedrockBlock> extendedCollisionBoxes = new Int2ObjectOpenHashMap<>();
@@ -282,7 +283,7 @@ public final class BlockRegistryPopulator {
 
                 // Get the tag needed for non-empty flower pots
                 if (entry.getValue().get("pottable") != null) {
-                    flowerPotBlocks.put(cleanJavaIdentifier.intern(), blockStates.get(bedrockDefinition.getRuntimeId()));
+                    flowerPotBlocks.put(cleanJavaIdentifier.intern(), blockStates.get(bedrockDefinition.getOrder()));
                 }
 
                 javaToVanillaBedrockBlocks[javaRuntimeId] = vanillaBedrockDefinition;

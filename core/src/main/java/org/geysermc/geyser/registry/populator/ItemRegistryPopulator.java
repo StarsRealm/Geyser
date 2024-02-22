@@ -303,7 +303,7 @@ public class ItemRegistryPopulator {
                             if (bedrockBlock == null) {
                                 // We need to loop around again (we can't cache the block tags above) because Bedrock can include states that we don't have a pairing for
                                 // in it's "preferred" block state - I.E. the first matching block state in the list
-                                for (GeyserBedrockBlock block : blockMappings.getBedrockRuntimeMap()) {
+                                for (GeyserBedrockBlock block : blockMappings.getBedrockRuntimeMap().values()) {
                                     if (block == null) {
                                         continue;
                                     }
