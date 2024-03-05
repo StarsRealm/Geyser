@@ -85,6 +85,13 @@ repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     maven("https://maven.neoforged.net/releases")
+    maven("https://maven.pkg.github.com/StarsRealm/Packages") {
+        name = "starsrealm"
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("TOKEN")
+        }
+    }
 }
 
 modrinth {

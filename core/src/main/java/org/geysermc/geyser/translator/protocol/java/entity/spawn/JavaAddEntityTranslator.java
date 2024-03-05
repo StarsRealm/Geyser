@@ -49,6 +49,9 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
 
     @Override
     public void translate(GeyserSession session, ClientboundAddEntityPacket packet) {
+        if(packet.getType() == EntityType.UNKNOWN) {
+            return;
+        }
         EntityDefinition<?> definition = Registries.ENTITY_DEFINITIONS.get(packet.getType());
         if (definition == null) {
             session.getGeyser().getLogger().debug("Could not find an entity definition with type " + packet.getType());
