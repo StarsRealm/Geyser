@@ -51,6 +51,11 @@ public record GeyserEntityIdentifier(NbtMap nbt) implements EntityIdentifier {
         return this.nbt.getBoolean("summonable");
     }
 
+    @Override
+    public String runtimeIdentifier() {
+        return this.nbt.getString("runtime_identifier");
+    }
+
     public static class Builder implements EntityIdentifier.Builder {
         private final NbtMapBuilder nbt = NbtMap.builder();
 
@@ -69,6 +74,12 @@ public record GeyserEntityIdentifier(NbtMap nbt) implements EntityIdentifier {
         @Override
         public EntityIdentifier.Builder summonable(boolean summonable) {
             this.nbt.putBoolean("summonable", summonable);
+            return this;
+        }
+
+        @Override
+        public EntityIdentifier.Builder runtimeIdentifier(String runtimeIdentifier) {
+            this.nbt.putString("runtime_identifier", runtimeIdentifier);
             return this;
         }
 

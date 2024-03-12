@@ -56,6 +56,8 @@ public interface EntityIdentifier {
      */
     boolean isSummonable();
 
+    String runtimeIdentifier();
+
     @NonNull
     static Builder builder() {
         return GeyserApi.api().provider(Builder.class);
@@ -86,6 +88,15 @@ public interface EntityIdentifier {
          * @return the builder
          */
         Builder summonable(boolean summonable);
+
+        /**
+         * Sets the entity's is an optional parameter that sits inside the description of the entity's behavior file,
+         * and is used to imitate a vanilla entity's hard-coded elements.
+         * It accepts Vanilla Minecraft identifiers, like minecraft:shulker.
+         * @param runtimeIdentifier It accepts Vanilla Minecraft identifiers, like minecraft:shulker.
+         * @return the Builder
+         */
+        Builder runtimeIdentifier(String runtimeIdentifier);
 
         /**
          * Builds the entity identifier.

@@ -53,6 +53,7 @@ import org.geysermc.geyser.registry.type.ItemMapping;
 import org.geysermc.geyser.registry.type.NonVanillaItemRegistration;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class CustomItemRegistryPopulator {
     public static void populate(Map<String, GeyserMappingItem> items, Multimap<String, CustomItemData> customItems, List<NonVanillaCustomItemData> nonVanillaCustomItems) {
@@ -255,6 +256,10 @@ public class CustomItemRegistryPopulator {
 
         if (customItemData.isFoil()) {
             itemProperties.putBoolean("foil", true);
+        }
+
+        if(customItemData.tags().contains("block")) {
+            componentBuilder.put("minecraft:block_placer", NbtMap.builder().putString("block", "minecraft:barrier").putList("use_on", NbtType.STRING, List.of()).build());
         }
 
         componentBuilder.putCompound("item_properties", itemProperties.build());
