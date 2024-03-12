@@ -102,7 +102,7 @@ public interface CustomItemData {
     /**
      * Gets the item's block definition
      */
-    @Nullable int blockDefinition();
+    int blockDefinition();
 
     /**
      * Gets the item's render offsets. If it is null, the item will be rendered normally, with no offsets.

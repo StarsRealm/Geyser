@@ -127,7 +127,7 @@ public class GeyserCustomItemData implements CustomItemData {
 
     @Override
     public int blockDefinition() {
-        return 0;
+        return this.blockDefinition;
     }
 
     @Override
@@ -215,7 +215,7 @@ public class GeyserCustomItemData implements CustomItemData {
         }
 
         @Override
-        public CustomItemData.Builder blockDefinition(@Nullable int blockDefinition) {
+        public CustomItemData.Builder blockDefinition(int blockDefinition) {
             this.blockDefinition = blockDefinition;
             return this;
         }
