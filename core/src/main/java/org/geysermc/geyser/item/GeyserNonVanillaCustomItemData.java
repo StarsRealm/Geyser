@@ -228,7 +228,7 @@ public final class GeyserNonVanillaCustomItemData extends GeyserCustomItemData i
         }
 
         @Override
-        public Builder blockDefinition(int BlockDefinition) {
+        public Builder blockDefinition(int blockDefinition) {
             return (Builder) super.blockDefinition(blockDefinition);
         }
 
