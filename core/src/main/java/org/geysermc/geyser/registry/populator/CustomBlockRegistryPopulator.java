@@ -382,7 +382,7 @@ public class CustomBlockRegistryPopulator {
                     .build());
         }
 
-        if (components.placementFilter() != null) {
+        if (components.placementFilter() != null && !components.placementFilter().isEmpty()) {
             builder.putCompound("minecraft:placement_filter", NbtMap.builder()
                     .putList("conditions", NbtType.COMPOUND, convertPlacementFilter(components.placementFilter()))
                     .build());
