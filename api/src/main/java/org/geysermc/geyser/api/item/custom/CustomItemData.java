@@ -100,11 +100,6 @@ public interface CustomItemData {
     int textureSize();
 
     /**
-     * Gets the item's block definition
-     */
-    int blockDefinition();
-
-    /**
      * Gets the item's render offsets. If it is null, the item will be rendered normally, with no offsets.
      *
      * @return the item's render offsets
@@ -146,8 +141,6 @@ public interface CustomItemData {
         Builder textureSize(int textureSize);
 
         Builder renderOffsets(@Nullable CustomRenderOffsets renderOffsets);
-
-        Builder blockDefinition(int BlockDefinition);
 
         Builder tags(@Nullable Set<String> tags);
 

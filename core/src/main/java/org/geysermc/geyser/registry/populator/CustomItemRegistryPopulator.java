@@ -144,15 +144,11 @@ public class CustomItemRegistryPopulator {
         };
         Items.register(item, customItemData.javaId());
 
-        BlockDefinition definition = null;
-        if(customItemData.blockDefinition() != 0) {
-            definition = BlockRegistries.BLOCKS.get(protocolVersion).getBedrockBlock(customItemData.blockDefinition());
-        }
 
         ItemMapping customItemMapping = ItemMapping.builder()
                 .bedrockDefinition(new SimpleItemDefinition(customIdentifier, customItemId, true))
                 .bedrockData(0)
-                .bedrockBlockDefinition(definition)
+                .bedrockBlockDefinition(null)
                 .toolType(customItemData.toolType())
                 .toolTier(customItemData.toolTier())
                 .translationString(customItemData.translationString())
