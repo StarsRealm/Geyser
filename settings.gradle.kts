@@ -45,11 +45,21 @@ dependencyResolutionManagement {
         // For Adventure snapshots
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
-        maven("https://maven.pkg.github.com/StarsRealm/Packages") {
-            name = "starsrealm"
+        maven("https://maven.aliyun.com/repository/public")
+        maven {
+            name = "AliYun-Release"
+            url = uri("https://packages.aliyun.com/maven/repository/2421751-release-ZmwRAc/")
             credentials {
-                username = System.getenv("USERNAME")
-                password = System.getenv("TOKEN")
+                username = System.getenv("ALY_USER")
+                password = System.getenv("ALY_PASSWORD")
+            }
+        }
+        maven {
+            name = "AliYun-Snapshot"
+            url = uri("https://packages.aliyun.com/maven/repository/2421751-snapshot-i7Aufp/")
+            credentials {
+                username = System.getenv("ALY_USER")
+                password = System.getenv("ALY_PASSWORD")
             }
         }
     }

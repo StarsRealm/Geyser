@@ -11,11 +11,19 @@ dependencies {
 publishing {
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/StarsRealm/Packages")
+            name = "AliYun-Release"
+            url = uri("https://packages.aliyun.com/maven/repository/2421751-release-ZmwRAc/")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+                username = project.findProperty("aliyun.package.user") as String? ?: System.getenv("ALY_USER")
+                password = project.findProperty("aliyun.package.password") as String? ?: System.getenv("ALY_PASSWORD")
+            }
+        }
+        maven {
+            name = "AliYun-Snapshot"
+            url = uri("https://packages.aliyun.com/maven/repository/2421751-snapshot-i7Aufp/")
+            credentials {
+                username = project.findProperty("aliyun.package.user") as String? ?: System.getenv("ALY_USER")
+                password = project.findProperty("aliyun.package.password") as String? ?: System.getenv("ALY_PASSWORD")
             }
         }
     }
