@@ -51,6 +51,7 @@ public class GeyserCustomItemData implements CustomItemData {
     private final String creativeGroup;
     private final int textureSize;
     private final CustomRenderOffsets renderOffsets;
+    private final int blockDefinition;
     private final Set<String> tags;
 
     public GeyserCustomItemData(String name,
@@ -75,6 +76,7 @@ public class GeyserCustomItemData implements CustomItemData {
         this.creativeGroup = creativeGroup;
         this.textureSize = textureSize;
         this.renderOffsets = renderOffsets;
+        this.blockDefinition = blockDefinition;
         this.tags = tags;
     }
 
@@ -121,6 +123,11 @@ public class GeyserCustomItemData implements CustomItemData {
     @Override
     public int textureSize() {
         return textureSize;
+    }
+
+    @Override
+    public int blockDefinition() {
+        return this.blockDefinition;
     }
 
     @Override
@@ -204,6 +211,12 @@ public class GeyserCustomItemData implements CustomItemData {
         @Override
         public Builder renderOffsets(CustomRenderOffsets renderOffsets) {
             this.renderOffsets = renderOffsets;
+            return this;
+        }
+
+        @Override
+        public CustomItemData.Builder blockDefinition(int blockDefinition) {
+            this.blockDefinition = blockDefinition;
             return this;
         }
 

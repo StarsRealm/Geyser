@@ -55,6 +55,7 @@ public final class GeyserNonVanillaCustomItemData extends GeyserCustomItemData i
     private final boolean isEdible;
     private final boolean canAlwaysEat;
     private final boolean isChargeable;
+    private final int blockDefinition;
 
     public GeyserNonVanillaCustomItemData(Builder builder) {
         super(builder.name, builder.customItemOptions, builder.displayName, builder.icon, builder.allowOffhand,
@@ -77,6 +78,7 @@ public final class GeyserNonVanillaCustomItemData extends GeyserCustomItemData i
         this.isEdible = builder.edible;
         this.canAlwaysEat = builder.canAlwaysEat;
         this.isChargeable = builder.chargeable;
+        this.blockDefinition = builder.blockDefinition;
     }
 
     @Override
@@ -154,6 +156,11 @@ public final class GeyserNonVanillaCustomItemData extends GeyserCustomItemData i
         return isChargeable;
     }
 
+    @Override
+    public int blockDefinition() {
+        return blockDefinition;
+    }
+
     public static class Builder extends GeyserCustomItemData.Builder implements NonVanillaCustomItemData.Builder {
         private String identifier = null;
         private int javaId = -1;
@@ -218,6 +225,11 @@ public final class GeyserNonVanillaCustomItemData extends GeyserCustomItemData i
         @Override
         public Builder renderOffsets(CustomRenderOffsets renderOffsets) {
             return (Builder) super.renderOffsets(renderOffsets);
+        }
+
+        @Override
+        public Builder blockDefinition(int blockDefinition) {
+            return (Builder) super.blockDefinition(blockDefinition);
         }
 
         @Override
