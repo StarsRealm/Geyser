@@ -97,7 +97,8 @@ public class ItemRegistryPopulator {
 
         GeyserBootstrap bootstrap = GeyserImpl.getInstance().getBootstrap();
 
-        TypeReference<Map<String, GeyserMappingItem>> mappingItemsType = new TypeReference<>() { };
+        TypeReference<Map<String, GeyserMappingItem>> mappingItemsType = new TypeReference<>() {
+        };
 
         Map<String, GeyserMappingItem> items;
         try (InputStream stream = bootstrap.getResourceOrThrow("mappings/items.json")) {
@@ -124,7 +125,8 @@ public class ItemRegistryPopulator {
 
         /* Load item palette */
         for (PaletteVersion palette : paletteVersions) {
-            TypeReference<List<PaletteItem>> paletteEntriesType = new TypeReference<>() {};
+            TypeReference<List<PaletteItem>> paletteEntriesType = new TypeReference<>() {
+            };
 
             List<PaletteItem> itemEntries;
             try (InputStream stream = bootstrap.getResourceOrThrow(String.format("bedrock/runtime_item_states.%s.json", palette.version()))) {
@@ -302,81 +304,26 @@ public class ItemRegistryPopulator {
                             }
 
                             NbtMap requiredBlockStates = requiredBlockStatesBuilder.build();
-                            if (bedrockBlock == null) {
-                                // We need to loop around again (we can't cache the block tags above) because Bedrock can include states that we don't have a pairing for
-                                // in it's "preferred" block state - I.E. the first matching block state in the list
-                                for (GeyserBedrockBlock block : blockMappings.getBedrockRuntimeMap().values()) {
-                                    if (block == null) {
-                                        continue;
-                                    }
-                                    NbtMap blockTag = block.getState();
-                                    if (blockTag.getString("name").equals(correctBedrockIdentifier)) {
-                                        NbtMap states = blockTag.getCompound("states");
-                                        boolean valid = true;
-                                        for (Map.Entry<String, Object> nbtEntry : requiredBlockStates.entrySet()) {
-                                            if (!states.get(nbtEntry.getKey()).equals(nbtEntry.getValue())) {
-                                                // A required block state doesn't match - this one is not valid
-                                                valid = false;
-                                                break;
+                            for (var item : creativeItems) {
+                                if (item.getBlockDefinition() != null) {
+                                    if (item.getDefinition().getIdentifier().equals(bedrockIdentifier)) {
+                                        GeyserBedrockBlock blockDefinition = (GeyserBedrockBlock) item.getBlockDefinition();
+                                        NbtMap tag = blockDefinition.getState();
+                                        if (tag != null) {
+                                            NbtMap state = blockDefinition.getState().getCompound("states");
+                                            if (state != null) {
+                                                boolean succ = true;
+                                                for (var e : requiredBlockStates.entrySet()) {
+                                                    if (!state.get(e.getKey()).equals(e.getValue())) {
+                                                        succ = false;
+                                                    }
+                                                }
+                                                if (succ) {
+                                                    bedrockBlock = blockDefinition;
+                                                    break;
+                                                }
                                             }
                                         }
-                                        if (valid) {
-                                            bedrockBlock = block;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (bedrockBlock == null) {
-                                    throw new RuntimeException("Could not find a block match for " + entry.getKey());
-                                }
-                            }
-
-                            // Because we have replaced the Bedrock block ID, we also need to replace the creative contents block runtime ID
-                            // That way, creative items work correctly for these blocks
-
-                            // Set our custom block override now if there is one
-                            if (customBlockItemOverride != null) {
-                                bedrockBlock = customBlockItemOverride;
-                            }
-
-                            for (int j = 0; j < creativeItems.size(); j++) {
-                                ItemData itemData = creativeItems.get(j);
-                                if (itemData.getDefinition().equals(definition)) {
-                                    if (itemData.getDamage() != 0) {
-                                        break;
-                                    }
-
-                                    NbtMap states = ((GeyserBedrockBlock) itemData.getBlockDefinition()).getState().getCompound("states");
-
-                                    boolean valid = true;
-                                    for (Map.Entry<String, Object> nbtEntry : requiredBlockStates.entrySet()) {
-                                        if (!Objects.equals(states.get(nbtEntry.getKey()), nbtEntry.getValue())) {
-                                            // A required block state doesn't match - this one is not valid
-                                            valid = false;
-                                            break;
-                                        }
-                                    }
-                                    if (valid) {
-                                        if (customBlockItemOverride != null && customBlockData != null) {
-                                            // Assuming this is a valid custom block override we'll just register it now while we have the creative item
-                                            int customProtocolId = nextFreeBedrockId++;
-                                            mappingItem = mappingItem.withBedrockData(customProtocolId);
-                                            bedrockIdentifier = customBlockData.identifier();
-                                            definition = new SimpleItemDefinition(bedrockIdentifier, customProtocolId, true);
-                                            registry.put(customProtocolId, definition);
-                                            customBlockItemDefinitions.put(customBlockData, definition);
-                                            customIdMappings.put(customProtocolId, bedrockIdentifier);
-                                            
-                                            creativeItems.set(j, itemData.toBuilder()
-                                                .definition(definition)
-                                                .blockDefinition(bedrockBlock)
-                                                .netId(itemData.getNetId())
-                                                .count(1)
-                                                .build());
-                                        } else {
-                                            creativeItems.set(j, itemData.toBuilder().blockDefinition(bedrockBlock).build());
-                                        }
-                                        break;
                                     }
                                 }
                             }
