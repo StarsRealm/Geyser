@@ -10,11 +10,21 @@ repositories {
     maven("https://maven.neoforged.net/releases")
     maven("https://maven.architectury.dev/")
 
-    maven("https://maven.pkg.github.com/StarsRealm/Packages") {
-        name = "starsrealm"
+    maven("https://maven.aliyun.com/repository/public")
+    maven {
+        name = "AliYun-Release"
+        url = uri("https://packages.aliyun.com/maven/repository/2421751-release-ZmwRAc/")
         credentials {
-            username = System.getenv("USERNAME")
-            password = System.getenv("TOKEN")
+            username = project.findProperty("aliyun.package.user") as String? ?: System.getenv("ALY_USER")
+            password = project.findProperty("aliyun.package.password") as String? ?: System.getenv("ALY_PASSWORD")
+        }
+    }
+    maven {
+        name = "AliYun-Snapshot"
+        url = uri("https://packages.aliyun.com/maven/repository/2421751-snapshot-i7Aufp/")
+        credentials {
+            username = project.findProperty("aliyun.package.user") as String? ?: System.getenv("ALY_USER")
+            password = project.findProperty("aliyun.package.password") as String? ?: System.getenv("ALY_PASSWORD")
         }
     }
 }
