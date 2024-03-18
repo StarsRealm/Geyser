@@ -39,6 +39,7 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.InteractiveTag;
 
+import java.util.Map;import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -68,9 +69,9 @@ public class BoatEntity extends Entity {
     // Looks too fast and too choppy with 0.1f, which is how I believe the Microsoftian client handles it
     private final float ROWING_SPEED = 0.1f;
 
-    public BoatEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+    public BoatEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
         // Initial rotation is incorrect
-        super(session, entityId, geyserId, uuid, definition, position.add(0d, definition.offset(), 0d), motion, yaw + 90, 0, yaw + 90);
+        super(session, entityId, geyserId, uuid, definition, position.add(0d, definition.offset(), 0d), motion, yaw + 90, 0, yaw + 90, intEntityProperty, floatEntityProperty);
 
         // Required to be able to move on land 1.16.200+ or apply gravity not in the water 1.16.100+
         dirtyMetadata.put(EntityDataTypes.IS_BUOYANT, true);

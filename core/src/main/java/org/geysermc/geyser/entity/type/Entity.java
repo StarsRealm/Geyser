@@ -42,6 +42,7 @@ import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityEventType;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
+import org.geysermc.geyser.entity.property.EntityProperty;
 import org.cloudburstmc.protocol.bedrock.packet.AddEntityPacket;
 import org.cloudburstmc.protocol.bedrock.packet.EntityEventPacket;
 import org.cloudburstmc.protocol.bedrock.packet.MoveEntityAbsolutePacket;
@@ -51,6 +52,8 @@ import org.cloudburstmc.protocol.bedrock.packet.SetEntityDataPacket;
 import org.geysermc.geyser.api.entity.type.GeyserEntity;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.GeyserDirtyMetadata;
+import org.geysermc.geyser.entity.property.FloatEntityProperty;
+import org.geysermc.geyser.entity.property.IntEntityProperty;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.text.MessageTranslator;
 import org.geysermc.geyser.util.EntityUtils;
@@ -58,11 +61,7 @@ import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.InteractiveTag;
 import org.geysermc.geyser.util.MathUtils;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -126,6 +125,9 @@ public class Entity implements GeyserEntity {
     @Setter(AccessLevel.PROTECTED) // For players
     private boolean flagsDirty = false;
 
+    protected final Map<String, Integer> intProperties = new LinkedHashMap<>();
+    protected final Map<String, Float> floatProperties = new LinkedHashMap<>();
+
     public Entity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
         this.session = session;
 
@@ -139,6 +141,33 @@ public class Entity implements GeyserEntity {
         this.headYaw = headYaw;
 
         this.valid = false;
+
+        initEntityProperties();
+
+        setPosition(position);
+        setAirSupply(getMaxAir());
+
+        initializeMetadata();
+    }
+
+    public Entity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty) {
+        this.session = session;
+
+        this.entityId = entityId;
+        this.geyserId = geyserId;
+        this.uuid = uuid;
+        this.definition = definition;
+        this.motion = motion;
+        this.yaw = yaw;
+        this.pitch = pitch;
+        this.headYaw = headYaw;
+
+        this.valid = false;
+
+        initEntityProperties();
+
+        intEntityProperty.forEach(this::setIntEntityProperty);
+        floatEntityProperty.forEach(this::setFloatEntityProperty);
 
         setPosition(position);
         setAirSupply(getMaxAir());
@@ -350,6 +379,8 @@ public class Entity implements GeyserEntity {
 
         if (dirtyMetadata.hasEntries() || flagsDirty) {
             SetEntityDataPacket entityDataPacket = new SetEntityDataPacket();
+            entityDataPacket.getProperties().getFloatProperties().addAll(floatEntityProperties());
+            entityDataPacket.getProperties().getIntProperties().addAll(intEntityProperties());
             entityDataPacket.setRuntimeEntityId(geyserId);
             if (flagsDirty) {
                 entityDataPacket.getMetadata().putFlags(flags);
@@ -583,5 +614,59 @@ public class Entity implements GeyserEntity {
     @SuppressWarnings("unchecked")
     public <I extends Entity> @Nullable I as(Class<I> entityClass) {
         return entityClass.isInstance(this) ? (I) this : null;
+    }
+
+    private boolean validateAndSetIntProperty(String identifier, int value) {
+        if(!intProperties.containsKey(identifier)) return false;
+        intProperties.put(identifier, value);
+        setFlagsDirty(true);
+        return true;
+    }
+
+    public final boolean setIntEntityProperty(String identifier, int value) {
+        return validateAndSetIntProperty(identifier, value);
+    }
+
+    public final boolean setFloatEntityProperty(String identifier, float value) {
+        if(!floatProperties.containsKey(identifier)) return false;
+        floatProperties.put(identifier, value);
+        setFlagsDirty(true);
+        return true;
+    }
+
+    private void initEntityProperties() {
+        String entityIdentifier = this.definition.identifier();
+        List<EntityProperty> entityPropertyList = EntityProperty.getEntityProperty(entityIdentifier);
+        if (entityPropertyList.isEmpty()) return;
+
+        for (EntityProperty property : entityPropertyList) {
+            final String identifier = property.getIdentifier();
+
+            if (property instanceof FloatEntityProperty floatProperty) {
+                floatProperties.put(identifier, floatProperty.getDefaultValue());
+            } else if (property instanceof IntEntityProperty intProperty) {
+                intProperties.put(identifier, intProperty.getDefaultValue());
+            }
+        }
+    }
+
+    private List<org.cloudburstmc.protocol.bedrock.data.entity.IntEntityProperty> intEntityProperties() {
+        Collection<Integer> intValues = intProperties.values();
+        List<org.cloudburstmc.protocol.bedrock.data.entity.IntEntityProperty> list = new ArrayList<>();
+        int i = 0;
+        for (Integer value : intValues) {
+            list.add(new org.cloudburstmc.protocol.bedrock.data.entity.IntEntityProperty(i++, value));
+        }
+        return list;
+    }
+
+    protected List<org.cloudburstmc.protocol.bedrock.data.entity.FloatEntityProperty> floatEntityProperties() {
+        Collection<Float> floatValues = floatProperties.values();
+        List<org.cloudburstmc.protocol.bedrock.data.entity.FloatEntityProperty> list = new ArrayList<>();
+        int i = 0;
+        for (Float value : floatValues) {
+            list.add(new org.cloudburstmc.protocol.bedrock.data.entity.FloatEntityProperty(i++, value));
+        }
+        return list;
     }
 }

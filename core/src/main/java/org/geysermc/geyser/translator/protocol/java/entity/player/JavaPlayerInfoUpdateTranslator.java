@@ -39,10 +39,7 @@ import org.geysermc.geyser.skin.SkinManager;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Translator(packet = ClientboundPlayerInfoUpdatePacket.class)
 public class JavaPlayerInfoUpdateTranslator extends PacketTranslator<ClientboundPlayerInfoUpdatePacket> {
@@ -84,7 +81,9 @@ public class JavaPlayerInfoUpdateTranslator extends PacketTranslator<Clientbound
                             Vector3f.ZERO,
                             0, 0, 0,
                             name,
-                            texturesProperty
+                            texturesProperty,
+                            new HashMap<>(),
+                            new HashMap<>()
                     );
 
                     session.getEntityCache().addPlayerEntity(playerEntity);

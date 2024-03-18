@@ -46,6 +46,7 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 @Translator(packet = ClientboundCustomPayloadPacket.class)
@@ -61,6 +62,24 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
             trueByteArray[0] = 1;
             session.sendDownstreamPacket(new ServerboundCustomPayloadPacket(PluginMessageChannels.FABRIC_SYNC_COMPLETE, trueByteArray));
             session.setFabricSync(true);
+        }
+
+        if(channel.equals(PluginMessageChannels.ENTITY_PROPERTY)) {
+            ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+            boolean flag = buffer.readBoolean();
+
+            int entityId = buffer.readInt();
+
+            int stringLength = buffer.readInt();
+            byte[] stringBytes = new byte[stringLength];
+            buffer.readBytes(stringBytes);
+            String stringValue = new String(stringBytes, StandardCharsets.UTF_8);
+
+            if(flag) {
+                session.getEntityCache().getEntityByJavaId(entityId).setIntEntityProperty(stringValue, buffer.readInt());
+            } else {
+                session.getEntityCache().getEntityByJavaId(entityId).setFloatEntityProperty(stringValue, buffer.readFloat());
+            }
         }
 
         if (channel.equals(Constants.PLUGIN_MESSAGE)) {

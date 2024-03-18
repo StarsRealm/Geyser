@@ -45,7 +45,7 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.inventory.item.ItemTranslator;
 import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.InventoryUtils;
-
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -79,8 +79,8 @@ public class ItemFrameEntity extends Entity {
      */
     private boolean changed = true;
 
-    public ItemFrameEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Direction direction) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
+    public ItemFrameEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Direction direction, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
 
         NbtMapBuilder blockBuilder = NbtMap.builder()
                 .putString("name", this.definition.entityType() == EntityType.GLOW_ITEM_FRAME ? "minecraft:glow_frame" : "minecraft:frame");

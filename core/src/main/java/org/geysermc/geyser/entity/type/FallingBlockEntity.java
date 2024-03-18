@@ -31,7 +31,7 @@ import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.session.GeyserSession;
-
+import java.util.Map;
 import java.util.UUID;
 
 public class FallingBlockEntity extends Entity {

@@ -34,13 +34,13 @@ import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.item.Items;
 import org.geysermc.geyser.item.type.Item;
 import org.geysermc.geyser.session.GeyserSession;
-
+import java.util.Map;
 import java.util.UUID;
 
 public class LlamaEntity extends ChestedHorseEntity {
 
-    public LlamaEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
+    public LlamaEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
 
         dirtyMetadata.put(EntityDataTypes.CONTAINER_STRENGTH_MODIFIER, 3); // Presumably 3 slots for every 1 strength
     }

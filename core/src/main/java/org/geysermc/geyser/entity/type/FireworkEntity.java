@@ -43,15 +43,12 @@ import org.geysermc.geyser.level.FireworkColor;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.util.MathUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalInt;
-import java.util.UUID;
+import java.util.*;
 
 public class FireworkEntity extends Entity {
 
-    public FireworkEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
+    public FireworkEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
     }
 
     public void setFireworkItem(EntityMetadata<ItemStack, ?> entityMetadata) {

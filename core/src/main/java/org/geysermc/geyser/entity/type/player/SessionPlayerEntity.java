@@ -45,10 +45,8 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.util.AttributeUtils;
 import org.geysermc.geyser.util.DimensionUtils;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The entity class specifically for a {@link GeyserSession}'s player.
@@ -70,7 +68,7 @@ public class SessionPlayerEntity extends PlayerEntity {
     private boolean isRidingInFront;
 
     public SessionPlayerEntity(GeyserSession session) {
-        super(session, -1, 1, null, Vector3f.ZERO, Vector3f.ZERO, 0, 0, 0, null, null);
+        super(session, -1, 1, null, Vector3f.ZERO, Vector3f.ZERO, 0, 0, 0, null, null, new HashMap<>(), new HashMap<>());
 
         valid = true;
     }

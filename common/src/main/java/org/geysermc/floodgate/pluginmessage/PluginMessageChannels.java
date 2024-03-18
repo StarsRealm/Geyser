@@ -33,6 +33,8 @@ public final class PluginMessageChannels {
     public static final String TRANSFER = "floodgate:transfer";
     public static final String PACKET = "floodgate:packet";
 
+    public static final String ENTITY_PROPERTY = "starsrealm:entity_property";
+
     public static final String FABRIC_SYNC_REQUEST = "fabric:registry/sync/direct";
     public static final String FABRIC_SYNC_COMPLETE = "fabric:registry/sync/complete";
 

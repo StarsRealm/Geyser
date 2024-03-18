@@ -32,7 +32,7 @@ import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.session.GeyserSession;
-
+import java.util.Map;
 import java.util.UUID;
 
 public class SpellcasterIllagerEntity extends AbstractIllagerEntity {
@@ -40,8 +40,8 @@ public class SpellcasterIllagerEntity extends AbstractIllagerEntity {
     private static final int ATTACK_PARTICLE_COLOR = (102 << 16) | (77 << 8) | 89;
     private static final int WOLOLO_PARTICLE_COLOR = (179 << 16) | (128 << 8) | 51;
 
-    public SpellcasterIllagerEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
+    public SpellcasterIllagerEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
         // OptionalPack usage
         setFlag(EntityFlag.BRIBED, this.definition == EntityDefinitions.ILLUSIONER);
     }

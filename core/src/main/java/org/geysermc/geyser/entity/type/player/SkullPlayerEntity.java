@@ -39,7 +39,8 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.session.cache.SkullCache;
 import org.geysermc.geyser.skin.SkullSkinManager;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Objects;import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -56,7 +57,7 @@ public class SkullPlayerEntity extends PlayerEntity {
     private Vector3i skullPosition;
 
     public SkullPlayerEntity(GeyserSession session, long geyserId) {
-        super(session, 0, geyserId, UUID.randomUUID(), Vector3f.ZERO, Vector3f.ZERO, 0, 0, 0, "", null);
+        super(session, 0, geyserId, UUID.randomUUID(), Vector3f.ZERO, Vector3f.ZERO, 0, 0, 0, "", null, new HashMap<>(), new HashMap<>());
     }
 
     @Override

@@ -35,6 +35,7 @@ import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.level.block.BlockStateValues;
 import org.geysermc.geyser.session.GeyserSession;
 
+import java.util.Map;import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -44,8 +45,8 @@ public class ThrowableEntity extends Entity implements Tickable {
 
     protected Vector3f lastJavaPosition;
 
-    public ThrowableEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
+    public ThrowableEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
         this.lastJavaPosition = position;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 GeyserMC. http://geysermc.org
+ * Copyright (c) 2019-2024 GeyserMC. http://geysermc.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,21 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.geyser.entity.type.living.monster;
+package org.geysermc.geyser.event.type;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
-import org.cloudburstmc.math.vector.Vector3f;
-import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
-import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.session.GeyserSession;
-import java.util.Map;
-import java.util.UUID;
+import org.geysermc.geyser.api.event.lifecycle.GeyserDefineEntityPropertyEvent;
+import org.geysermc.geyser.entity.property.EntityProperty;
+import org.geysermc.geyser.entity.property.FloatEntityProperty;
+import org.geysermc.geyser.entity.property.IntEntityProperty;
 
-public class SpiderEntity extends MonsterEntity {
-
-    public SpiderEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+public class GeyserDefineEntityPropertyEventImpl implements GeyserDefineEntityPropertyEvent {
+    @Override
+    public void register(String identifier, String name, int min, int max, int defaultValue) {
+        EntityProperty.register(name, new IntEntityProperty(name, defaultValue, min, max));
     }
 
-    public void setSpiderFlags(ByteEntityMetadata entityMetadata) {
-        byte xd = entityMetadata.getPrimitiveValue();
-        setFlag(EntityFlag.WALL_CLIMBING, (xd & 0x01) == 0x01);
+    @Override
+    public void register(String identifier, String name, float min, float max, float defaultValue) {
+        EntityProperty.register(name, new FloatEntityProperty(name, defaultValue, min, max));
     }
 }

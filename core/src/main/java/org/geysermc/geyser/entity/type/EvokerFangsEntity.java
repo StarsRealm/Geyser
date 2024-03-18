@@ -31,6 +31,7 @@ import org.cloudburstmc.protocol.bedrock.packet.PlaySoundPacket;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.session.GeyserSession;
 
+import java.util.Map;import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -38,8 +39,8 @@ public class EvokerFangsEntity extends Entity implements Tickable {
     private int limitedLife = 22;
     private boolean attackStarted = false;
 
-    public EvokerFangsEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
+    public EvokerFangsEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
         // As of 1.18.2 Bedrock, this line is required for the entity to be visible
         // 22 is the starting number on Java Edition
         dirtyMetadata.put(EntityDataTypes.DATA_LIFETIME_TICKS, this.limitedLife);

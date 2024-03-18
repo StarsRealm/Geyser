@@ -65,6 +65,7 @@ import org.geysermc.geyser.api.util.PlatformType;
 import org.geysermc.geyser.command.GeyserCommandManager;
 import org.geysermc.geyser.configuration.GeyserConfiguration;
 import org.geysermc.geyser.entity.EntityDefinitions;
+import org.geysermc.geyser.entity.property.EntityProperty;
 import org.geysermc.geyser.erosion.UnixSocketClientListener;
 import org.geysermc.geyser.event.GeyserEventBus;
 import org.geysermc.geyser.extension.GeyserExtensionManager;
@@ -215,6 +216,10 @@ public class GeyserImpl implements GeyserApi {
         /* Initialize translators */
         EntityDefinitions.init();
         MessageTranslator.init();
+
+        /* Initialize entity Properties */
+        EntityProperty.buildPacket();
+        EntityProperty.buildPlayerProperty();
 
         // Download the latest asset list and cache it
         AssetUtils.generateAssetCache().whenComplete((aVoid, ex) -> {

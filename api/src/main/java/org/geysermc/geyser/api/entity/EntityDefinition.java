@@ -26,7 +26,6 @@
 package org.geysermc.geyser.api.entity;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.geysermc.geyser.api.GeyserApi;
 
 /**

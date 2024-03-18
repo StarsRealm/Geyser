@@ -44,8 +44,8 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.MathUtils;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.Map;
 
 public class ArmorStandEntity extends LivingEntity {
 
@@ -85,8 +85,8 @@ public class ArmorStandEntity extends LivingEntity {
      */
     private boolean positionUpdateRequired = false;
 
-    public ArmorStandEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
+    public ArmorStandEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
     }
 
     @Override
@@ -336,7 +336,7 @@ public class ArmorStandEntity extends LivingEntity {
                 // Create the second entity. It doesn't need to worry about the items, but it does need to worry about
                 // the metadata as it will hold the name tag.
                 secondEntity = new ArmorStandEntity(session, 0, session.getEntityCache().getNextEntityId().incrementAndGet(), null,
-                        EntityDefinitions.ARMOR_STAND, position, motion, getYaw(), getPitch(), getHeadYaw());
+                        EntityDefinitions.ARMOR_STAND, position, motion, getYaw(), getPitch(), getHeadYaw(), new HashMap<>(), new HashMap<>());
                 secondEntity.primaryEntity = false;
             }
             // Copy metadata

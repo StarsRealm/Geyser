@@ -38,7 +38,7 @@ import org.geysermc.geyser.level.physics.BoundingBox;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.collision.BlockCollision;
 import org.geysermc.geyser.util.BlockUtils;
-
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -54,8 +54,8 @@ public class FishingHookEntity extends ThrowableEntity {
 
     private final BoundingBox boundingBox;
 
-    public FishingHookEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, PlayerEntity owner) {
-        super(session, entityId, geyserId, uuid, EntityDefinitions.FISHING_BOBBER, position, motion, yaw, pitch, 0f);
+    public FishingHookEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, PlayerEntity owner, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty) {
+        super(session, entityId, geyserId, uuid, EntityDefinitions.FISHING_BOBBER, position, motion, yaw, pitch, 0f, intEntityProperty, floatEntityProperty);
 
         this.boundingBox = new BoundingBox(0.125, 0.125, 0.125, 0.25, 0.25, 0.25);
 
