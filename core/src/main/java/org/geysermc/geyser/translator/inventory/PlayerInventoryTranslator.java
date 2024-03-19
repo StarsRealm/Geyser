@@ -52,17 +52,12 @@ import org.geysermc.geyser.inventory.*;
 import org.geysermc.geyser.item.Items;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.skin.FakeHeadProvider;
-import org.geysermc.geyser.text.GeyserLocale;
 import org.geysermc.geyser.translator.inventory.item.ItemTranslator;
-import org.geysermc.geyser.util.InventoryUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.IntFunction;
 
 public class PlayerInventoryTranslator extends InventoryTranslator {
-    private static final IntFunction<ItemData> UNUSUABLE_CRAFTING_SPACE_BLOCK = InventoryUtils.createUnusableSpaceBlock(GeyserLocale.getLocaleStringLog("geyser.inventory.unusable_item.creative"));
-
     public PlayerInventoryTranslator() {
         super(46);
     }
@@ -125,11 +120,7 @@ public class PlayerInventoryTranslator extends InventoryTranslator {
             slotPacket.setContainerId(ContainerId.UI);
             slotPacket.setSlot(i + 27);
 
-            if (session.getGameMode() == GameMode.CREATIVE) {
-                slotPacket.setItem(UNUSUABLE_CRAFTING_SPACE_BLOCK.apply(session.getUpstream().getProtocolVersion()));
-            } else {
-                slotPacket.setItem(ItemTranslator.translateToBedrock(session, inventory.getItem(i).getItemStack()));
-            }
+            slotPacket.setItem(ItemTranslator.translateToBedrock(session, inventory.getItem(i).getItemStack()));
 
             session.sendUpstreamPacket(slotPacket);
         }
