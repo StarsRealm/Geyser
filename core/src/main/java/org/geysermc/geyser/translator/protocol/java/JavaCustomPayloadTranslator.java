@@ -28,6 +28,7 @@ package org.geysermc.geyser.translator.protocol.java;
 import com.github.steveice10.mc.protocol.packet.common.clientbound.ClientboundCustomPayloadPacket;
 import com.github.steveice10.mc.protocol.packet.common.serverbound.ServerboundCustomPayloadPacket;
 import com.google.common.base.Charsets;
+import org.cloudburstmc.protocol.bedrock.packet.AnimateEntityPacket;
 import org.cloudburstmc.protocol.bedrock.packet.TransferPacket;
 import org.cloudburstmc.protocol.bedrock.packet.UnknownPacket;
 import io.netty.buffer.ByteBuf;
@@ -63,8 +64,7 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
             session.sendDownstreamPacket(new ServerboundCustomPayloadPacket(PluginMessageChannels.FABRIC_SYNC_COMPLETE, trueByteArray));
             session.setFabricSync(true);
         }
-
-        if(channel.equals(PluginMessageChannels.ENTITY_PROPERTY)) {
+        else if(channel.equals(PluginMessageChannels.ENTITY_PROPERTY)) {
             ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
             boolean flag = buffer.readBoolean();
 
@@ -81,15 +81,49 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
                 session.getEntityCache().getEntityByJavaId(entityId).setFloatEntityProperty(stringValue, buffer.readFloat());
             }
         }
+        else if(channel.equals(PluginMessageChannels.ENTITY_ANIMATION)) {
+            ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
 
-        if (channel.equals(Constants.PLUGIN_MESSAGE)) {
+
+            AnimateEntityPacket animateEntityPacket = new AnimateEntityPacket();
+            int stringLength = buffer.readInt();
+            byte[] stringBytes = new byte[stringLength];
+            buffer.readBytes(stringBytes);
+            String stringValue = new String(stringBytes, StandardCharsets.UTF_8);
+            animateEntityPacket.setAnimation(stringValue);
+
+            stringLength = buffer.readInt();
+            stringBytes = new byte[stringLength];
+            buffer.readBytes(stringBytes);
+            stringValue = new String(stringBytes, StandardCharsets.UTF_8);
+            animateEntityPacket.setNextState(stringValue);
+
+
+            stringLength = buffer.readInt();
+            stringBytes = new byte[stringLength];
+            buffer.readBytes(stringBytes);
+            stringValue = new String(stringBytes, StandardCharsets.UTF_8);
+            animateEntityPacket.setStopExpression(stringValue);
+
+            animateEntityPacket.setStopExpressionVersion(buffer.readInt());
+
+            stringLength = buffer.readInt();
+            stringBytes = new byte[stringLength];
+            buffer.readBytes(stringBytes);
+            stringValue = new String(stringBytes, StandardCharsets.UTF_8);
+            animateEntityPacket.setController(stringValue);
+
+            animateEntityPacket.setBlendOutTime(buffer.readFloat());
+            
+            animateEntityPacket.getRuntimeEntityIds().add(buffer.readInt());
+        }
+        else if (channel.equals(Constants.PLUGIN_MESSAGE)) {
             ByteBuf buf = Unpooled.wrappedBuffer(packet.getData());
             ErosionPacket<?> erosionPacket = Packets.decode(buf);
             ((GeyserboundPacket) erosionPacket).handle(session.getErosionHandler());
             return;
         }
-
-        if (channel.equals(PluginMessageChannels.FORM)) {
+        else if (channel.equals(PluginMessageChannels.FORM)) {
             session.ensureInEventLoop(() -> {
                 byte[] data = packet.getData();
 
