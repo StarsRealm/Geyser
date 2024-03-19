@@ -35,6 +35,7 @@ public final class PluginMessageChannels {
 
     public static final String ENTITY_PROPERTY = "starsrealm:entity_property";
     public static final String ENTITY_ANIMATION = "starsrealm:entity_animation";
+    public static final String BEDROCK_PARTICLE = "starsrealm:bedrock_particle";
 
     public static final String FABRIC_SYNC_REQUEST = "fabric:registry/sync/direct";
     public static final String FABRIC_SYNC_COMPLETE = "fabric:registry/sync/complete";

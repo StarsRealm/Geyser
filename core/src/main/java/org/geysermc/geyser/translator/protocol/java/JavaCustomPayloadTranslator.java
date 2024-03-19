@@ -28,7 +28,9 @@ package org.geysermc.geyser.translator.protocol.java;
 import com.github.steveice10.mc.protocol.packet.common.clientbound.ClientboundCustomPayloadPacket;
 import com.github.steveice10.mc.protocol.packet.common.serverbound.ServerboundCustomPayloadPacket;
 import com.google.common.base.Charsets;
+import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.packet.AnimateEntityPacket;
+import org.cloudburstmc.protocol.bedrock.packet.SpawnParticleEffectPacket;
 import org.cloudburstmc.protocol.bedrock.packet.TransferPacket;
 import org.cloudburstmc.protocol.bedrock.packet.UnknownPacket;
 import io.netty.buffer.ByteBuf;
@@ -46,6 +48,7 @@ import org.geysermc.geyser.GeyserLogger;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
+import org.geysermc.geyser.util.DimensionUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -81,9 +84,22 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
                 session.getEntityCache().getEntityByJavaId(entityId).setFloatEntityProperty(stringValue, buffer.readFloat());
             }
         }
-        else if(channel.equals(PluginMessageChannels.ENTITY_ANIMATION)) {
+        else if(channel.equals(PluginMessageChannels.BEDROCK_PARTICLE)) {
             ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
 
+            SpawnParticleEffectPacket spawnParticleEffectPacket = new SpawnParticleEffectPacket();
+            int stringLength = buffer.readInt();
+            byte[] stringBytes = new byte[stringLength];
+            buffer.readBytes(stringBytes);
+            String stringValue = new String(stringBytes, StandardCharsets.UTF_8);
+            spawnParticleEffectPacket.setIdentifier(stringValue);
+            spawnParticleEffectPacket.setPosition(Vector3f.from(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
+            spawnParticleEffectPacket.setUniqueEntityId(buffer.readInt());
+            spawnParticleEffectPacket.setDimensionId(DimensionUtils.javaToBedrock(session.getDimension()));
+            session.sendUpstreamPacket(spawnParticleEffectPacket);
+        }
+        else if(channel.equals(PluginMessageChannels.ENTITY_ANIMATION)) {
+            ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
 
             AnimateEntityPacket animateEntityPacket = new AnimateEntityPacket();
             int stringLength = buffer.readInt();
