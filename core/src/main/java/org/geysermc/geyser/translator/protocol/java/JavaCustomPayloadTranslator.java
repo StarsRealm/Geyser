@@ -52,6 +52,7 @@ import org.geysermc.geyser.util.DimensionUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @Translator(packet = ClientboundCustomPayloadPacket.class)
 public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCustomPayloadPacket> {
@@ -96,6 +97,15 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
             spawnParticleEffectPacket.setPosition(Vector3f.from(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
             spawnParticleEffectPacket.setUniqueEntityId(buffer.readInt());
             spawnParticleEffectPacket.setDimensionId(DimensionUtils.javaToBedrock(session.getDimension()));
+
+            if(buffer.readBoolean()) {
+                stringLength = buffer.readInt();
+                stringBytes = new byte[stringLength];
+                buffer.readBytes(stringBytes);
+                stringValue = new String(stringBytes, StandardCharsets.UTF_8);
+                spawnParticleEffectPacket.setMolangVariablesJson(Optional.of(stringValue));
+            }
+
             session.sendUpstreamPacket(spawnParticleEffectPacket);
         }
         else if(channel.equals(PluginMessageChannels.ENTITY_ANIMATION)) {
