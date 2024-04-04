@@ -75,7 +75,7 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
 
             boolean flag = buffer.readBoolean();
 
-            int entityId =  helper.readVarInt(buffer);
+            int entityId = helper.readVarInt(buffer);
 
 
             String stringValue = helper.readString(buffer);
@@ -93,7 +93,7 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
             SpawnParticleEffectPacket spawnParticleEffectPacket = new SpawnParticleEffectPacket();
             spawnParticleEffectPacket.setIdentifier(helper.readString(buffer));
             spawnParticleEffectPacket.setPosition(Vector3f.from(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
-            spawnParticleEffectPacket.setUniqueEntityId(helper.readVarInt(buffer));
+            spawnParticleEffectPacket.setUniqueEntityId(session.getEntityCache().getEntityByJavaId(helper.readVarInt(buffer)).getGeyserId());
             spawnParticleEffectPacket.setDimensionId(DimensionUtils.javaToBedrock(session.getDimension()));
 
             if(buffer.readBoolean()) {
@@ -113,7 +113,7 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
             animateEntityPacket.setStopExpressionVersion(helper.readVarInt(buffer));
             animateEntityPacket.setController(helper.readString(buffer));
             animateEntityPacket.setBlendOutTime(buffer.readFloat());
-            animateEntityPacket.getRuntimeEntityIds().add(helper.readVarInt(buffer));
+            animateEntityPacket.getRuntimeEntityIds().add(session.getEntityCache().getEntityByJavaId(helper.readVarInt(buffer)).getGeyserId());
 
             session.sendUpstreamPacket(animateEntityPacket);
         }
