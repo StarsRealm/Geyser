@@ -161,13 +161,6 @@ public interface NonVanillaCustomItemData extends CustomItemData {
         return displayHandheld();
     }
 
-    /**
-     * Gets the block the item places.
-     *
-     * @return the block the item places
-     */
-    String block();
-
     static NonVanillaCustomItemData.Builder builder() {
         return GeyserApi.api().provider(NonVanillaCustomItemData.Builder.class);
     }
