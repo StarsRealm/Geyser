@@ -25,6 +25,7 @@
 
 package org.geysermc.geyser.translator.protocol.java;
 
+import com.github.steveice10.mc.protocol.codec.MinecraftCodecHelper;
 import com.github.steveice10.mc.protocol.packet.common.clientbound.ClientboundCustomPayloadPacket;
 import com.github.steveice10.mc.protocol.packet.common.serverbound.ServerboundCustomPayloadPacket;
 import com.google.common.base.Charsets;
@@ -69,79 +70,52 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
             session.setFabricSync(true);
         }
         else if(channel.equals(PluginMessageChannels.ENTITY_PROPERTY)) {
+            MinecraftCodecHelper helper =  session.getProtocol().createHelper();
             ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+
             boolean flag = buffer.readBoolean();
 
-            int entityId = buffer.readInt();
+            int entityId =  helper.readVarInt(buffer);
 
-            int stringLength = buffer.readInt();
-            byte[] stringBytes = new byte[stringLength];
-            buffer.readBytes(stringBytes);
-            String stringValue = new String(stringBytes, StandardCharsets.UTF_8);
+
+            String stringValue = helper.readString(buffer);
 
             if(flag) {
-                session.getEntityCache().getEntityByJavaId(entityId).setIntEntityProperty(stringValue, buffer.readInt());
+                session.getEntityCache().getEntityByJavaId(entityId).setIntEntityProperty(stringValue, helper.readVarInt(buffer));
             } else {
                 session.getEntityCache().getEntityByJavaId(entityId).setFloatEntityProperty(stringValue, buffer.readFloat());
             }
         }
         else if(channel.equals(PluginMessageChannels.BEDROCK_PARTICLE)) {
+            MinecraftCodecHelper helper =  session.getProtocol().createHelper();
             ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
 
             SpawnParticleEffectPacket spawnParticleEffectPacket = new SpawnParticleEffectPacket();
-            int stringLength = buffer.readInt();
-            byte[] stringBytes = new byte[stringLength];
-            buffer.readBytes(stringBytes);
-            String stringValue = new String(stringBytes, StandardCharsets.UTF_8);
-            spawnParticleEffectPacket.setIdentifier(stringValue);
+            spawnParticleEffectPacket.setIdentifier(helper.readString(buffer));
             spawnParticleEffectPacket.setPosition(Vector3f.from(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
-            spawnParticleEffectPacket.setUniqueEntityId(buffer.readInt());
+            spawnParticleEffectPacket.setUniqueEntityId(helper.readVarInt(buffer));
             spawnParticleEffectPacket.setDimensionId(DimensionUtils.javaToBedrock(session.getDimension()));
 
             if(buffer.readBoolean()) {
-                stringLength = buffer.readInt();
-                stringBytes = new byte[stringLength];
-                buffer.readBytes(stringBytes);
-                stringValue = new String(stringBytes, StandardCharsets.UTF_8);
-                spawnParticleEffectPacket.setMolangVariablesJson(Optional.of(stringValue));
+                spawnParticleEffectPacket.setMolangVariablesJson(Optional.of(helper.readString(buffer)));
             }
 
             session.sendUpstreamPacket(spawnParticleEffectPacket);
         }
         else if(channel.equals(PluginMessageChannels.ENTITY_ANIMATION)) {
+            MinecraftCodecHelper helper =  session.getProtocol().createHelper();
             ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
 
             AnimateEntityPacket animateEntityPacket = new AnimateEntityPacket();
-            int stringLength = buffer.readInt();
-            byte[] stringBytes = new byte[stringLength];
-            buffer.readBytes(stringBytes);
-            String stringValue = new String(stringBytes, StandardCharsets.UTF_8);
-            animateEntityPacket.setAnimation(stringValue);
-
-            stringLength = buffer.readInt();
-            stringBytes = new byte[stringLength];
-            buffer.readBytes(stringBytes);
-            stringValue = new String(stringBytes, StandardCharsets.UTF_8);
-            animateEntityPacket.setNextState(stringValue);
-
-
-            stringLength = buffer.readInt();
-            stringBytes = new byte[stringLength];
-            buffer.readBytes(stringBytes);
-            stringValue = new String(stringBytes, StandardCharsets.UTF_8);
-            animateEntityPacket.setStopExpression(stringValue);
-
-            animateEntityPacket.setStopExpressionVersion(buffer.readInt());
-
-            stringLength = buffer.readInt();
-            stringBytes = new byte[stringLength];
-            buffer.readBytes(stringBytes);
-            stringValue = new String(stringBytes, StandardCharsets.UTF_8);
-            animateEntityPacket.setController(stringValue);
-
+            animateEntityPacket.setAnimation(helper.readString(buffer));
+            animateEntityPacket.setNextState(helper.readString(buffer));
+            animateEntityPacket.setStopExpression(helper.readString(buffer));
+            animateEntityPacket.setStopExpressionVersion(helper.readVarInt(buffer));
+            animateEntityPacket.setController(helper.readString(buffer));
             animateEntityPacket.setBlendOutTime(buffer.readFloat());
-            
-            animateEntityPacket.getRuntimeEntityIds().add(buffer.readInt());
+            animateEntityPacket.getRuntimeEntityIds().add(helper.readVarInt(buffer));
+
+            session.sendUpstreamPacket(animateEntityPacket);
         }
         else if (channel.equals(Constants.PLUGIN_MESSAGE)) {
             ByteBuf buf = Unpooled.wrappedBuffer(packet.getData());
