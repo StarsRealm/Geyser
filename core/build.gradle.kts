@@ -3,6 +3,7 @@ import net.kyori.blossom.BlossomExtension
 plugins {
     alias(libs.plugins.blossom)
     id("geyser.publish-conventions")
+    id("maven-publish")
 }
 
 dependencies {
@@ -147,4 +148,31 @@ tasks.register<DownloadFilesTask>("downloadBedrockData") {
     suffixedFiles = listOf("block_palette.nbt", "creative_items.json", "runtime_item_states.json")
 
     destinationDir = "$projectDir/src/main/resources/bedrock"
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "AliYun-Release"
+            url = uri("https://packages.aliyun.com/maven/repository/2421751-release-ZmwRAc/")
+            credentials {
+                username = project.findProperty("aliyun.package.user") as String? ?: System.getenv("ALY_USER")
+                password = project.findProperty("aliyun.package.password") as String? ?: System.getenv("ALY_PASSWORD")
+            }
+        }
+        maven {
+            name = "AliYun-Snapshot"
+            url = uri("https://packages.aliyun.com/maven/repository/2421751-snapshot-i7Aufp/")
+            credentials {
+                username = project.findProperty("aliyun.package.user") as String? ?: System.getenv("ALY_USER")
+                password = project.findProperty("aliyun.package.password") as String? ?: System.getenv("ALY_PASSWORD")
+            }
+        }
+    }
+    publications {
+        create("gpr", MavenPublication::class.java) {
+            from(components.getByName("java"))
+            groupId = project.group.toString()
+        }
+    }
 }
