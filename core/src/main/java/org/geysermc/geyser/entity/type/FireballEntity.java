@@ -73,6 +73,9 @@ public class FireballEntity extends ThrowableEntity {
 
     @Override
     public void tick() {
+        if (removedInVoid()) {
+            return;
+        }
         moveAbsoluteImmediate(tickMovement(position), getYaw(), getPitch(), getHeadYaw(), false, false);
     }
 }

@@ -145,7 +145,7 @@ public final class BlockRegistryPopulator {
                     builder.remove("version"); // Remove all nbt tags which are not needed for differentiating states
                     builder.remove("name_hash"); // Quick workaround - was added in 1.19.20
                     builder.remove("network_id"); // Added in 1.19.80 - ????
-                    builder.remove("block_id"); // Added in 1.20.60 //TODO verify this can be just removed
+                    builder.remove("block_id"); // Added in 1.20.60
                     //noinspection UnstableApiUsage
                     builder.putCompound("states", statesInterner.intern((NbtMap) builder.remove("states")));
                     vanillaBlockStates.set(i, builder.build());
@@ -232,6 +232,7 @@ public final class BlockRegistryPopulator {
             Map<NbtMap, BlockDefinition> itemFrames = new Object2ObjectOpenHashMap<>();
 
             Set<BlockDefinition> jigsawDefinitions = new ObjectOpenHashSet<>();
+            Map<String, BlockDefinition> structureBlockDefinitions = new Object2ObjectOpenHashMap<>();
 
             BlockMappings.BlockMappingsBuilder builder = BlockMappings.builder();
             while (blocksIterator.hasNext()) {
@@ -273,6 +274,18 @@ public final class BlockRegistryPopulator {
 
                 if (javaId.contains("jigsaw")) {
                     jigsawDefinitions.add(bedrockDefinition);
+                }
+
+                if (javaId.contains("structure_block")) {
+                    int modeIndex = javaId.indexOf("mode=");
+                    if (modeIndex != -1) {
+                        int startIndex = modeIndex + 5; // Length of "mode=" is 5
+                        int endIndex = javaId.indexOf("]", startIndex);
+                        if (endIndex != -1) {
+                            String modeValue = javaId.substring(startIndex, endIndex);
+                            structureBlockDefinitions.put(modeValue.toUpperCase(), bedrockDefinition);
+                        }
+                    }
                 }
 
                 boolean waterlogged = entry.getKey().contains("waterlogged=true")
@@ -361,6 +374,7 @@ public final class BlockRegistryPopulator {
                     .itemFrames(itemFrames)
                     .flowerPotBlocks(flowerPotBlocks)
                     .jigsawStates(jigsawDefinitions)
+                    .structureBlockStates(structureBlockDefinitions)
                     .remappedVanillaIds(remappedVanillaIds)
                     .blockProperties(customBlockProperties)
                     .customBlockStateDefinitions(customBlockStateDefinitions)
