@@ -1218,7 +1218,9 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
     public ScheduledFuture<?> scheduleInEventLoop(Runnable runnable, long duration, TimeUnit timeUnit) {
         return eventLoop.schedule(() -> {
             try {
-                runnable.run();
+                if (!closed) {
+                    runnable.run();
+                }
             } catch (Throwable e) {
                 geyser.getLogger().error("Error thrown in " + this.bedrockUsername() + "'s event loop!", e);
             }
