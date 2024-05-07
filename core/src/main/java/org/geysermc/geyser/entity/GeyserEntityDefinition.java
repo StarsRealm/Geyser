@@ -31,7 +31,7 @@ import com.github.steveice10.mc.protocol.data.game.entity.type.EntityType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtType;
 import org.geysermc.geyser.GeyserImpl;
@@ -54,7 +54,7 @@ import java.util.function.BiConsumer;
  * @param <T> the entity type this definition represents
  */
 public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory, EntityType entityType, EntityIdentifier entityIdentifier,
-                                                       float width, float height, float offset, List<EntityMetadataTranslator<? super T, ?, ?>> translators, boolean custom) implements EntityDefinition {
+                                                       float width, float height, float offset, List<EntityMetadataTranslator<? super T, ?, ?>> translators, boolean custom, String runtimeIdentifier) implements EntityDefinition {
 
     public static Map<Integer, String> idToName = new HashMap<>();
 
@@ -108,6 +108,7 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
         private final List<EntityMetadataTranslator<? super T, ?, ?>> translators;
         private final boolean custom;
         private int networkdId = 0;
+        private String runtimeIdentifier = "";
 
         private Builder(GeyserEntityDefinition<T> definition) {
             this.factory = definition.factory;
@@ -157,6 +158,7 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
             if (entityIdentifier.isEmpty()) {
                 this.identifier = new GeyserEntityIdentifier(NbtMap.builder()
                         .putString("id", identifier)
+                        .putString("runtime_identifier", runtimeIdentifier)
                         .putBoolean("hasspawnegg", false)
                         .putBoolean("summonable", false)
                         .build());
@@ -211,6 +213,12 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
             return this;
         }
 
+        @Override
+        public EntityDefinition.Builder runtimeIdentifier(@NonNull String runtimeIdentifier) {
+            this.runtimeIdentifier = runtimeIdentifier;
+            return this;
+        }
+
         /**
          * @param register whether to register this entity in the Registries for entity types. Generally this should be
          *                 set to false if we're not expecting this entity to spawn from the network.
@@ -224,7 +232,7 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
                 identifier = this.identifier.identifier();
             }
 
-            GeyserEntityDefinition<T> definition = new GeyserEntityDefinition<>(factory, type, this.identifier, width, height, offset, translators, custom);
+            GeyserEntityDefinition<T> definition = new GeyserEntityDefinition<>(factory, type, this.identifier, width, height, offset, translators, custom, runtimeIdentifier);
             if (register && identifier != null) {
                 EntityUtils.registerEntity(identifier, definition);
             }

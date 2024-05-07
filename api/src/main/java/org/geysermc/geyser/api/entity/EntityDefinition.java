@@ -26,6 +26,7 @@
 package org.geysermc.geyser.api.entity;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.geysermc.geyser.api.GeyserApi;
 
 /**
@@ -63,6 +64,16 @@ public interface EntityDefinition {
      * @return the offset of this entity
      */
     float offset();
+
+    /**
+     * runtime_identifier is an optional parameter that sits inside the description of the entity's behavior file
+     * and is used to imitate a vanilla entity's hard-coded elements.
+     * It accepts Vanilla Minecraft identifiers, like minecraft:shulker.
+     *
+     * @return runtime_identifier
+     */
+    @Nullable
+    String runtimeIdentifier();
 
     static Builder builder() {
         return GeyserApi.api().provider(Builder.class);
@@ -109,6 +120,14 @@ public interface EntityDefinition {
          * @return the builder
          */
         Builder networkId(int networkId);
+
+        /**
+         * Set runtime_identifier
+         *
+         * @param runtimeIdentifier sits inside the description of the entity's behavior
+         * @return the builder
+         */
+        Builder runtimeIdentifier(@NonNull String runtimeIdentifier);
 
         /**
          * Builds the entity definition.
