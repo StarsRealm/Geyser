@@ -96,12 +96,13 @@ public abstract class EntityProperty {
     public abstract void populateTag(NbtMapBuilder tag);
 
     private static NbtList<NbtMap> buildPropertyList(List<EntityProperty> properties) {
-        NbtList<NbtMap> listProperty = new NbtList<>(NbtType.COMPOUND);
+        List<NbtMap> list = new ArrayList<>();
         for (EntityProperty entityProperty : properties) {
             NbtMapBuilder propertyTag = NbtMap.builder().putString("name", entityProperty.getIdentifier());
             entityProperty.populateTag(propertyTag);
-            listProperty.add(propertyTag.build());
+            list.add(propertyTag.build());
         }
-        return listProperty;
+
+        return new NbtList<>(NbtType.COMPOUND, list);
     }
 }
