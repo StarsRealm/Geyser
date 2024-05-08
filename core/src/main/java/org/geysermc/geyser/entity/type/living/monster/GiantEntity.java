@@ -37,6 +37,9 @@ public class GiantEntity extends MonsterEntity {
     public GiantEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
         super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
 
-        dirtyMetadata.put(EntityDataTypes.SCALE, 6f);
+    @Override
+    protected void initializeMetadata() {
+        super.initializeMetadata();
+        setScale(6f);
     }
 }

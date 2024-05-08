@@ -25,12 +25,14 @@
 
 package org.geysermc.geyser.entity;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.MetadataType;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.BooleanEntityMetadata;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.FloatEntityMetadata;
-import com.github.steveice10.mc.protocol.data.game.entity.type.EntityType;
+import org.geysermc.geyser.entity.type.living.monster.raid.RavagerEntity;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataType;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.BooleanEntityMetadata;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.FloatEntityMetadata;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
+import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
 import org.geysermc.geyser.entity.type.*;
 import org.geysermc.geyser.entity.type.living.*;
 import org.geysermc.geyser.entity.type.living.animal.*;
@@ -200,7 +202,6 @@ public final class EntityDefinitions {
                     .type(EntityType.AREA_EFFECT_CLOUD)
                     .height(0.5f).width(1.0f)
                     .addTranslator(MetadataType.FLOAT, AreaEffectCloudEntity::setRadius)
-                    .addTranslator(MetadataType.INT, (entity, entityMetadata) -> entity.getDirtyMetadata().put(EntityDataTypes.EFFECT_COLOR, entityMetadata.getValue()))
                     .addTranslator(null) // Waiting
                     .addTranslator(MetadataType.PARTICLE, AreaEffectCloudEntity::setParticle)
                     .build();
@@ -376,10 +377,10 @@ public final class EntityDefinitions {
                     .addTranslator(MetadataType.BYTE, AbstractArrowEntity::setArrowFlags)
                     .addTranslator(null) // "Piercing level"
                     .build();
-            ARROW = GeyserEntityDefinition.inherited(TippedArrowEntity::new, abstractArrowBase)
+            ARROW = EntityDefinition.inherited(ArrowEntity::new, abstractArrowBase)
                     .type(EntityType.ARROW)
                     .heightAndWidth(0.25f)
-                    .addTranslator(MetadataType.INT, TippedArrowEntity::setPotionEffectColor)
+                    .addTranslator(MetadataType.INT, ArrowEntity::setPotionEffectColor)
                     .build();
             SPECTRAL_ARROW = GeyserEntityDefinition.inherited(abstractArrowBase.factory(), abstractArrowBase)
                     .type(EntityType.SPECTRAL_ARROW)
@@ -452,8 +453,7 @@ public final class EntityDefinitions {
         GeyserEntityDefinition<LivingEntity> livingEntityBase = GeyserEntityDefinition.inherited(LivingEntity::new, entityBase)
                 .addTranslator(MetadataType.BYTE, LivingEntity::setLivingEntityFlags)
                 .addTranslator(MetadataType.FLOAT, LivingEntity::setHealth)
-                .addTranslator(MetadataType.INT,
-                        (livingEntity, entityMetadata) -> livingEntity.getDirtyMetadata().put(EntityDataTypes.EFFECT_COLOR, entityMetadata.getValue()))
+                .addTranslator(MetadataType.PARTICLES, LivingEntity::setParticles)
                 .addTranslator(MetadataType.BOOLEAN,
                         (livingEntity, entityMetadata) -> livingEntity.getDirtyMetadata().put(EntityDataTypes.EFFECT_AMBIENCE, (byte) (((BooleanEntityMetadata) entityMetadata).getPrimitiveValue() ? 1 : 0)))
                 .addTranslator(null) // Arrow count
@@ -672,7 +672,7 @@ public final class EntityDefinitions {
             SLIME = GeyserEntityDefinition.inherited(SlimeEntity::new, mobEntityBase)
                     .type(EntityType.SLIME)
                     .heightAndWidth(0.51f)
-                    .addTranslator(MetadataType.INT, SlimeEntity::setScale)
+                    .addTranslator(MetadataType.INT, SlimeEntity::setSlimeScale)
                     .build();
             MAGMA_CUBE = GeyserEntityDefinition.inherited(MagmaCubeEntity::new, SLIME)
                     .type(EntityType.MAGMA_CUBE)
@@ -745,9 +745,9 @@ public final class EntityDefinitions {
                     .type(EntityType.PILLAGER)
                     .height(1.8f).width(0.6f)
                     .offset(1.62f)
-                    .addTranslator(null) // Charging; doesn't have an equivalent on Bedrock //TODO check
+                    .addTranslator(MetadataType.BOOLEAN, PillagerEntity::setChargingCrossbow)
                     .build();
-            RAVAGER = GeyserEntityDefinition.inherited(raidParticipantEntityBase.factory(), raidParticipantEntityBase)
+            RAVAGER = EntityDefinition.inherited(RavagerEntity::new, raidParticipantEntityBase)
                     .type(EntityType.RAVAGER)
                     .height(1.9f).width(1.2f)
                     .build();
@@ -770,7 +770,21 @@ public final class EntityDefinitions {
 
         // Extends ageable
         {
-            AXOLOTL = GeyserEntityDefinition.inherited(AxolotlEntity::new, ageableEntityBase)
+            ARMADILLO = EntityDefinition.inherited(ArmadilloEntity::new, ageableEntityBase)
+                    .type(EntityType.ARMADILLO)
+                    .height(0.65f).width(0.7f)
+                    .properties(new GeyserEntityProperties.Builder()
+                        .addEnum(
+                            "minecraft:armadillo_state",
+                            "unrolled",
+                            "rolled_up",
+                            "rolled_up_peeking",
+                            "rolled_up_relaxing",
+                            "rolled_up_unrolling")
+                        .build())
+                    .addTranslator(MetadataType.ARMADILLO_STATE, ArmadilloEntity::setArmadilloState)
+                    .build();
+            AXOLOTL = EntityDefinition.inherited(AxolotlEntity::new, ageableEntityBase)
                     .type(EntityType.AXOLOTL)
                     .height(0.42f).width(0.7f)
                     .addTranslator(MetadataType.INT, AxolotlEntity::setVariant)
@@ -780,6 +794,9 @@ public final class EntityDefinitions {
             BEE = GeyserEntityDefinition.inherited(BeeEntity::new, ageableEntityBase)
                     .type(EntityType.BEE)
                     .heightAndWidth(0.6f)
+                    .properties(new GeyserEntityProperties.Builder()
+                        .addBoolean("minecraft:has_nectar")
+                        .build())
                     .addTranslator(MetadataType.BYTE, BeeEntity::setBeeFlags)
                     .addTranslator(MetadataType.INT, BeeEntity::setAngerTime)
                     .build();
@@ -937,8 +954,7 @@ public final class EntityDefinitions {
             LLAMA = GeyserEntityDefinition.inherited(LlamaEntity::new, chestedHorseEntityBase)
                     .type(EntityType.LLAMA)
                     .height(1.87f).width(0.9f)
-                    .addTranslator(MetadataType.INT, (entity, entityMetadata) -> entity.getDirtyMetadata().put(EntityDataTypes.STRENGTH, entityMetadata.getValue()))
-                    .addTranslator(MetadataType.INT, LlamaEntity::setCarpetedColor)
+                    .addTranslator(MetadataType.INT, LlamaEntity::setStrength)
                     .addTranslator(MetadataType.INT, (entity, entityMetadata) -> entity.getDirtyMetadata().put(EntityDataTypes.VARIANT, entityMetadata.getValue()))
                     .build();
             TRADER_LLAMA = GeyserEntityDefinition.inherited(TraderLlamaEntity::new, LLAMA)
@@ -947,7 +963,7 @@ public final class EntityDefinitions {
                     .build();
         }
 
-        GeyserEntityDefinition<TameableEntity> tameableEntityBase = GeyserEntityDefinition.inherited(TameableEntity::new, ageableEntityBase)
+        EntityDefinition<TameableEntity> tameableEntityBase = EntityDefinition.<TameableEntity>inherited(null, ageableEntityBase) // No factory, is abstract
                 .addTranslator(MetadataType.BYTE, TameableEntity::setTameableFlags)
                 .addTranslator(MetadataType.OPTIONAL_UUID, TameableEntity::setOwner)
                 .build();
@@ -971,6 +987,7 @@ public final class EntityDefinitions {
                 .addTranslator(MetadataType.BOOLEAN, (wolfEntity, entityMetadata) -> wolfEntity.setFlag(EntityFlag.INTERESTED, ((BooleanEntityMetadata) entityMetadata).getPrimitiveValue()))
                 .addTranslator(MetadataType.INT, WolfEntity::setCollarColor)
                 .addTranslator(MetadataType.INT, WolfEntity::setWolfAngerTime)
+                .addTranslator(MetadataType.WOLF_VARIANT, WolfEntity::setWolfVariant)
                 .build();
 
         // As of 1.18 these don't track entity data at all

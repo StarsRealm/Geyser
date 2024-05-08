@@ -25,6 +25,7 @@
 
 package org.geysermc.geyser.entity.type.living.animal;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.item.type.Item;
@@ -39,7 +40,8 @@ public class PolarBearEntity extends AnimalEntity {
     }
 
     @Override
-    public boolean canEat(Item item) {
-        return false;
+    @Nullable
+    protected ItemTag getFoodTag() {
+        return null;
     }
 }

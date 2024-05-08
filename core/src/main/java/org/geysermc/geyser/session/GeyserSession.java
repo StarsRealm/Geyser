@@ -28,45 +28,39 @@ package org.geysermc.geyser.session;
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.auth.exception.request.RequestException;
 import com.github.steveice10.mc.auth.service.MsaAuthenticationService;
-import com.github.steveice10.mc.protocol.MinecraftConstants;
-import com.github.steveice10.mc.protocol.MinecraftProtocol;
-import com.github.steveice10.mc.protocol.data.ProtocolState;
-import com.github.steveice10.mc.protocol.data.UnexpectedEncryptionException;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.Pose;
-import com.github.steveice10.mc.protocol.data.game.entity.object.Direction;
-import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
-import com.github.steveice10.mc.protocol.data.game.entity.player.Hand;
-import com.github.steveice10.mc.protocol.data.game.entity.player.HandPreference;
-import com.github.steveice10.mc.protocol.data.game.entity.player.PlayerAction;
-import com.github.steveice10.mc.protocol.data.game.setting.ChatVisibility;
-import com.github.steveice10.mc.protocol.data.game.setting.SkinPart;
-import com.github.steveice10.mc.protocol.data.game.statistic.CustomStatistic;
-import com.github.steveice10.mc.protocol.data.game.statistic.Statistic;
-import com.github.steveice10.mc.protocol.packet.common.serverbound.ServerboundClientInformationPacket;
-import com.github.steveice10.mc.protocol.packet.handshake.serverbound.ClientIntentionPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatCommandPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundPlayerAbilitiesPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundPlayerActionPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundUseItemPacket;
-import com.github.steveice10.mc.protocol.packet.login.serverbound.ServerboundCustomQueryAnswerPacket;
-import com.github.steveice10.packetlib.BuiltinFlags;
-import com.github.steveice10.packetlib.Session;
-import com.github.steveice10.packetlib.event.session.ConnectedEvent;
-import com.github.steveice10.packetlib.event.session.DisconnectedEvent;
-import com.github.steveice10.packetlib.event.session.PacketErrorEvent;
-import com.github.steveice10.packetlib.event.session.PacketSendingEvent;
-import com.github.steveice10.packetlib.event.session.SessionAdapter;
-import com.github.steveice10.packetlib.packet.Packet;
-import com.github.steveice10.packetlib.tcp.TcpClientSession;
-import com.github.steveice10.packetlib.tcp.TcpSession;
+import org.geysermc.mcprotocollib.protocol.MinecraftConstants;
+import org.geysermc.mcprotocollib.protocol.MinecraftProtocol;
+import org.geysermc.mcprotocollib.protocol.data.ProtocolState;
+import org.geysermc.mcprotocollib.protocol.data.UnexpectedEncryptionException;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.Pose;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.object.Direction;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.player.GameMode;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.player.HandPreference;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.player.PlayerAction;
+import org.geysermc.mcprotocollib.protocol.data.game.setting.ChatVisibility;
+import org.geysermc.mcprotocollib.protocol.data.game.setting.SkinPart;
+import org.geysermc.mcprotocollib.protocol.data.game.statistic.CustomStatistic;
+import org.geysermc.mcprotocollib.protocol.data.game.statistic.Statistic;
+import org.geysermc.mcprotocollib.protocol.packet.common.serverbound.ServerboundClientInformationPacket;
+import org.geysermc.mcprotocollib.protocol.packet.handshake.serverbound.ClientIntentionPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatCommandSignedPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.player.ServerboundPlayerAbilitiesPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.player.ServerboundPlayerActionPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.player.ServerboundUseItemPacket;
+import org.geysermc.mcprotocollib.protocol.packet.login.serverbound.ServerboundCustomQueryAnswerPacket;
+import org.geysermc.mcprotocollib.network.BuiltinFlags;
+import org.geysermc.mcprotocollib.network.Session;
+import org.geysermc.mcprotocollib.network.event.session.*;
+import org.geysermc.mcprotocollib.network.packet.Packet;
+import org.geysermc.mcprotocollib.network.tcp.TcpClientSession;
+import org.geysermc.mcprotocollib.network.tcp.TcpSession;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoop;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -153,7 +147,6 @@ import org.geysermc.geyser.session.cache.*;
 import org.geysermc.geyser.skin.FloodgateSkinUploader;
 import org.geysermc.geyser.text.GeyserLocale;
 import org.geysermc.geyser.text.MinecraftLocale;
-import org.geysermc.geyser.text.TextDecoration;
 import org.geysermc.geyser.translator.inventory.InventoryTranslator;
 import org.geysermc.geyser.translator.text.MessageTranslator;
 import org.geysermc.geyser.util.ChunkUtils;
@@ -165,16 +158,7 @@ import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledFuture;
@@ -222,6 +206,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
     private final LodestoneCache lodestoneCache;
     private final PistonCache pistonCache;
     private final PreferencesCache preferencesCache;
+    private final RegistryCache registryCache;
     private final SkullCache skullCache;
     private final StructureBlockCache structureBlockCache;
     private final TagCache tagCache;
@@ -270,17 +255,6 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
      */
     @Setter
     private ItemMappings itemMappings;
-
-    /**
-     * Required to decode biomes correctly.
-     */
-    @Setter
-    private int biomeGlobalPalette;
-    /**
-     * Stores the map between Java and Bedrock biome network IDs.
-     */
-    @Setter
-    private int[] biomeTranslations = null;
 
     /**
      * A map of Vector3i positions to Java entities.
@@ -369,16 +343,10 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
      * As all entities are in the same world, this can be safely applied to all other entities.
      */
     @Setter
-    private String dimension = DimensionUtils.OVERWORLD;
+    private int dimension = DimensionUtils.OVERWORLD;
     @MonotonicNonNull
     @Setter
     private JavaDimension dimensionType = null;
-    /**
-     * All dimensions that the client could possibly connect to.
-     */
-    private final Map<String, JavaDimension> dimensions = new Object2ObjectOpenHashMap<>(3);
-
-    private final Int2ObjectMap<TextDecoration> chatTypes = new Int2ObjectOpenHashMap<>(7);
 
     @Setter
     private int breakingBlock;
@@ -610,6 +578,12 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
     @Setter
     private @Nullable ItemData currentBook = null;
 
+    /**
+     * Stores cookies sent by the Java server.
+     */
+    @Setter @Getter
+    private Map<String, byte[]> cookies = new Object2ObjectOpenHashMap<>();
+
     private final GeyserCameraData cameraData;
 
     private final GeyserEntityData entityData;
@@ -636,6 +610,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         this.lodestoneCache = new LodestoneCache();
         this.pistonCache = new PistonCache(this);
         this.preferencesCache = new PreferencesCache(this);
+        this.registryCache = new RegistryCache(this);
         this.skullCache = new SkullCache(this);
         this.structureBlockCache = new StructureBlockCache();
         this.tagCache = new TagCache();
@@ -682,6 +657,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
     public void connect() {
         startGame();
         sentSpawnPacket = true;
+        syncEntityProperties();
 
         // Registry Entity Properties
         for(SyncEntityPropertyPacket pk : EntityProperty.getPacketCache()) {
@@ -930,7 +906,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
      * After getting whatever credentials needed, we attempt to join the Java server.
      */
     private void connectDownstream() {
-        SessionLoginEvent loginEvent = new SessionLoginEvent(this, remoteServer);
+        SessionLoginEvent loginEvent = new SessionLoginEvent(this, remoteServer, new Object2ObjectOpenHashMap<>());
         GeyserImpl.getInstance().eventBus().fire(loginEvent);
         if (loginEvent.isCancelled()) {
             String disconnectReason = loginEvent.disconnectReason() == null ?
@@ -939,6 +915,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
             return;
         }
 
+        this.cookies = loginEvent.cookies();
         this.remoteServer = loginEvent.remoteServer();
         boolean floodgate = this.remoteServer.authType() == AuthType.FLOODGATE;
 
@@ -1140,7 +1117,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
             setDaylightCycle(true);
         }
 
-        downstream.connect(false);
+        downstream.connect(false, loginEvent.transferring());
     }
 
     public void disconnect(String reason) {
@@ -1511,7 +1488,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
      * Sends a command to the Java server.
      */
     public void sendCommand(String command) {
-        sendDownstreamGamePacket(new ServerboundChatCommandPacket(command, Instant.now().toEpochMilli(), 0L, Collections.emptyList(), 0, new BitSet()));
+        sendDownstreamGamePacket(new ServerboundChatCommandSignedPacket(command, Instant.now().toEpochMilli(), 0L, Collections.emptyList(), 0, new BitSet()));
     }
 
     public void setServerRenderDistance(int renderDistance) {
@@ -1641,7 +1618,18 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         startGamePacket.setServerAuthoritativeBlockBreaking(false);
         startGamePacket.setBlockNetworkIdsHashed(true);
 
+        // Entity properties for older versions
+        startGamePacket.getExperiments().add(new ExperimentData("upcoming_creator_features", true));
+
         upstream.sendPacket(startGamePacket);
+    }
+
+    private void syncEntityProperties() {
+        for (NbtMap nbtMap : Registries.BEDROCK_ENTITY_PROPERTIES.get()) {
+            SyncEntityPropertyPacket syncEntityPropertyPacket = new SyncEntityPropertyPacket();
+            syncEntityPropertyPacket.setData(nbtMap);
+            upstream.sendPacket(syncEntityPropertyPacket);
+        }
     }
 
     /**

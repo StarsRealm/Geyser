@@ -25,7 +25,7 @@
 
 package org.geysermc.geyser.entity.type.living.animal;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.IntEntityMetadata;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
@@ -67,7 +67,8 @@ public class RabbitEntity extends AnimalEntity {
     }
 
     @Override
-    public boolean canEat(Item item) {
-        return item == Items.DANDELION || item == Items.CARROT || item == Items.GOLDEN_CARROT;
+    @Nullable
+    protected ItemTag getFoodTag() {
+        return ItemTag.RABBIT_FOOD;
     }
 }

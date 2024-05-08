@@ -25,9 +25,9 @@
 
 package org.geysermc.geyser.entity;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.EntityMetadata;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.MetadataType;
-import com.github.steveice10.mc.protocol.data.game.entity.type.EntityType;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataType;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -38,6 +38,7 @@ import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.api.entity.EntityDefinition;
 import org.geysermc.geyser.api.entity.EntityIdentifier;
 import org.geysermc.geyser.entity.factory.EntityFactory;
+import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
 import org.geysermc.geyser.entity.type.Entity;
 import org.geysermc.geyser.registry.Registries;
 import org.geysermc.geyser.translator.entity.EntityMetadataTranslator;
@@ -105,6 +106,7 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
         private float width;
         private float height;
         private float offset = 0.00001f;
+        private GeyserEntityProperties registeredProperties;
         private final List<EntityMetadataTranslator<? super T, ?, ?>> translators;
         private final boolean custom;
         private int networkdId = 0;
@@ -138,6 +140,7 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
             this.width = width;
             this.height = height;
             this.offset = offset;
+            this.registeredProperties = registeredProperties;
             this.translators = translators;
             this.custom = false;
         }
@@ -190,6 +193,11 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
         public Builder<T> type(EntityType type) {
             this.type = type;
             identifier = null;
+            return this;
+        }
+
+        public Builder<T> properties(GeyserEntityProperties registeredProperties) {
+            this.registeredProperties = registeredProperties;
             return this;
         }
 

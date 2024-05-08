@@ -25,20 +25,17 @@
 
 package org.geysermc.geyser.entity.type;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.IntEntityMetadata;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.inventory.item.TippedArrowPotion;
 import org.geysermc.geyser.session.GeyserSession;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.IntEntityMetadata;
 
 import java.util.Map;import java.util.Map;
 import java.util.UUID;
 
-/**
- * Internally this is known as TippedArrowEntity but is used with tipped arrows and normal arrows
- */
-public class TippedArrowEntity extends AbstractArrowEntity {
+public class ArrowEntity extends AbstractArrowEntity {
 
     public TippedArrowEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
         super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);

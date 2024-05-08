@@ -25,8 +25,8 @@
 
 package org.geysermc.geyser.entity.type.living.monster.raid;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
 import org.cloudburstmc.math.vector.Vector3f;
+import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.session.GeyserSession;
@@ -45,5 +45,10 @@ public class VindicatorEntity extends AbstractIllagerEntity {
         // Allow the axe to be shown if necessary
         byte xd = entityMetadata.getPrimitiveValue();
         setFlag(EntityFlag.ANGRY, (xd & 4) == 4);
+    }
+
+    @Override
+    public boolean useArmSwingAttack() {
+        return true;
     }
 }

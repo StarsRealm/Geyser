@@ -25,9 +25,7 @@
 
 package org.geysermc.geyser.entity.type.living.animal.horse;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.Pose;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.BooleanEntityMetadata;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityEventType;
@@ -90,8 +88,8 @@ public class CamelEntity extends AbstractHorseEntity {
     }
 
     @Override
-    public boolean canEat(Item item) {
-        return item == Items.CACTUS;
+    protected @Nullable ItemTag getFoodTag() {
+        return ItemTag.CAMEL_FOOD;
     }
 
     @Override

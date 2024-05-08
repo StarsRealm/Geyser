@@ -25,7 +25,8 @@
 
 package org.geysermc.geyser.entity.type.living.animal.horse;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.IntEntityMetadata;
+import lombok.Getter;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.inventory.ItemData;
@@ -38,6 +39,11 @@ import java.util.Map;
 import java.util.UUID;
 
 public class LlamaEntity extends ChestedHorseEntity {
+    /**
+     * Used to calculate inventory size
+     */
+    @Getter
+    private int strength = 1;
 
     public LlamaEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
         super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
@@ -45,32 +51,13 @@ public class LlamaEntity extends ChestedHorseEntity {
         dirtyMetadata.put(EntityDataTypes.CONTAINER_STRENGTH_MODIFIER, 3); // Presumably 3 slots for every 1 strength
     }
 
-    /**
-     * Color equipped on the llama
-     */
-    public void setCarpetedColor(IntEntityMetadata entityMetadata) {
-        // Bedrock treats llama decoration as armor
-        MobArmorEquipmentPacket equipmentPacket = new MobArmorEquipmentPacket();
-        equipmentPacket.setRuntimeEntityId(geyserId);
-        // -1 means no armor
-        int carpetIndex = entityMetadata.getPrimitiveValue();
-        if (carpetIndex > -1 && carpetIndex <= 15) {
-            // The damage value is the dye color that Java sends us, for pre-1.16.220
-            // The item is always going to be a carpet
-            equipmentPacket.setChestplate(session.getItemMappings().getCarpets().get(carpetIndex));
-        } else {
-            equipmentPacket.setChestplate(ItemData.AIR);
-        }
-        // Required to fill out the rest of the equipment or Bedrock ignores it, including above else statement if removing armor
-        equipmentPacket.setBoots(ItemData.AIR);
-        equipmentPacket.setHelmet(ItemData.AIR);
-        equipmentPacket.setLeggings(ItemData.AIR);
-
-        session.sendUpstreamPacket(equipmentPacket);
+    public void setStrength(IntEntityMetadata entityMetadata) {
+        strength = MathUtils.constrain(entityMetadata.getPrimitiveValue(), 1, 5);
+        this.dirtyMetadata.put(EntityDataTypes.STRENGTH, strength);
     }
 
     @Override
-    public boolean canEat(Item item) {
-        return item == Items.WHEAT || item == Items.HAY_BLOCK;
+    protected @Nullable ItemTag getFoodTag() {
+        return ItemTag.LLAMA_FOOD;
     }
 }

@@ -25,8 +25,7 @@
 
 package org.geysermc.geyser.entity.type.living.animal.tameable;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.EntityMetadata;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
+import lombok.Getter;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
@@ -35,11 +34,13 @@ import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.type.Entity;
 import org.geysermc.geyser.entity.type.living.animal.AnimalEntity;
 import org.geysermc.geyser.session.GeyserSession;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
 
 import java.util.Optional;import java.util.Map;
 import java.util.UUID;
 
-public class TameableEntity extends AnimalEntity {
+public abstract class TameableEntity extends AnimalEntity {
     /**
      * Used in the interactive tag manager to track if the session player owns this entity
      */

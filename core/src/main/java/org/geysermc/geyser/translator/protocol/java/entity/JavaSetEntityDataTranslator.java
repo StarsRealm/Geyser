@@ -32,6 +32,8 @@ import org.geysermc.geyser.entity.type.Entity;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.ClientboundSetEntityDataPacket;
 
 @Translator(packet = ClientboundSetEntityDataPacket.class)
 public class JavaSetEntityDataTranslator extends PacketTranslator<ClientboundSetEntityDataPacket> {

@@ -25,8 +25,9 @@
 
 package org.geysermc.geyser.entity.type.living.animal;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.type.BooleanEntityMetadata;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.cloudburstmc.math.vector.Vector3f;
+import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.item.Items;
@@ -54,8 +55,9 @@ public class HoglinEntity extends AnimalEntity {
     }
 
     @Override
-    public boolean canEat(Item item) {
-        return item == Items.CRIMSON_FUNGUS;
+    @Nullable
+    protected ItemTag getFoodTag() {
+        return ItemTag.HOGLIN_FOOD;
     }
 
     @Override
@@ -65,6 +67,11 @@ public class HoglinEntity extends AnimalEntity {
 
     @Override
     protected boolean isEnemy() {
+        return true;
+    }
+
+    @Override
+    public boolean useArmSwingAttack() {
         return true;
     }
 }
