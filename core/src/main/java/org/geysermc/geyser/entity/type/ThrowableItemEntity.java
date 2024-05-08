@@ -32,7 +32,6 @@ import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.session.GeyserSession;
 
-import java.util.Map;import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -45,8 +44,8 @@ public class ThrowableItemEntity extends ThrowableEntity {
     private int age;
     private boolean invisible;
 
-    public ThrowableItemEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public ThrowableItemEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
         setFlag(EntityFlag.INVISIBLE, true);
         invisible = false;
     }

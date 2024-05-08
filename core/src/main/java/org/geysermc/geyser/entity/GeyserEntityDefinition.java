@@ -55,7 +55,7 @@ import java.util.function.BiConsumer;
  * @param <T> the entity type this definition represents
  */
 public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory, EntityType entityType, EntityIdentifier entityIdentifier,
-                                                       float width, float height, float offset, List<EntityMetadataTranslator<? super T, ?, ?>> translators, boolean custom, String runtimeIdentifier) implements EntityDefinition {
+                                                       float width, float height, float offset, GeyserEntityProperties registeredProperties, List<EntityMetadataTranslator<? super T, ?, ?>> translators, boolean custom, String runtimeIdentifier) implements EntityDefinition {
 
     public static Map<Integer, String> idToName = new HashMap<>();
 
@@ -240,7 +240,8 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
                 identifier = this.identifier.identifier();
             }
 
-            GeyserEntityDefinition<T> definition = new GeyserEntityDefinition<>(factory, type, this.identifier, width, height, offset, translators, custom, runtimeIdentifier);
+            // TODO
+            GeyserEntityDefinition<T> definition = new GeyserEntityDefinition<>(factory, type, this.identifier, width, height, offset, null, translators, custom, runtimeIdentifier);
             if (register && identifier != null) {
                 EntityUtils.registerEntity(identifier, definition);
             }

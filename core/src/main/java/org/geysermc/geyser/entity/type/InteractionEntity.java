@@ -36,7 +36,6 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.FloatE
 import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.player.ServerboundSwingPacket;
 
-import java.util.Map;import java.util.Map;
 import java.util.UUID;
 
 public class InteractionEntity extends Entity {
@@ -47,8 +46,8 @@ public class InteractionEntity extends Entity {
      */
     private boolean response = false;
 
-    public InteractionEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public InteractionEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     @Override

@@ -38,14 +38,16 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.session.cache.tags.ItemTag;
 import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.InteractiveTag;
-import java.util.Map;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
+
 import java.util.UUID;
 
 public class SheepEntity extends AnimalEntity {
     private int color;
 
-    public SheepEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public SheepEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     public void setSheepFlags(ByteEntityMetadata entityMetadata) {

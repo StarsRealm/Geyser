@@ -34,13 +34,18 @@ import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.data.inventory.ItemData;
 import org.cloudburstmc.protocol.bedrock.packet.BlockEntityDataPacket;
 import org.cloudburstmc.protocol.bedrock.packet.UpdateBlockPacket;
-import lombok.Getter;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.item.ItemTranslator;
 import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.InventoryUtils;
-import java.util.Map;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.IntEntityMetadata;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.object.Direction;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
+import org.geysermc.mcprotocollib.protocol.data.game.item.ItemStack;
+
 import java.util.UUID;
 
 /**
@@ -74,8 +79,8 @@ public class ItemFrameEntity extends Entity {
      */
     private boolean changed = true;
 
-    public ItemFrameEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Direction direction, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public ItemFrameEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Direction direction) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
 
         NbtMapBuilder blockBuilder = NbtMap.builder()
                 .putString("name", this.definition.entityType() == EntityType.GLOW_ITEM_FRAME ? "minecraft:glow_frame" : "minecraft:frame");

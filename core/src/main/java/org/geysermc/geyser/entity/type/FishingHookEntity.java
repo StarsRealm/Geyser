@@ -30,14 +30,15 @@ import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.packet.PlaySoundPacket;
 import org.geysermc.erosion.util.BlockPositionIterator;
-import org.geysermc.geyser.entity.EntityDefinitions;
+import org.geysermc.geyser.entity.GeyserEntityDefinitions;
 import org.geysermc.geyser.entity.type.player.PlayerEntity;
 import org.geysermc.geyser.level.block.BlockStateValues;
 import org.geysermc.geyser.level.physics.BoundingBox;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.collision.BlockCollision;
 import org.geysermc.geyser.util.BlockUtils;
-import java.util.Map;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.IntEntityMetadata;
+
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -53,8 +54,8 @@ public class FishingHookEntity extends ThrowableEntity {
 
     private final BoundingBox boundingBox;
 
-    public FishingHookEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, PlayerEntity owner, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty) {
-        super(session, entityId, geyserId, uuid, EntityDefinitions.FISHING_BOBBER, position, motion, yaw, pitch, 0f, intEntityProperty, floatEntityProperty);
+    public FishingHookEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, PlayerEntity owner) {
+        super(session, entityId, geyserId, uuid, GeyserEntityDefinitions.FISHING_BOBBER, position, motion, yaw, pitch, 0f);
 
         this.boundingBox = new BoundingBox(0.125, 0.125, 0.125, 0.25, 0.25, 0.25);
 

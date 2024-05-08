@@ -46,8 +46,10 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.ByteEn
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.FloatEntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.player.GameMode;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The entity class specifically for a {@link GeyserSession}'s player.
@@ -69,7 +71,7 @@ public class SessionPlayerEntity extends PlayerEntity {
     private boolean isRidingInFront;
 
     public SessionPlayerEntity(GeyserSession session) {
-        super(session, -1, 1, null, Vector3f.ZERO, Vector3f.ZERO, 0, 0, 0, null, null, new HashMap<>(), new HashMap<>());
+        super(session, -1, 1, null, Vector3f.ZERO, Vector3f.ZERO, 0, 0, 0, null, null);
 
         valid = true;
     }

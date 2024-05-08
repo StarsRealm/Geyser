@@ -29,7 +29,6 @@ import lombok.Getter;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
-import lombok.Getter;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.type.Entity;
 import org.geysermc.geyser.entity.type.living.animal.AnimalEntity;
@@ -37,7 +36,7 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
 
-import java.util.Optional;import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class TameableEntity extends AnimalEntity {
@@ -47,8 +46,8 @@ public abstract class TameableEntity extends AnimalEntity {
     @Getter
     protected long ownerBedrockId;
 
-    public TameableEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public TameableEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     public void setTameableFlags(ByteEntityMetadata entityMetadata) {

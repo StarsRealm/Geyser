@@ -25,9 +25,7 @@
 
 package org.geysermc.geyser.translator.protocol.java;
 
-import com.github.steveice10.mc.protocol.codec.MinecraftCodecHelper;
-import com.github.steveice10.mc.protocol.packet.common.clientbound.ClientboundCustomPayloadPacket;
-import com.github.steveice10.mc.protocol.packet.common.serverbound.ServerboundCustomPayloadPacket;
+
 import com.google.common.base.Charsets;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.packet.AnimateEntityPacket;
@@ -36,8 +34,6 @@ import org.cloudburstmc.protocol.bedrock.packet.TransferPacket;
 import org.cloudburstmc.protocol.bedrock.packet.UnknownPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import org.cloudburstmc.protocol.bedrock.packet.TransferPacket;
-import org.cloudburstmc.protocol.bedrock.packet.UnknownPacket;
 import org.geysermc.cumulus.Forms;
 import org.geysermc.cumulus.form.Form;
 import org.geysermc.cumulus.form.util.FormType;
@@ -52,6 +48,9 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
 import org.geysermc.geyser.util.DimensionUtils;
+import org.geysermc.mcprotocollib.protocol.codec.MinecraftCodecHelper;
+import org.geysermc.mcprotocollib.protocol.packet.common.clientbound.ClientboundCustomPayloadPacket;
+import org.geysermc.mcprotocollib.protocol.packet.common.serverbound.ServerboundCustomPayloadPacket;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -83,9 +82,9 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
             String stringValue = helper.readString(buffer);
 
             if(flag) {
-                session.getEntityCache().getEntityByJavaId(entityId).setIntEntityProperty(stringValue, helper.readVarInt(buffer));
+                session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager().add(stringValue, helper.readVarInt(buffer));
             } else {
-                session.getEntityCache().getEntityByJavaId(entityId).setFloatEntityProperty(stringValue, buffer.readFloat());
+                session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager().add(stringValue, buffer.readFloat());
             }
         }
         else if(channel.equals(PluginMessageChannels.BEDROCK_PARTICLE)) {

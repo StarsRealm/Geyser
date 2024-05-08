@@ -29,13 +29,12 @@ import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
-import it.unimi.dsi.fastutil.ints.IntList;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.type.living.AbstractFishEntity;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.IntEntityMetadata;
 
-import java.util.List;import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 public class TropicalFishEntity extends AbstractFishEntity {
@@ -49,8 +48,8 @@ public class TropicalFishEntity extends AbstractFishEntity {
     private static final List<String> VARIANT_NAMES = ImmutableList.of("kob", "sunstreak", "snooper", "dasher", "brinely", "spotty", "flopper", "stripey", "glitter", "blockfish", "betty", "clayfish");
     private static final List<String> COLOR_NAMES = ImmutableList.of("white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black");
 
-    public TropicalFishEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public TropicalFishEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     public void setFishVariant(IntEntityMetadata entityMetadata) {

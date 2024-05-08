@@ -69,7 +69,10 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.FloatE
 import org.geysermc.mcprotocollib.protocol.data.game.scoreboard.ScoreboardPosition;
 import org.geysermc.mcprotocollib.protocol.data.game.scoreboard.TeamColor;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Getter @Setter
@@ -107,8 +110,8 @@ public class PlayerEntity extends LivingEntity implements GeyserPlayerEntity {
     private ParrotEntity rightParrot;
 
     public PlayerEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, Vector3f position,
-                        Vector3f motion, float yaw, float pitch, float headYaw, String username, @Nullable String texturesProperty, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty) {
-        super(session, entityId, geyserId, uuid, EntityDefinitions.PLAYER, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+                        Vector3f motion, float yaw, float pitch, float headYaw, String username, @Nullable String texturesProperty) {
+        super(session, entityId, geyserId, uuid, EntityDefinitions.PLAYER, position, motion, yaw, pitch, headYaw);
 
         this.username = username;
         this.nametag = username;
@@ -315,7 +318,7 @@ public class PlayerEntity extends LivingEntity implements GeyserPlayerEntity {
             }
             // The parrot is a separate entity in Bedrock, but part of the player entity in Java //TODO is a UUID provided in NBT?
             ParrotEntity parrot = new ParrotEntity(session, 0, session.getEntityCache().getNextEntityId().incrementAndGet(),
-                    null, EntityDefinitions.PARROT, position, motion, getYaw(), getPitch(), getHeadYaw(), new HashMap<>(), new HashMap<>());
+                    null, EntityDefinitions.PARROT, position, motion, getYaw(), getPitch(), getHeadYaw());
             parrot.spawnEntity();
             parrot.getDirtyMetadata().put(EntityDataTypes.VARIANT, (Integer) tag.get("Variant"));
             // Different position whether the parrot is left or right

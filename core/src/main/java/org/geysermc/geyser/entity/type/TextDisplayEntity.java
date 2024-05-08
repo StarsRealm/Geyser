@@ -34,14 +34,13 @@ import org.geysermc.geyser.translator.text.MessageTranslator;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.BooleanEntityMetadata;
 
-import java.util.Map;
-import java.util.Optional;import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 // Note: 1.19.4 requires that the billboard is set to something in order to show, on Java Edition
 public class TextDisplayEntity extends Entity {
-    public TextDisplayEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public TextDisplayEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     @Override

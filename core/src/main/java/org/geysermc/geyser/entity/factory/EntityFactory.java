@@ -38,5 +38,5 @@ import java.util.UUID;
  */
 public interface EntityFactory<T extends Entity> {
 
-    T create(GeyserSession session, int javaId, long bedrockId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty);
+    T create(GeyserSession session, int javaId, long bedrockId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw);
 }

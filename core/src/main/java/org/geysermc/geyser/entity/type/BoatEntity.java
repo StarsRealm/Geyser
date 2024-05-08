@@ -30,9 +30,8 @@ import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.packet.AnimatePacket;
 import org.cloudburstmc.protocol.bedrock.packet.MoveEntityAbsolutePacket;
-import lombok.Getter;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.entity.EntityDefinitions;
+import org.geysermc.geyser.entity.GeyserEntityDefinitions;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.InteractiveTag;
@@ -40,7 +39,6 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.Boolea
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.IntEntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
 
-import java.util.Map;import java.util.Map;
 import java.util.UUID;
 
 public class BoatEntity extends Entity implements Tickable {
@@ -70,9 +68,9 @@ public class BoatEntity extends Entity implements Tickable {
     // Looks too fast and too choppy with 0.1f, which is how I believe the Microsoftian client handles it
     private final float ROWING_SPEED = 0.1f;
 
-    public BoatEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
+    public BoatEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
         // Initial rotation is incorrect
-        super(session, entityId, geyserId, uuid, definition, position.add(0d, definition.offset(), 0d), motion, yaw + 90, 0, yaw + 90, intEntityProperty, floatEntityProperty);
+        super(session, entityId, geyserId, uuid, definition, position.add(0d, definition.offset(), 0d), motion, yaw + 90, 0, yaw + 90);
 
         // Required to be able to move on land 1.16.200+ or apply gravity not in the water 1.16.100+
         dirtyMetadata.put(EntityDataTypes.IS_BUOYANT, true);
@@ -91,7 +89,7 @@ public class BoatEntity extends Entity implements Tickable {
         moveEntityPacket.setRuntimeEntityId(geyserId);
         if (session.getPlayerEntity().getVehicle() == this && session.getPlayerEntity().isRidingInFront()) {
             // Minimal glitching when ClientboundMoveVehiclePacket is sent
-            moveEntityPacket.setPosition(position.up(EntityDefinitions.PLAYER.offset() - this.definition.offset()));
+            moveEntityPacket.setPosition(position.up(GeyserEntityDefinitions.PLAYER.offset() - this.definition.offset()));
         } else {
             moveEntityPacket.setPosition(this.position);
         }

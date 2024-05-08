@@ -25,6 +25,7 @@
 
 package org.geysermc.geyser.entity;
 
+
 import org.geysermc.geyser.entity.type.living.monster.raid.RavagerEntity;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataType;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.BooleanEntityMetadata;
@@ -55,8 +56,9 @@ import org.geysermc.geyser.translator.text.MessageTranslator;
 public final class EntityDefinitions {
     public static final GeyserEntityDefinition<AllayEntity> ALLAY;
     public static final GeyserEntityDefinition<AreaEffectCloudEntity> AREA_EFFECT_CLOUD;
+    public static final GeyserEntityDefinition<ArmadilloEntity> ARMADILLO;
     public static final GeyserEntityDefinition<ArmorStandEntity> ARMOR_STAND;
-    public static final GeyserEntityDefinition<TippedArrowEntity> ARROW;
+    public static final GeyserEntityDefinition<ArrowEntity> ARROW;
     public static final GeyserEntityDefinition<AxolotlEntity> AXOLOTL;
     public static final GeyserEntityDefinition<BatEntity> BAT;
     public static final GeyserEntityDefinition<BeeEntity> BEE;
@@ -132,7 +134,7 @@ public final class EntityDefinitions {
     public static final GeyserEntityDefinition<ThrownPotionEntity> POTION;
     public static final GeyserEntityDefinition<PufferFishEntity> PUFFERFISH;
     public static final GeyserEntityDefinition<RabbitEntity> RABBIT;
-    public static final GeyserEntityDefinition<RaidParticipantEntity> RAVAGER;
+    public static final GeyserEntityDefinition<RavagerEntity> RAVAGER;
     public static final GeyserEntityDefinition<AbstractFishEntity> SALMON;
     public static final GeyserEntityDefinition<SheepEntity> SHEEP;
     public static final GeyserEntityDefinition<ShulkerEntity> SHULKER;
@@ -377,7 +379,7 @@ public final class EntityDefinitions {
                     .addTranslator(MetadataType.BYTE, AbstractArrowEntity::setArrowFlags)
                     .addTranslator(null) // "Piercing level"
                     .build();
-            ARROW = EntityDefinition.inherited(ArrowEntity::new, abstractArrowBase)
+            ARROW = GeyserEntityDefinition.inherited(ArrowEntity::new, abstractArrowBase)
                     .type(EntityType.ARROW)
                     .heightAndWidth(0.25f)
                     .addTranslator(MetadataType.INT, ArrowEntity::setPotionEffectColor)
@@ -747,7 +749,7 @@ public final class EntityDefinitions {
                     .offset(1.62f)
                     .addTranslator(MetadataType.BOOLEAN, PillagerEntity::setChargingCrossbow)
                     .build();
-            RAVAGER = EntityDefinition.inherited(RavagerEntity::new, raidParticipantEntityBase)
+            RAVAGER = GeyserEntityDefinition.inherited(RavagerEntity::new, raidParticipantEntityBase)
                     .type(EntityType.RAVAGER)
                     .height(1.9f).width(1.2f)
                     .build();
@@ -770,21 +772,21 @@ public final class EntityDefinitions {
 
         // Extends ageable
         {
-            ARMADILLO = EntityDefinition.inherited(ArmadilloEntity::new, ageableEntityBase)
+            ARMADILLO = GeyserEntityDefinition.inherited(ArmadilloEntity::new, ageableEntityBase)
                     .type(EntityType.ARMADILLO)
                     .height(0.65f).width(0.7f)
                     .properties(new GeyserEntityProperties.Builder()
-                        .addEnum(
-                            "minecraft:armadillo_state",
-                            "unrolled",
-                            "rolled_up",
-                            "rolled_up_peeking",
-                            "rolled_up_relaxing",
-                            "rolled_up_unrolling")
-                        .build())
+                            .addEnum(
+                                    "minecraft:armadillo_state",
+                                    "unrolled",
+                                    "rolled_up",
+                                    "rolled_up_peeking",
+                                    "rolled_up_relaxing",
+                                    "rolled_up_unrolling")
+                            .build())
                     .addTranslator(MetadataType.ARMADILLO_STATE, ArmadilloEntity::setArmadilloState)
                     .build();
-            AXOLOTL = EntityDefinition.inherited(AxolotlEntity::new, ageableEntityBase)
+            AXOLOTL = GeyserEntityDefinition.inherited(AxolotlEntity::new, ageableEntityBase)
                     .type(EntityType.AXOLOTL)
                     .height(0.42f).width(0.7f)
                     .addTranslator(MetadataType.INT, AxolotlEntity::setVariant)
@@ -795,8 +797,8 @@ public final class EntityDefinitions {
                     .type(EntityType.BEE)
                     .heightAndWidth(0.6f)
                     .properties(new GeyserEntityProperties.Builder()
-                        .addBoolean("minecraft:has_nectar")
-                        .build())
+                            .addBoolean("minecraft:has_nectar")
+                            .build())
                     .addTranslator(MetadataType.BYTE, BeeEntity::setBeeFlags)
                     .addTranslator(MetadataType.INT, BeeEntity::setAngerTime)
                     .build();
@@ -963,7 +965,7 @@ public final class EntityDefinitions {
                     .build();
         }
 
-        EntityDefinition<TameableEntity> tameableEntityBase = EntityDefinition.<TameableEntity>inherited(null, ageableEntityBase) // No factory, is abstract
+        GeyserEntityDefinition<TameableEntity> tameableEntityBase = GeyserEntityDefinition.<TameableEntity>inherited(null, ageableEntityBase) // No factory, is abstract
                 .addTranslator(MetadataType.BYTE, TameableEntity::setTameableFlags)
                 .addTranslator(MetadataType.OPTIONAL_UUID, TameableEntity::setOwner)
                 .build();

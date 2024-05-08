@@ -28,11 +28,11 @@ package org.geysermc.geyser.entity.type.living;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.session.GeyserSession;
-import java.util.Map;
+
 import java.util.UUID;
 
 public class GlowSquidEntity extends SquidEntity {
-    public GlowSquidEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public GlowSquidEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 }

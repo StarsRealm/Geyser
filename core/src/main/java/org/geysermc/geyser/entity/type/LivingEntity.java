@@ -86,8 +86,21 @@ public class LivingEntity extends Entity {
      */
     private boolean isMaxFrozenState = false;
 
-    public LivingEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    /**
+     * The base scale entity data, without attributes applied. Used for such cases as baby variants.
+     */
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private float scale;
+    /**
+     * The scale sent through the Java attributes packet
+     */
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private float attributeScale;
+
+    public LivingEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     public void setHelmet(ItemStack stack) {

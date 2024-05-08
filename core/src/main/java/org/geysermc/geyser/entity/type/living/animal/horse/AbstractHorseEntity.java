@@ -46,13 +46,12 @@ import org.geysermc.geyser.util.InteractiveTag;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
 
-import java.util.Set;import java.util.Map;
 import java.util.UUID;
 
 public class AbstractHorseEntity extends AnimalEntity {
 
-    public AbstractHorseEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public AbstractHorseEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
 
         // Specifies the size of the entity's inventory. Required to place slots in the entity.
         dirtyMetadata.put(EntityDataTypes.CONTAINER_SIZE, getContainerBaseSize());

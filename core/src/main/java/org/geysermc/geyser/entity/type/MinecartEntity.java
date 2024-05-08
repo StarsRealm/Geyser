@@ -28,7 +28,7 @@ package org.geysermc.geyser.entity.type;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.entity.EntityDefinitions;
+import org.geysermc.geyser.entity.GeyserEntityDefinitions;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.InteractiveTag;
@@ -36,12 +36,11 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.Boolea
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.IntEntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
 
-import java.util.Map;import java.util.Map;
 import java.util.UUID;
 
 public class MinecartEntity extends Entity {
 
-    public MinecartEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
+    public MinecartEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
         super(session, entityId, geyserId, uuid, definition, position.add(0d, definition.offset(), 0d), motion, yaw, pitch, headYaw);
     }
 
@@ -72,7 +71,7 @@ public class MinecartEntity extends Entity {
 
     @Override
     protected InteractiveTag testInteraction(Hand hand) {
-        if (definition == EntityDefinitions.CHEST_MINECART || definition == EntityDefinitions.HOPPER_MINECART) {
+        if (definition == GeyserEntityDefinitions.CHEST_MINECART || definition == GeyserEntityDefinitions.HOPPER_MINECART) {
             return InteractiveTag.OPEN_CONTAINER;
         } else {
             if (session.isSneaking()) {
@@ -89,7 +88,7 @@ public class MinecartEntity extends Entity {
 
     @Override
     public InteractionResult interact(Hand hand) {
-        if (definition == EntityDefinitions.CHEST_MINECART || definition == EntityDefinitions.HOPPER_MINECART) {
+        if (definition == GeyserEntityDefinitions.CHEST_MINECART || definition == GeyserEntityDefinitions.HOPPER_MINECART) {
             // Opening the UI of this minecart
             return InteractionResult.SUCCESS;
         } else {

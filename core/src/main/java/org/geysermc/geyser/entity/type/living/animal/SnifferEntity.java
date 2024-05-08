@@ -33,22 +33,26 @@ import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.cloudburstmc.protocol.bedrock.packet.LevelEventPacket;
 import org.cloudburstmc.protocol.bedrock.packet.LevelSoundEventPacket;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.entity.EntityDefinitions;
+import org.geysermc.geyser.entity.GeyserEntityDefinitions;
 import org.geysermc.geyser.entity.type.Tickable;
 import org.geysermc.geyser.session.GeyserSession;
-import java.util.Map;
+import org.geysermc.geyser.session.cache.tags.ItemTag;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.Pose;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.SnifferState;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.ObjectEntityMetadata;
+
 import java.util.UUID;
 
 public class SnifferEntity extends AnimalEntity implements Tickable {
-    private static final float DIGGING_HEIGHT = EntityDefinitions.SNIFFER.height() - 0.4f;
+    private static final float DIGGING_HEIGHT = GeyserEntityDefinitions.SNIFFER.height() - 0.4f;
     private static final int DIG_END = 120;
     private static final int DIG_START = DIG_END - 34;
 
     private Pose pose = Pose.STANDING; // Needed to call setDimensions for DIGGING state
     private int digTicks;
 
-    public SnifferEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public SnifferEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     @Override

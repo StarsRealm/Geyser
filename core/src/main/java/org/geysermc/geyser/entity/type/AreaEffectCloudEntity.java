@@ -38,13 +38,12 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.FloatE
 import org.geysermc.mcprotocollib.protocol.data.game.level.particle.EntityEffectParticleData;
 import org.geysermc.mcprotocollib.protocol.data.game.level.particle.Particle;
 
-import java.util.Map;import java.util.Map;
 import java.util.UUID;
 
 public class AreaEffectCloudEntity extends Entity {
 
-    public AreaEffectCloudEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty) {
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public AreaEffectCloudEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     @Override

@@ -28,7 +28,6 @@ package org.geysermc.geyser.entity.type;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.packet.SetEntityMotionPacket;
-import org.geysermc.floodgate.util.DeviceOs;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.type.player.PlayerEntity;
 import org.geysermc.geyser.item.Items;
@@ -38,12 +37,13 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetad
 import org.geysermc.mcprotocollib.protocol.data.game.item.ItemStack;
 import org.geysermc.mcprotocollib.protocol.data.game.item.component.DataComponents;
 
-import java.util.*;
+import java.util.OptionalInt;
+import java.util.UUID;
 
 public class FireworkEntity extends Entity {
 
-    public FireworkEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    public FireworkEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     public void setFireworkItem(EntityMetadata<ItemStack, ?> entityMetadata) {

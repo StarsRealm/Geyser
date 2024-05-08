@@ -43,6 +43,10 @@ import org.geysermc.geyser.entity.type.living.animal.horse.CamelEntity;
 import org.geysermc.geyser.inventory.GeyserItemStack;
 import org.geysermc.geyser.item.Items;
 import org.geysermc.geyser.registry.Registries;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.Effect;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.player.GameMode;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -49,7 +49,7 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.player.Hand;
 import org.geysermc.mcprotocollib.protocol.data.game.item.ItemStack;
 
 import java.util.Collections;
-import java.util.Map;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -65,8 +65,10 @@ public class WolfEntity extends TameableEntity {
 
     private byte collarColor = 14; // Red - default
 
-    public WolfEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw, Map<String, Integer> intEntityProperty, Map<String, Float> floatEntityProperty){
-        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+    private boolean isCurseOfBinding = false;
+
+    public WolfEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
+        super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
     }
 
     @Override

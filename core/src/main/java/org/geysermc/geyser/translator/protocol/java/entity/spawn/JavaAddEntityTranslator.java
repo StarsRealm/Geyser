@@ -79,7 +79,7 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
                 // Server is sending a fake version of the current player
                 entity = new PlayerEntity(session, packet.getEntityId(), session.getEntityCache().getNextEntityId().incrementAndGet(),
                         session.getPlayerEntity().getUuid(), position, motion, yaw, pitch, headYaw, session.getPlayerEntity().getUsername(),
-                        session.getPlayerEntity().getTexturesProperty(), intEntityProperty, floatEntityProperty);
+                        session.getPlayerEntity().getTexturesProperty());
             } else {
                 entity = session.getEntityCache().getPlayerEntity(packet.getUuid());
                 if (entity == null) {
@@ -94,6 +94,14 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
                 entity.setHeadYaw(headYaw);
                 entity.setMotion(motion);
             }
+
+            intEntityProperty.forEach((name,value) -> {
+                entity.getPropertyManager().add(name, value);
+            });
+            floatEntityProperty.forEach((name,value) -> {
+                entity.getPropertyManager().add(name, value);
+            });
+
             session.getEntityCache().cacheEntity(entity);
 
             entity.sendPlayer();
@@ -108,10 +116,10 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
         } else if (packet.getType() == EntityType.ITEM_FRAME || packet.getType() == EntityType.GLOW_ITEM_FRAME) {
             // Item frames need the hanging direction
             entity = new ItemFrameEntity(session, packet.getEntityId(), session.getEntityCache().getNextEntityId().incrementAndGet(), packet.getUuid(),
-                    definition, position, motion, yaw, pitch, headYaw, (Direction) packet.getData(), intEntityProperty, floatEntityProperty);
+                    definition, position, motion, yaw, pitch, headYaw, (Direction) packet.getData());
         } else if (packet.getType() == EntityType.PAINTING) {
             entity = new PaintingEntity(session, packet.getEntityId(), session.getEntityCache().getNextEntityId().incrementAndGet(), packet.getUuid(),
-                    definition, position, motion, yaw, pitch, headYaw, (Direction) packet.getData(), intEntityProperty, floatEntityProperty);
+                    definition, position, motion, yaw, pitch, headYaw, (Direction) packet.getData());
         } else if (packet.getType() == EntityType.FISHING_BOBBER) {
             // Fishing bobbers need the owner for the line
             int ownerEntityId = ((ProjectileData) packet.getData()).getOwnerId();
@@ -119,13 +127,13 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
             // Java clients only spawn fishing hooks with a player as its owner
             if (owner instanceof PlayerEntity) {
                 entity = new FishingHookEntity(session, packet.getEntityId(), session.getEntityCache().getNextEntityId().incrementAndGet(), packet.getUuid(),
-                        position, motion, yaw, pitch, headYaw, (PlayerEntity) owner, intEntityProperty, floatEntityProperty);
+                        position, motion, yaw, pitch, headYaw, (PlayerEntity) owner);
             } else {
                 return;
             }
         } else {
             entity = definition.factory().create(session, packet.getEntityId(), session.getEntityCache().getNextEntityId().incrementAndGet(),
-                    packet.getUuid(), definition, position, motion, yaw, pitch, headYaw, intEntityProperty, floatEntityProperty);
+                    packet.getUuid(), definition, position, motion, yaw, pitch, headYaw);
         }
 
         if (packet.getType() == EntityType.WARDEN) {
@@ -134,6 +142,13 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
                 entity.setPose(Pose.EMERGING);
             }
         }
+
+        intEntityProperty.forEach( (name,value) -> {
+            entity.getPropertyManager().add(name, value);
+        });
+        floatEntityProperty.forEach( (name,value) -> {
+            entity.getPropertyManager().add(name, value);
+        });
 
         session.getEntityCache().spawnEntity(entity);
     }
