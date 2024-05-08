@@ -31,7 +31,7 @@ import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.packet.AnimatePacket;
 import org.cloudburstmc.protocol.bedrock.packet.MoveEntityAbsolutePacket;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.entity.GeyserEntityDefinitions;
+import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.InteractiveTag;
@@ -89,7 +89,7 @@ public class BoatEntity extends Entity implements Tickable {
         moveEntityPacket.setRuntimeEntityId(geyserId);
         if (session.getPlayerEntity().getVehicle() == this && session.getPlayerEntity().isRidingInFront()) {
             // Minimal glitching when ClientboundMoveVehiclePacket is sent
-            moveEntityPacket.setPosition(position.up(GeyserEntityDefinitions.PLAYER.offset() - this.definition.offset()));
+            moveEntityPacket.setPosition(position.up(EntityDefinitions.PLAYER.offset() - this.definition.offset()));
         } else {
             moveEntityPacket.setPosition(this.position);
         }

@@ -33,7 +33,7 @@ import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.cloudburstmc.protocol.bedrock.packet.LevelEventPacket;
 import org.cloudburstmc.protocol.bedrock.packet.LevelSoundEventPacket;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.entity.GeyserEntityDefinitions;
+import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.entity.type.Tickable;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.session.cache.tags.ItemTag;
@@ -44,7 +44,7 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.Object
 import java.util.UUID;
 
 public class SnifferEntity extends AnimalEntity implements Tickable {
-    private static final float DIGGING_HEIGHT = GeyserEntityDefinitions.SNIFFER.height() - 0.4f;
+    private static final float DIGGING_HEIGHT = EntityDefinitions.SNIFFER.height() - 0.4f;
     private static final int DIG_END = 120;
     private static final int DIG_START = DIG_END - 34;
 

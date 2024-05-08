@@ -112,7 +112,6 @@ import org.geysermc.geyser.api.network.AuthType;
 import org.geysermc.geyser.api.network.RemoteServer;
 import org.geysermc.geyser.api.util.PlatformType;
 import org.geysermc.geyser.entity.GeyserEntityIdentifier;
-import org.geysermc.geyser.entity.property.EntityProperty;
 import org.geysermc.geyser.impl.camera.CameraDefinitions;
 import org.geysermc.geyser.impl.camera.GeyserCameraData;
 import org.geysermc.geyser.command.GeyserCommandSource;
@@ -658,11 +657,6 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         startGame();
         sentSpawnPacket = true;
         syncEntityProperties();
-
-        // Registry Entity Properties
-        for(SyncEntityPropertyPacket pk : EntityProperty.getPacketCache()) {
-            this.sendUpstreamPacket(pk);
-        }
 
         // Set the hardcoded shield ID to the ID we just defined in StartGamePacket
         // upstream.getSession().getHardcodedBlockingId().set(this.itemMappings.getStoredItems().shield().getBedrockId());
@@ -1608,7 +1602,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         startGamePacket.setInventoriesServerAuthoritative(true);
         startGamePacket.setServerEngine(""); // Do we want to fill this in?
 
-        startGamePacket.setPlayerPropertyData(EntityProperty.getPlayerPropertyCache());
+        startGamePacket.setPlayerPropertyData(EntityDefinitions.PLAYER.registeredProperties().toNbtMap("minecraft:player"));
         startGamePacket.setWorldTemplateId(UUID.randomUUID());
 
         startGamePacket.setChatRestrictionLevel(ChatRestrictionLevel.NONE);

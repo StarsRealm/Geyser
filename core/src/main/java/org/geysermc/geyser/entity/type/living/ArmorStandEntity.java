@@ -32,8 +32,8 @@ import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataType;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.cloudburstmc.protocol.bedrock.data.inventory.ItemData;
+import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.entity.GeyserEntityDefinitions;
 import org.geysermc.geyser.entity.type.LivingEntity;
 import org.geysermc.geyser.item.Items;
 import org.geysermc.geyser.session.GeyserSession;
@@ -337,7 +337,7 @@ public class ArmorStandEntity extends LivingEntity {
                 // Create the second entity. It doesn't need to worry about the items, but it does need to worry about
                 // the metadata as it will hold the name tag.
                 secondEntity = new ArmorStandEntity(session, 0, session.getEntityCache().getNextEntityId().incrementAndGet(), null,
-                        GeyserEntityDefinitions.ARMOR_STAND, position, motion, getYaw(), getPitch(), getHeadYaw());
+                        EntityDefinitions.ARMOR_STAND, position, motion, getYaw(), getPitch(), getHeadYaw());
                 secondEntity.primaryEntity = false;
             }
             // Copy metadata

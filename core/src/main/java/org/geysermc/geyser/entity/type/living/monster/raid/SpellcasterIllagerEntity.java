@@ -29,7 +29,7 @@ import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.entity.GeyserEntityDefinitions;
+import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.ByteEntityMetadata;
 
@@ -43,7 +43,7 @@ public class SpellcasterIllagerEntity extends AbstractIllagerEntity {
     public SpellcasterIllagerEntity(GeyserSession session, int entityId, long geyserId, UUID uuid, GeyserEntityDefinition<?> definition, Vector3f position, Vector3f motion, float yaw, float pitch, float headYaw) {
         super(session, entityId, geyserId, uuid, definition, position, motion, yaw, pitch, headYaw);
         // OptionalPack usage
-        setFlag(EntityFlag.BRIBED, this.definition == GeyserEntityDefinitions.ILLUSIONER);
+        setFlag(EntityFlag.BRIBED, this.definition == EntityDefinitions.ILLUSIONER);
     }
 
     public void setSpellType(ByteEntityMetadata entityMetadata) {

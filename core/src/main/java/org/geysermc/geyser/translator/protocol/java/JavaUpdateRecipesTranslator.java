@@ -213,8 +213,6 @@ public class JavaUpdateRecipesTranslator extends PacketTranslator<ClientboundUpd
                     // We can send the equivalent Bedrock MultiRecipe! :)
                     craftingDataPacket.getCraftingData().add(MultiRecipeData.of(UUID.fromString("685a742a-c42e-4a4e-88ea-5eb83fc98e5b"), netId++));
                 }
-                case UNKNOWN -> {
-                }
                 default -> {
                     List<RecipeData> craftingData = recipeTypes.get(recipe.getType());
                     if (craftingData != null) {

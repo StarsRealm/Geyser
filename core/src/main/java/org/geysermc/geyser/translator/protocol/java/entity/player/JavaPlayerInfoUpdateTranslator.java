@@ -81,9 +81,7 @@ public class JavaPlayerInfoUpdateTranslator extends PacketTranslator<Clientbound
                             Vector3f.ZERO,
                             0, 0, 0,
                             name,
-                            texturesProperty,
-                            new HashMap<>(),
-                            new HashMap<>()
+                            texturesProperty
                     );
 
                     session.getEntityCache().addPlayerEntity(playerEntity);

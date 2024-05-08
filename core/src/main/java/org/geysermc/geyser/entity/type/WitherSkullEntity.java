@@ -28,7 +28,7 @@ package org.geysermc.geyser.entity.type;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.BooleanEntityMetadata;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.entity.GeyserEntityDefinitions;
+import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.session.GeyserSession;
 
 import java.util.UUID;
@@ -47,7 +47,7 @@ public class WitherSkullEntity extends FireballEntity {
         if (newDangerous != isCharged) {
             isCharged = newDangerous;
             // Is an entirely new entity in Bedrock but just a metadata type in Java
-            definition = isCharged ? GeyserEntityDefinitions.WITHER_SKULL_DANGEROUS : GeyserEntityDefinitions.WITHER_SKULL;
+            definition = isCharged ? EntityDefinitions.WITHER_SKULL_DANGEROUS : EntityDefinitions.WITHER_SKULL;
             despawnEntity();
             spawnEntity();
         }

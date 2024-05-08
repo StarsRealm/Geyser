@@ -28,7 +28,7 @@ package org.geysermc.geyser.entity.type;
 import org.cloudburstmc.math.vector.Vector3f;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
-import org.geysermc.geyser.entity.GeyserEntityDefinitions;
+import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.util.InteractionResult;
 import org.geysermc.geyser.util.InteractiveTag;
@@ -71,7 +71,7 @@ public class MinecartEntity extends Entity {
 
     @Override
     protected InteractiveTag testInteraction(Hand hand) {
-        if (definition == GeyserEntityDefinitions.CHEST_MINECART || definition == GeyserEntityDefinitions.HOPPER_MINECART) {
+        if (definition == EntityDefinitions.CHEST_MINECART || definition == EntityDefinitions.HOPPER_MINECART) {
             return InteractiveTag.OPEN_CONTAINER;
         } else {
             if (session.isSneaking()) {
@@ -88,7 +88,7 @@ public class MinecartEntity extends Entity {
 
     @Override
     public InteractionResult interact(Hand hand) {
-        if (definition == GeyserEntityDefinitions.CHEST_MINECART || definition == GeyserEntityDefinitions.HOPPER_MINECART) {
+        if (definition == EntityDefinitions.CHEST_MINECART || definition == EntityDefinitions.HOPPER_MINECART) {
             // Opening the UI of this minecart
             return InteractionResult.SUCCESS;
         } else {
