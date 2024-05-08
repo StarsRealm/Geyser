@@ -27,8 +27,10 @@ package org.geysermc.geyser.registry.loader;
 
 import org.geysermc.geyser.api.entity.EntityDefinition;
 import org.geysermc.geyser.api.entity.EntityIdentifier;
+import org.geysermc.geyser.api.entity.EntityProperties;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.GeyserEntityIdentifier;
+import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
 import org.geysermc.geyser.entity.type.Entity;
 import org.geysermc.geyser.api.bedrock.camera.CameraFade;
 import org.geysermc.geyser.api.bedrock.camera.CameraPosition;
@@ -96,6 +98,7 @@ public class ProviderRegistryLoader implements RegistryLoader<Map<Class<?>, Prov
         // entities
         providers.put(EntityIdentifier.Builder.class, args -> new GeyserEntityIdentifier.Builder());
         providers.put(EntityDefinition.Builder.class, args -> new GeyserEntityDefinition.Builder<>(Entity::new, true));
+        providers.put(EntityProperties.Builder.class, args -> new GeyserEntityProperties.Builder());
 
         return providers;
     }

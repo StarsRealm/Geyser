@@ -34,6 +34,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtMapBuilder;
 import org.cloudburstmc.nbt.NbtType;
+import org.geysermc.geyser.api.entity.EntityProperties;
 import org.geysermc.geyser.entity.properties.type.BooleanProperty;
 import org.geysermc.geyser.entity.properties.type.EnumProperty;
 import org.geysermc.geyser.entity.properties.type.FloatProperty;
@@ -46,7 +47,7 @@ import java.util.List;
 
 @EqualsAndHashCode
 @ToString
-public class GeyserEntityProperties {
+public class GeyserEntityProperties implements EntityProperties {
     private final ObjectArrayList<PropertyType> properties;
     private final Object2IntMap<String> propertyIndices;
 
@@ -76,7 +77,7 @@ public class GeyserEntityProperties {
         return propertyIndices.getOrDefault(name, -1);
     }
 
-    public static class Builder {
+    public static class Builder implements EntityProperties.Builder {
         private final ObjectArrayList<PropertyType> properties = new ObjectArrayList<>();
         private final Object2IntMap<String> propertyIndices = new Object2IntOpenHashMap<>();
 

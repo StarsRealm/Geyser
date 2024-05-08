@@ -64,6 +64,13 @@ public interface EntityDefinition {
      */
     float offset();
 
+    /**
+     * Bedrock Entity Property function
+     *
+     * @return the entity's property
+     */
+    EntityProperties registeredProperties();
+
     static Builder builder() {
         return GeyserApi.api().provider(Builder.class);
     }
@@ -110,6 +117,14 @@ public interface EntityDefinition {
          */
         Builder networkId(int networkId);
 
+
+        /**
+         * Set Bedrock Entity Property function
+         *
+         * @param entityProperties the entity's property
+         * @return the builder
+         */
+        Builder properties(@NonNull EntityProperties entityProperties);
 
         /**
          * Builds the entity definition.

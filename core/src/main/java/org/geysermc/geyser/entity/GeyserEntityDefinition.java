@@ -25,6 +25,7 @@
 
 package org.geysermc.geyser.entity;
 
+import org.geysermc.geyser.api.entity.EntityProperties;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataType;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
@@ -196,8 +197,8 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
             return this;
         }
 
-        public Builder<T> properties(GeyserEntityProperties registeredProperties) {
-            this.registeredProperties = registeredProperties;
+        public Builder<T> properties(EntityProperties registeredProperties) {
+            this.registeredProperties = (GeyserEntityProperties) registeredProperties;
             return this;
         }
 
