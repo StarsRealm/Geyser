@@ -32,7 +32,6 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtType;
 import org.geysermc.geyser.GeyserImpl;
@@ -56,9 +55,11 @@ import java.util.function.BiConsumer;
  * @param <T> the entity type this definition represents
  */
 public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory, EntityType entityType, EntityIdentifier entityIdentifier,
-                                                       float width, float height, float offset, GeyserEntityProperties registeredProperties, List<EntityMetadataTranslator<? super T, ?, ?>> translators, boolean custom) implements EntityDefinition {
+                                                       float width, float height, float offset, EntityProperties.Builder registeredProperties, List<EntityMetadataTranslator<? super T, ?, ?>> translators, boolean custom) implements EntityDefinition {
 
     public static Map<Integer, String> idToName = new HashMap<>();
+
+    public static Map<GeyserEntityDefinition<? extends Entity>, GeyserEntityProperties> ENTITY_PROPERTIES = new HashMap<>();
 
     public static <T extends Entity> Builder<T> inherited(EntityFactory<T> factory, GeyserEntityDefinition<? super T> parent) {
         return new Builder<>(factory, parent.entityType, parent.entityIdentifier, parent.width, parent.height, parent.offset, new ObjectArrayList<>(parent.translators));
@@ -94,6 +95,15 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
         return Registries.ENTITY_DEFINITIONS.get().containsValue(this);
     }
 
+    public GeyserEntityProperties getProperties() {
+        if(ENTITY_PROPERTIES.containsKey(this)) {
+            return ENTITY_PROPERTIES.get(this);
+        } else {
+            ENTITY_PROPERTIES.put(this, (GeyserEntityProperties) registeredProperties.build());
+        }
+        return ENTITY_PROPERTIES.get(this);
+    }
+
     public Builder<T> toBuilder() {
         return new Builder<>(this);
     }
@@ -107,11 +117,10 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
         private float width;
         private float height;
         private float offset = 0.00001f;
-        private GeyserEntityProperties registeredProperties;
+        private EntityProperties.Builder registeredProperties = EntityProperties.builder();
         private final List<EntityMetadataTranslator<? super T, ?, ?>> translators;
         private final boolean custom;
         private int networkdId = 0;
-        private String runtimeIdentifier = "";
 
         private Builder(GeyserEntityDefinition<T> definition) {
             this.factory = definition.factory;
@@ -141,7 +150,6 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
             this.width = width;
             this.height = height;
             this.offset = offset;
-            this.registeredProperties = registeredProperties;
             this.translators = translators;
             this.custom = false;
         }
@@ -162,7 +170,6 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
             if (entityIdentifier.isEmpty()) {
                 this.identifier = new GeyserEntityIdentifier(NbtMap.builder()
                         .putString("id", identifier)
-                        .putString("runtime_identifier", runtimeIdentifier)
                         .putBoolean("hasspawnegg", false)
                         .putBoolean("summonable", false)
                         .build());
@@ -197,8 +204,8 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
             return this;
         }
 
-        public Builder<T> properties(EntityProperties registeredProperties) {
-            this.registeredProperties = (GeyserEntityProperties) registeredProperties;
+        public Builder<T> properties(EntityProperties.Builder registeredProperties) {
+            this.registeredProperties = registeredProperties;
             return this;
         }
 

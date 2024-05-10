@@ -39,6 +39,7 @@ import org.cloudburstmc.protocol.bedrock.packet.*;
 import org.geysermc.geyser.api.entity.type.GeyserEntity;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.GeyserDirtyMetadata;
+import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
 import org.geysermc.geyser.entity.properties.GeyserEntityPropertyManager;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.text.MessageTranslator;
@@ -134,7 +135,7 @@ public class Entity implements GeyserEntity {
 
         this.valid = false;
 
-        this.propertyManager = new GeyserEntityPropertyManager(definition.registeredProperties());
+        this.propertyManager = new GeyserEntityPropertyManager(definition.getProperties());
 
         setPosition(position);
         setAirSupply(getMaxAir());

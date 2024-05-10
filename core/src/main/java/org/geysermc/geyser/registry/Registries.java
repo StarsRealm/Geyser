@@ -25,6 +25,7 @@
 
 package org.geysermc.geyser.registry;
 
+import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 import org.geysermc.mcprotocollib.protocol.data.game.level.block.BlockEntityType;
 import org.geysermc.mcprotocollib.protocol.data.game.level.event.LevelEvent;
@@ -235,5 +236,11 @@ public final class Registries {
         };
 
         GeyserImpl.getInstance().eventBus().fire(defineEntitiesEvent);
+
+        definitions.forEach(geyserDefinition -> {
+            GeyserEntityProperties geyserEntityProperties = ((GeyserEntityDefinition<?>) geyserDefinition).getProperties();
+
+            Registries.BEDROCK_ENTITY_PROPERTIES.get().add(geyserEntityProperties.toNbtMap(((GeyserEntityDefinition<?>) geyserDefinition).identifier()));
+        });
     }
 }

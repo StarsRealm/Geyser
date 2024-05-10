@@ -26,6 +26,7 @@
 package org.geysermc.geyser.api.entity;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.geysermc.geyser.api.GeyserApi;
 
 /**
@@ -69,7 +70,7 @@ public interface EntityDefinition {
      *
      * @return the entity's property
      */
-    EntityProperties registeredProperties();
+    EntityProperties.Builder registeredProperties();
 
     static Builder builder() {
         return GeyserApi.api().provider(Builder.class);
@@ -124,7 +125,7 @@ public interface EntityDefinition {
          * @param entityProperties the entity's property
          * @return the builder
          */
-        Builder properties(@NonNull EntityProperties entityProperties);
+        Builder properties(EntityProperties.@Nullable Builder entityProperties);
 
         /**
          * Builds the entity definition.

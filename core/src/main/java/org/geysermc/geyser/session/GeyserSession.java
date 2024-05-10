@@ -28,6 +28,8 @@ package org.geysermc.geyser.session;
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.auth.exception.request.RequestException;
 import com.github.steveice10.mc.auth.service.MsaAuthenticationService;
+import org.geysermc.geyser.entity.GeyserEntityDefinition;
+import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
 import org.geysermc.mcprotocollib.protocol.MinecraftConstants;
 import org.geysermc.mcprotocollib.protocol.MinecraftProtocol;
 import org.geysermc.mcprotocollib.protocol.data.ProtocolState;
@@ -1602,7 +1604,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         startGamePacket.setInventoriesServerAuthoritative(true);
         startGamePacket.setServerEngine(""); // Do we want to fill this in?
 
-        startGamePacket.setPlayerPropertyData(EntityDefinitions.PLAYER.registeredProperties().toNbtMap("minecraft:player"));
+        startGamePacket.setPlayerPropertyData(((GeyserEntityProperties) (EntityDefinitions.PLAYER.registeredProperties().build())).toNbtMap("minecraft:player"));
         startGamePacket.setWorldTemplateId(UUID.randomUUID());
 
         startGamePacket.setChatRestrictionLevel(ChatRestrictionLevel.NONE);
