@@ -69,9 +69,6 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
         float pitch = packet.getPitch();
         float headYaw = packet.getHeadYaw();
 
-        Map<String, Integer> intEntityProperty = packet.getIntEntityProperty();
-        Map<String, Float> floatEntityProperty = packet.getFloatEntityProperty();
-
         if (packet.getType() == EntityType.PLAYER) {
 
             PlayerEntity entity;
@@ -94,13 +91,6 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
                 entity.setHeadYaw(headYaw);
                 entity.setMotion(motion);
             }
-
-            intEntityProperty.forEach((name,value) -> {
-                entity.getPropertyManager().add(name, value);
-            });
-            floatEntityProperty.forEach((name,value) -> {
-                entity.getPropertyManager().add(name, value);
-            });
 
             session.getEntityCache().cacheEntity(entity);
 
@@ -142,13 +132,6 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
                 entity.setPose(Pose.EMERGING);
             }
         }
-
-        intEntityProperty.forEach( (name,value) -> {
-            entity.getPropertyManager().add(name, value);
-        });
-        floatEntityProperty.forEach( (name,value) -> {
-            entity.getPropertyManager().add(name, value);
-        });
 
         session.getEntityCache().spawnEntity(entity);
     }

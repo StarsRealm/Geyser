@@ -44,6 +44,7 @@ import org.geysermc.erosion.packet.geyserbound.GeyserboundPacket;
 import org.geysermc.floodgate.pluginmessage.PluginMessageChannels;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.GeyserLogger;
+import org.geysermc.geyser.entity.properties.GeyserEntityPropertyManager;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
@@ -54,6 +55,7 @@ import org.geysermc.mcprotocollib.protocol.packet.common.serverbound.Serverbound
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Optional;
 
 @Translator(packet = ClientboundCustomPayloadPacket.class)
@@ -64,68 +66,99 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
     public void translate(GeyserSession session, ClientboundCustomPayloadPacket packet) {
         String channel = packet.getChannel();
 
-        if(channel.equals(PluginMessageChannels.FABRIC_SYNC_REQUEST) && !session.getFabricSync()) {
-            byte[] trueByteArray = new byte[1];
-            trueByteArray[0] = 1;
-            session.sendDownstreamPacket(new ServerboundCustomPayloadPacket(PluginMessageChannels.FABRIC_SYNC_COMPLETE, trueByteArray));
-            session.setFabricSync(true);
-        }
-        else if(channel.equals(PluginMessageChannels.ENTITY_PROPERTY)) {
-            MinecraftCodecHelper helper =  session.getProtocol().createHelper();
-            ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
-
-            boolean flag = buffer.readBoolean();
-
-            int entityId = helper.readVarInt(buffer);
-
-
-            String stringValue = helper.readString(buffer);
-
-            if(flag) {
-                session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager().add(stringValue, helper.readVarInt(buffer));
-            } else {
-                session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager().add(stringValue, buffer.readFloat());
+        switch (channel) {
+            case PluginMessageChannels.ENTITY_PROPERTY -> {
+                MinecraftCodecHelper helper = session.getProtocol().createHelper();
+                ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+                int entityId = helper.readVarInt(buffer);
+                GeyserEntityPropertyManager propertyManager = session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager();
+                Map<String, Integer> integerMap = helper.readStringIntMap(buffer);
+                Map<String, Float> floatMap = helper.readStringFloatMap(buffer);
+                integerMap.forEach(propertyManager::add);
+                floatMap.forEach(propertyManager::add);
+                int size = helper.readVarInt(buffer);
+                for (int i = 0; i < size; i++) {
+                    String name = helper.readString(buffer);
+                    boolean value = buffer.readBoolean();
+                    propertyManager.add(name, value);
+                }
+                size = helper.readVarInt(buffer);
+                for (int i = 0; i < size; i++) {
+                    String name = helper.readString(buffer);
+                    String value = helper.readString(buffer);
+                    propertyManager.add(name, value);
+                }
             }
-        }
-        else if(channel.equals(PluginMessageChannels.BEDROCK_PARTICLE)) {
-            MinecraftCodecHelper helper =  session.getProtocol().createHelper();
-            ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
-
-            SpawnParticleEffectPacket spawnParticleEffectPacket = new SpawnParticleEffectPacket();
-            spawnParticleEffectPacket.setIdentifier(helper.readString(buffer));
-            spawnParticleEffectPacket.setPosition(Vector3f.from(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
-            spawnParticleEffectPacket.setUniqueEntityId(session.getEntityCache().getEntityByJavaId(helper.readVarInt(buffer)).getGeyserId());
-            spawnParticleEffectPacket.setDimensionId(DimensionUtils.javaToBedrock(session.getDimension()));
-
-            if(buffer.readBoolean()) {
-                spawnParticleEffectPacket.setMolangVariablesJson(Optional.of(helper.readString(buffer)));
+            case PluginMessageChannels.BOOLEAN_PROPERTY -> {
+                MinecraftCodecHelper helper = session.getProtocol().createHelper();
+                ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+                int entityId = helper.readVarInt(buffer);
+                String name = helper.readString(buffer);
+                boolean value = buffer.readBoolean();
+                session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager().add(name, value);
             }
+            case PluginMessageChannels.INTEGER_PROPERTY -> {
+                MinecraftCodecHelper helper = session.getProtocol().createHelper();
+                ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+                int entityId = helper.readVarInt(buffer);
+                String name = helper.readString(buffer);
+                int value = helper.readVarInt(buffer);
+                session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager().add(name, value);
+            }
+            case PluginMessageChannels.FLOAT_PROPERTY -> {
+                MinecraftCodecHelper helper = session.getProtocol().createHelper();
+                ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+                int entityId = helper.readVarInt(buffer);
+                String name = helper.readString(buffer);
+                float value = buffer.readFloat();
+                session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager().add(name, value);
+            }
+            case PluginMessageChannels.STRING_PROPERTY -> {
+                MinecraftCodecHelper helper = session.getProtocol().createHelper();
+                ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+                int entityId = helper.readVarInt(buffer);
+                String name = helper.readString(buffer);
+                String value = helper.readString(buffer);
+                session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager().add(name, value);
+            }
+            case PluginMessageChannels.BEDROCK_PARTICLE -> {
+                MinecraftCodecHelper helper = session.getProtocol().createHelper();
+                ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
 
-            session.sendUpstreamPacket(spawnParticleEffectPacket);
-        }
-        else if(channel.equals(PluginMessageChannels.ENTITY_ANIMATION)) {
-            MinecraftCodecHelper helper =  session.getProtocol().createHelper();
-            ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+                SpawnParticleEffectPacket spawnParticleEffectPacket = new SpawnParticleEffectPacket();
+                spawnParticleEffectPacket.setIdentifier(helper.readString(buffer));
+                spawnParticleEffectPacket.setPosition(Vector3f.from(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
+                spawnParticleEffectPacket.setUniqueEntityId(session.getEntityCache().getEntityByJavaId(helper.readVarInt(buffer)).getGeyserId());
+                spawnParticleEffectPacket.setDimensionId(DimensionUtils.javaToBedrock(session.getDimension()));
 
-            AnimateEntityPacket animateEntityPacket = new AnimateEntityPacket();
-            animateEntityPacket.setAnimation(helper.readString(buffer));
-            animateEntityPacket.setNextState(helper.readString(buffer));
-            animateEntityPacket.setStopExpression(helper.readString(buffer));
-            animateEntityPacket.setStopExpressionVersion(helper.readVarInt(buffer));
-            animateEntityPacket.setController(helper.readString(buffer));
-            animateEntityPacket.setBlendOutTime(buffer.readFloat());
-            animateEntityPacket.getRuntimeEntityIds().add(session.getEntityCache().getEntityByJavaId(helper.readVarInt(buffer)).getGeyserId());
+                if (buffer.readBoolean()) {
+                    spawnParticleEffectPacket.setMolangVariablesJson(Optional.of(helper.readString(buffer)));
+                }
 
-            session.sendUpstreamPacket(animateEntityPacket);
-        }
-        else if (channel.equals(Constants.PLUGIN_MESSAGE)) {
-            ByteBuf buf = Unpooled.wrappedBuffer(packet.getData());
-            ErosionPacket<?> erosionPacket = Packets.decode(buf);
-            ((GeyserboundPacket) erosionPacket).handle(session.getErosionHandler());
-            return;
-        }
-        else if (channel.equals(PluginMessageChannels.FORM)) {
-            session.ensureInEventLoop(() -> {
+                session.sendUpstreamPacket(spawnParticleEffectPacket);
+            }
+            case PluginMessageChannels.ENTITY_ANIMATION -> {
+                MinecraftCodecHelper helper = session.getProtocol().createHelper();
+                ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+
+                AnimateEntityPacket animateEntityPacket = new AnimateEntityPacket();
+                animateEntityPacket.setAnimation(helper.readString(buffer));
+                animateEntityPacket.setNextState(helper.readString(buffer));
+                animateEntityPacket.setStopExpression(helper.readString(buffer));
+                animateEntityPacket.setStopExpressionVersion(helper.readVarInt(buffer));
+                animateEntityPacket.setController(helper.readString(buffer));
+                animateEntityPacket.setBlendOutTime(buffer.readFloat());
+                animateEntityPacket.getRuntimeEntityIds().add(session.getEntityCache().getEntityByJavaId(helper.readVarInt(buffer)).getGeyserId());
+
+                session.sendUpstreamPacket(animateEntityPacket);
+            }
+            case Constants.PLUGIN_MESSAGE -> {
+                ByteBuf buf = Unpooled.wrappedBuffer(packet.getData());
+                ErosionPacket<?> erosionPacket = Packets.decode(buf);
+                ((GeyserboundPacket) erosionPacket).handle(session.getErosionHandler());
+                return;
+            }
+            case PluginMessageChannels.FORM -> session.ensureInEventLoop(() -> {
                 byte[] data = packet.getData();
 
                 // receive: first byte is form type, second and third are the id, remaining is the form data
@@ -157,9 +190,7 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
                 });
                 session.sendForm(form);
             });
-
-        } else if (channel.equals(PluginMessageChannels.TRANSFER)) {
-            session.ensureInEventLoop(() -> {
+            case PluginMessageChannels.TRANSFER -> session.ensureInEventLoop(() -> {
                 byte[] data = packet.getData();
 
                 // port (4 bytes), address (remaining data)
@@ -179,9 +210,7 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
                 transferPacket.setPort(port);
                 session.sendUpstreamPacket(transferPacket);
             });
-
-        } else if (channel.equals(PluginMessageChannels.PACKET)) {
-            session.ensureInEventLoop(() -> {
+            case PluginMessageChannels.PACKET -> session.ensureInEventLoop(() -> {
                 logger.debug("A packet has been sent using the Floodgate api");
                 byte[] data = packet.getData();
 

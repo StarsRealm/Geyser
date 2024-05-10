@@ -33,12 +33,14 @@ public final class PluginMessageChannels {
     public static final String TRANSFER = "floodgate:transfer";
     public static final String PACKET = "floodgate:packet";
 
-    public static final String ENTITY_PROPERTY = "starsrealm:entity_property";
+    public static final String ENTITY_PROPERTY = "starsrealm:entity_properties";
+    public static final String BOOLEAN_PROPERTY = "starsrealm:boolean_properties";
+    public static final String INTEGER_PROPERTY = "starsrealm:integer_properties";
+    public static final String FLOAT_PROPERTY = "starsrealm:float_properties";
+    public static final String STRING_PROPERTY = "starsrealm:string_properties";
+
     public static final String ENTITY_ANIMATION = "starsrealm:entity_animation";
     public static final String BEDROCK_PARTICLE = "starsrealm:bedrock_particle";
-
-    public static final String FABRIC_SYNC_REQUEST = "fabric:registry/sync/direct";
-    public static final String FABRIC_SYNC_COMPLETE = "fabric:registry/sync/complete";
 
     private static final byte[] FLOODGATE_REGISTER_DATA =
             String.join("\0", SKIN, FORM, TRANSFER, PACKET)
