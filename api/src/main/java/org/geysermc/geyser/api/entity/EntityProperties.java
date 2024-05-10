@@ -26,10 +26,16 @@
 package org.geysermc.geyser.api.entity;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.geysermc.geyser.api.GeyserApi;
 
 import java.util.List;
 
 public interface EntityProperties {
+
+    @NonNull
+    static Builder builder() {
+        return GeyserApi.api().provider(Builder.class);
+    }
 
     interface Builder {
 
