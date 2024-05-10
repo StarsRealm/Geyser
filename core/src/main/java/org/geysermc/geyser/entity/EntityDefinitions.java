@@ -783,7 +783,7 @@ public final class EntityDefinitions {
                                     "rolled_up_peeking",
                                     "rolled_up_relaxing",
                                     "rolled_up_unrolling")
-                            .build())
+                            )
                     .addTranslator(MetadataType.ARMADILLO_STATE, ArmadilloEntity::setArmadilloState)
                     .build();
             AXOLOTL = GeyserEntityDefinition.inherited(AxolotlEntity::new, ageableEntityBase)
@@ -798,7 +798,7 @@ public final class EntityDefinitions {
                     .heightAndWidth(0.6f)
                     .properties(new GeyserEntityProperties.Builder()
                             .addBoolean("minecraft:has_nectar")
-                            .build())
+                            )
                     .addTranslator(MetadataType.BYTE, BeeEntity::setBeeFlags)
                     .addTranslator(MetadataType.INT, BeeEntity::setAngerTime)
                     .build();
