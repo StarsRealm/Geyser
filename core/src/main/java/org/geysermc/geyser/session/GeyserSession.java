@@ -1120,9 +1120,11 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
         if (!closed) {
             loggedIn = false;
 
-            // Fire SessionDisconnectEvent
             SessionDisconnectEvent disconnectEvent = new SessionDisconnectEvent(this, reason);
-            geyser.getEventBus().fire(disconnectEvent);
+            if (authData != null && clientData != null) { // can occur if player disconnects before Bedrock auth finishes
+                // Fire SessionDisconnectEvent
+                geyser.getEventBus().fire(disconnectEvent);
+            }
 
             // Disconnect downstream if necessary
             if (downstream != null) {
@@ -1447,7 +1449,7 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
 
     @Override
     public String name() {
-        return null;
+        return playerEntity != null ? javaUsername() : bedrockUsername();
     }
 
     @Override
@@ -1985,12 +1987,12 @@ public class GeyserSession implements GeyserConnection, GeyserCommandSource {
 
     @Override
     public @MonotonicNonNull String javaUsername() {
-        return playerEntity.getUsername();
+        return playerEntity != null ? playerEntity.getUsername() : null;
     }
 
     @Override
     public UUID javaUuid() {
-        return playerEntity.getUuid();
+        return playerEntity != null ? playerEntity.getUuid() : null ;
     }
 
     @Override
