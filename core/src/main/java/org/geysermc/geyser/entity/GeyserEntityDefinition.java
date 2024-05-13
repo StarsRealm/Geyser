@@ -25,6 +25,8 @@
 
 package org.geysermc.geyser.entity;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.geysermc.geyser.api.entity.EntityProperties;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataType;
@@ -57,7 +59,7 @@ import java.util.function.BiConsumer;
 public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory, EntityType entityType, EntityIdentifier entityIdentifier,
                                                        float width, float height, float offset, EntityProperties.Builder registeredProperties, List<EntityMetadataTranslator<? super T, ?, ?>> translators, boolean custom) implements EntityDefinition {
 
-    public static Map<Integer, String> idToName = new HashMap<>();
+    public static final Int2ObjectMap<GeyserEntityDefinition<? extends Entity>> idToDef = new Int2ObjectOpenHashMap<>();
 
     public static Map<GeyserEntityDefinition<? extends Entity>, GeyserEntityProperties> ENTITY_PROPERTIES = new HashMap<>();
 
@@ -242,13 +244,17 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
                 identifier = this.identifier.identifier();
             }
 
+            if(this.type != null) {
+                this.networkdId = this.type.ordinal();
+            }
+
             GeyserEntityDefinition<T> definition = new GeyserEntityDefinition<>(factory, type, this.identifier, width, height, offset, registeredProperties, translators, custom);
             if (register && identifier != null) {
                 EntityUtils.registerEntity(identifier, definition);
             }
 
             if(this.networkdId != 0) {
-                idToName.put(this.networkdId, identifier);
+                idToDef.put(this.networkdId, definition);
             }
 
             return definition;

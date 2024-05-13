@@ -37,30 +37,30 @@ import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.entity.type.*;
 import org.geysermc.geyser.entity.type.player.PlayerEntity;
-import org.geysermc.geyser.registry.Registries;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.skin.SkinManager;
 import org.geysermc.geyser.text.GeyserLocale;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
 
-import java.util.Map;
-
 @Translator(packet = ClientboundAddEntityPacket.class)
 public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEntityPacket> {
 
     @Override
     public void translate(GeyserSession session, ClientboundAddEntityPacket packet) {
-        GeyserEntityDefinition<?> definition;
-        if(packet.getType() == EntityType.UNKNOWN) {
-            int entityTypeId = packet.getEntityTypeId();
-            definition = Registries.ENTITY_IDENTIFIERS.get(GeyserEntityDefinition.idToName.get(entityTypeId));
-        } else {
-            definition = Registries.ENTITY_DEFINITIONS.get(packet.getType());
-        }
+        int entityTypeId = packet.getEntityTypeId();
+        GeyserEntityDefinition<?> definition  = GeyserEntityDefinition.idToDef.get(entityTypeId);
+
         if (definition == null) {
             session.getGeyser().getLogger().debug("Could not find an entity definition with type " + packet.getType());
             return;
+        }
+
+        EntityType type;
+        if(definition.entityType() != null) {
+            type = definition.entityType();
+        } else {
+            type = EntityType.UNKNOWN;
         }
 
         Vector3f position = Vector3f.from(packet.getX(), packet.getY(), packet.getZ());
@@ -69,7 +69,7 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
         float pitch = packet.getPitch();
         float headYaw = packet.getHeadYaw();
 
-        if (packet.getType() == EntityType.PLAYER) {
+        if (type == EntityType.PLAYER) {
 
             PlayerEntity entity;
             if (packet.getUuid().equals(session.getPlayerEntity().getUuid())) {
@@ -100,17 +100,17 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
         }
 
         Entity entity;
-        if (packet.getType() == EntityType.FALLING_BLOCK) {
+        if (type == EntityType.FALLING_BLOCK) {
             entity = new FallingBlockEntity(session, packet.getEntityId(), session.getEntityCache().getNextEntityId().incrementAndGet(), packet.getUuid(),
                     position, motion, yaw, pitch, headYaw, ((FallingBlockData) packet.getData()).getId());
-        } else if (packet.getType() == EntityType.ITEM_FRAME || packet.getType() == EntityType.GLOW_ITEM_FRAME) {
+        } else if (type == EntityType.ITEM_FRAME || type == EntityType.GLOW_ITEM_FRAME) {
             // Item frames need the hanging direction
             entity = new ItemFrameEntity(session, packet.getEntityId(), session.getEntityCache().getNextEntityId().incrementAndGet(), packet.getUuid(),
                     definition, position, motion, yaw, pitch, headYaw, (Direction) packet.getData());
-        } else if (packet.getType() == EntityType.PAINTING) {
+        } else if (type == EntityType.PAINTING) {
             entity = new PaintingEntity(session, packet.getEntityId(), session.getEntityCache().getNextEntityId().incrementAndGet(), packet.getUuid(),
                     definition, position, motion, yaw, pitch, headYaw, (Direction) packet.getData());
-        } else if (packet.getType() == EntityType.FISHING_BOBBER) {
+        } else if (type == EntityType.FISHING_BOBBER) {
             // Fishing bobbers need the owner for the line
             int ownerEntityId = ((ProjectileData) packet.getData()).getOwnerId();
             Entity owner = session.getEntityCache().getEntityByJavaId(ownerEntityId);
@@ -126,7 +126,7 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
                     packet.getUuid(), definition, position, motion, yaw, pitch, headYaw);
         }
 
-        if (packet.getType() == EntityType.WARDEN) {
+        if (type == EntityType.WARDEN) {
             WardenData wardenData = (WardenData) packet.getData();
             if (wardenData.isEmerging()) {
                 entity.setPose(Pose.EMERGING);
