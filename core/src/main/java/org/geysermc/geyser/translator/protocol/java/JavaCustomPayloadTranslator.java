@@ -71,22 +71,26 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
                 MinecraftCodecHelper helper = session.getProtocol().createHelper();
                 ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
                 int entityId = helper.readVarInt(buffer);
-                GeyserEntityPropertyManager propertyManager = session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager();
-                Map<String, Integer> integerMap = helper.readStringIntMap(buffer);
-                Map<String, Float> floatMap = helper.readStringFloatMap(buffer);
-                integerMap.forEach(propertyManager::add);
-                floatMap.forEach(propertyManager::add);
-                int size = helper.readVarInt(buffer);
-                for (int i = 0; i < size; i++) {
-                    String name = helper.readString(buffer);
-                    boolean value = buffer.readBoolean();
-                    propertyManager.add(name, value);
-                }
-                size = helper.readVarInt(buffer);
-                for (int i = 0; i < size; i++) {
-                    String name = helper.readString(buffer);
-                    String value = helper.readString(buffer);
-                    propertyManager.add(name, value);
+                try {
+                    GeyserEntityPropertyManager propertyManager = session.getEntityCache().getEntityByJavaId(entityId).getPropertyManager();
+                    Map<String, Integer> integerMap = helper.readStringIntMap(buffer);
+                    Map<String, Float> floatMap = helper.readStringFloatMap(buffer);
+                    integerMap.forEach(propertyManager::add);
+                    floatMap.forEach(propertyManager::add);
+                    int size = helper.readVarInt(buffer);
+                    for (int i = 0; i < size; i++) {
+                        String name = helper.readString(buffer);
+                        boolean value = buffer.readBoolean();
+                        propertyManager.add(name, value);
+                    }
+                    size = helper.readVarInt(buffer);
+                    for (int i = 0; i < size; i++) {
+                        String name = helper.readString(buffer);
+                        String value = helper.readString(buffer);
+                        propertyManager.add(name, value);
+                    }
+                } catch (Exception e) {
+                    GeyserImpl.getInstance().getLogger().warning("Failed to parse entity property: " + entityId);
                 }
             }
             case PluginMessageChannels.BOOLEAN_PROPERTY -> {

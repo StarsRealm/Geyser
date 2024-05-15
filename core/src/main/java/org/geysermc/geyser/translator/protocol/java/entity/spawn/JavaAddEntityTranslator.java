@@ -94,6 +94,19 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
 
             session.getEntityCache().cacheEntity(entity);
 
+            packet.getIntEntityProperties().forEach((s, integer) -> {
+                entity.getPropertyManager().add(s, integer);
+            });
+            packet.getFloatEntityProperties().forEach(((s, aFloat) -> {
+                entity.getPropertyManager().add(s, aFloat);
+            }));
+            packet.getBooleanEntityProperties().forEach( (s, aBoolean) -> {
+                entity.getPropertyManager().add(s, aBoolean);
+            });
+            packet.getStringEntityProperties().forEach(((s, s2) -> {
+                entity.getPropertyManager().add(s, s2);
+            }));
+
             entity.sendPlayer();
             SkinManager.requestAndHandleSkinAndCape(entity, session, null);
             return;
@@ -132,6 +145,19 @@ public class JavaAddEntityTranslator extends PacketTranslator<ClientboundAddEnti
                 entity.setPose(Pose.EMERGING);
             }
         }
+
+        packet.getIntEntityProperties().forEach((s, integer) -> {
+            entity.getPropertyManager().add(s, integer);
+        });
+        packet.getFloatEntityProperties().forEach(((s, aFloat) -> {
+            entity.getPropertyManager().add(s, aFloat);
+        }));
+        packet.getBooleanEntityProperties().forEach( (s, aBoolean) -> {
+            entity.getPropertyManager().add(s, aBoolean);
+        });
+        packet.getStringEntityProperties().forEach(((s, s2) -> {
+            entity.getPropertyManager().add(s, s2);
+        }));
 
         session.getEntityCache().spawnEntity(entity);
     }
