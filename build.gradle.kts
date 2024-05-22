@@ -13,17 +13,11 @@ allprojects {
 }
 
 val basePlatforms = setOf(
-    projects.bungeecord,
-    projects.spigot,
+//    projects.bungeecord,
+//    projects.spigot,
     projects.standalone,
     projects.velocity,
-    projects.viaproxy
-).map { it.dependencyProject }
-
-val moddedPlatforms = setOf(
-    projects.fabric,
-    projects.neoforge,
-    projects.mod
+//    projects.viaproxy
 ).map { it.dependencyProject }
 
 subprojects {
@@ -35,7 +29,6 @@ subprojects {
 
     when (this) {
         in basePlatforms -> plugins.apply("geyser.platform-conventions")
-        in moddedPlatforms -> plugins.apply("geyser.modded-conventions")
         else -> plugins.apply("geyser.base-conventions")
     }
 }
