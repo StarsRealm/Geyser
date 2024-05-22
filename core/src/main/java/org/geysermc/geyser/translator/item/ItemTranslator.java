@@ -335,7 +335,7 @@ public final class ItemTranslator {
             String[] canModifyBedrock = new String[predicates.size()];
             for (int i = 0; i < canModifyBedrock.length; i++) {
                 // Get the Java identifier of the block that can be placed
-                String location = predicates.get(i).getLocation();
+                String location = predicates.get(i).getBlocks().getLocation();
                 if (location == null) {
                     canModifyBedrock[i] = ""; // So it'll serialize
                     continue; // ???
