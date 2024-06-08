@@ -246,6 +246,11 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
 
             if(this.type != null) {
                 this.networkdId = this.type.ordinal();
+            } else {
+                // 自定义实体的约定属性注册
+                this.addTranslator(MetadataType.INT, Entity::setCustomVariant);
+                this.addTranslator(MetadataType.BOOLEAN, Entity::setCustomBaby);
+                this.addTranslator(MetadataType.INT, Entity::setCustomMarkVariant);
             }
 
             GeyserEntityDefinition<T> definition = new GeyserEntityDefinition<>(factory, type, this.identifier, width, height, offset, registeredProperties, translators, custom);

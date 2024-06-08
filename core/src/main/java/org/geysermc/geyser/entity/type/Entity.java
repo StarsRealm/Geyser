@@ -598,4 +598,16 @@ public class Entity implements GeyserEntity {
     public <I extends Entity> @Nullable I as(Class<I> entityClass) {
         return entityClass.isInstance(this) ? (I) this : null;
     }
+
+    public void setCustomVariant(IntEntityMetadata intEntityMetadata) {
+        dirtyMetadata.put(EntityDataTypes.VARIANT, intEntityMetadata.getPrimitiveValue());
+    }
+
+    public void setCustomMarkVariant(IntEntityMetadata intEntityMetadata) {
+        dirtyMetadata.put(EntityDataTypes.MARK_VARIANT, intEntityMetadata.getPrimitiveValue());
+    }
+
+    public void setCustomBaby(BooleanEntityMetadata booleanEntityMetadata) {
+        this.setFlag(EntityFlag.BABY, booleanEntityMetadata.getPrimitiveValue());
+    }
 }
