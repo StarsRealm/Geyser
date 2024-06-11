@@ -83,6 +83,7 @@ import org.geysermc.geyser.api.network.AuthType;
 import org.geysermc.geyser.api.network.RemoteServer;
 import org.geysermc.geyser.api.util.PlatformType;
 import org.geysermc.geyser.entity.GeyserEntityIdentifier;
+import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
 import org.geysermc.geyser.impl.camera.CameraDefinitions;
 import org.geysermc.geyser.impl.camera.GeyserCameraData;
 import org.geysermc.geyser.command.GeyserCommandSource;
