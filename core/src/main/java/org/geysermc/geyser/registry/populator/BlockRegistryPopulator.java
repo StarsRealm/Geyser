@@ -303,7 +303,7 @@ public final class BlockRegistryPopulator {
                 // Get the tag needed for non-empty flower pots
                 if (javaPottable.contains(block)) {
                     // Specifically NOT putIfAbsent - mangrove propagule breaks otherwise
-                    flowerPotBlocks.put(block, blockStates.get(bedrockDefinition.getRuntimeId()));
+                    flowerPotBlocks.put(block, bedrockDefinition.getState());
                 }
 
                 javaToVanillaBedrockBlocks[javaRuntimeId] = vanillaBedrockDefinition;
@@ -461,7 +461,7 @@ public final class BlockRegistryPopulator {
 
                 BlockRegistries.JAVA_BLOCKS.registerWithAnyIndex(javaBlockState.stateGroupId(), block, Blocks.AIR);
                 BlockRegistries.JAVA_IDENTIFIER_TO_ID.register(javaId, stateRuntimeId);
-                BlockRegistries.BLOCK_STATES.register(stateRuntimeId, new BlockState(block, stateRuntimeId));
+                BlockRegistries.BLOCK_STATES.registerWithAnyIndex(stateRuntimeId, new BlockState(block, stateRuntimeId), Blocks.AIR.defaultBlockState());
             }
         }
 

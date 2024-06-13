@@ -35,6 +35,7 @@ import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtType;
 import org.cloudburstmc.nbt.NbtUtils;
 import org.geysermc.geyser.GeyserImpl;
+import org.geysermc.geyser.level.block.type.Block;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.level.physics.BoundingBox;
 import org.geysermc.geyser.registry.BlockRegistries;
@@ -82,25 +83,29 @@ public class CollisionRegistryLoader extends MultiResourceRegistryLoader<String,
         // Map of unique collisions to its instance
         Map<BlockCollision, BlockCollision> collisionInstances = new Object2ObjectOpenHashMap<>();
         for (int i = 0; i < blockStates.size(); i++) {
-            BlockState state = blockStates.get(i);
-            if (state == null) {
-                GeyserImpl.getInstance().getLogger().warning("Missing block state for Java block " + i);
-                continue;
-            }
-
-            BlockCollision newCollision = instantiateCollision(state, annotationMap, indices[i], collisionList);
-
-            if (newCollision != null) {
-                // If there's an existing instance equal to this one, use that instead
-                BlockCollision existingInstance = collisionInstances.get(newCollision);
-                if (existingInstance != null) {
-                    newCollision = existingInstance;
-                } else {
-                    collisionInstances.put(newCollision, newCollision);
+            try {
+                BlockState state = blockStates.get(i);
+                if (state == null) {
+                    GeyserImpl.getInstance().getLogger().warning("Missing block state for Java block " + i);
+                    continue;
                 }
-            }
 
-            collisions.add(newCollision);
+                BlockCollision newCollision = instantiateCollision(state, annotationMap, indices[i], collisionList);
+
+                if (newCollision != null) {
+                    // If there's an existing instance equal to this one, use that instead
+                    BlockCollision existingInstance = collisionInstances.get(newCollision);
+                    if (existingInstance != null) {
+                        newCollision = existingInstance;
+                    } else {
+                        collisionInstances.put(newCollision, newCollision);
+                    }
+                }
+
+                collisions.add(newCollision);
+            } catch (ArrayIndexOutOfBoundsException ignore) {
+
+            }
         }
         collisions.trim();
         return collisions;
