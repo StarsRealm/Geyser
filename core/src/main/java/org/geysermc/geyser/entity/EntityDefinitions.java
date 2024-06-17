@@ -25,7 +25,8 @@
 
 package org.geysermc.geyser.entity;
 
-
+import org.geysermc.geyser.entity.type.AbstractWindChargeEntity;
+import org.geysermc.geyser.entity.factory.EntityFactory;
 import org.geysermc.geyser.entity.type.living.monster.raid.RavagerEntity;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataType;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.type.BooleanEntityMetadata;
@@ -54,128 +55,132 @@ import org.geysermc.geyser.registry.Registries;
 import org.geysermc.geyser.translator.text.MessageTranslator;
 
 public final class EntityDefinitions {
-    public static final GeyserEntityDefinition<AllayEntity> ALLAY;
-    public static final GeyserEntityDefinition<AreaEffectCloudEntity> AREA_EFFECT_CLOUD;
-    public static final GeyserEntityDefinition<ArmadilloEntity> ARMADILLO;
-    public static final GeyserEntityDefinition<ArmorStandEntity> ARMOR_STAND;
-    public static final GeyserEntityDefinition<ArrowEntity> ARROW;
-    public static final GeyserEntityDefinition<AxolotlEntity> AXOLOTL;
-    public static final GeyserEntityDefinition<BatEntity> BAT;
-    public static final GeyserEntityDefinition<BeeEntity> BEE;
-    public static final GeyserEntityDefinition<BlazeEntity> BLAZE;
-    public static final GeyserEntityDefinition<BoatEntity> BOAT;
-    public static final GeyserEntityDefinition<CamelEntity> CAMEL;
-    public static final GeyserEntityDefinition<CatEntity> CAT;
-    public static final GeyserEntityDefinition<SpiderEntity> CAVE_SPIDER;
-    public static final GeyserEntityDefinition<MinecartEntity> CHEST_MINECART;
-    public static final GeyserEntityDefinition<ChickenEntity> CHICKEN;
-    public static final GeyserEntityDefinition<ChestBoatEntity> CHEST_BOAT;
-    public static final GeyserEntityDefinition<AbstractFishEntity> COD;
-    public static final GeyserEntityDefinition<CommandBlockMinecartEntity> COMMAND_BLOCK_MINECART;
-    public static final GeyserEntityDefinition<CowEntity> COW;
-    public static final GeyserEntityDefinition<CreeperEntity> CREEPER;
-    public static final GeyserEntityDefinition<DolphinEntity> DOLPHIN;
-    public static final GeyserEntityDefinition<ChestedHorseEntity> DONKEY;
-    public static final GeyserEntityDefinition<FireballEntity> DRAGON_FIREBALL;
-    public static final GeyserEntityDefinition<ZombieEntity> DROWNED;
-    public static final GeyserEntityDefinition<ThrowableItemEntity> EGG;
-    public static final GeyserEntityDefinition<ElderGuardianEntity> ELDER_GUARDIAN;
-    public static final GeyserEntityDefinition<EndermanEntity> ENDERMAN;
-    public static final GeyserEntityDefinition<MonsterEntity> ENDERMITE;
-    public static final GeyserEntityDefinition<EnderDragonEntity> ENDER_DRAGON;
-    public static final GeyserEntityDefinition<ThrowableItemEntity> ENDER_PEARL;
-    public static final GeyserEntityDefinition<EnderCrystalEntity> END_CRYSTAL;
-    public static final GeyserEntityDefinition<SpellcasterIllagerEntity> EVOKER;
-    public static final GeyserEntityDefinition<EvokerFangsEntity> EVOKER_FANGS;
-    public static final GeyserEntityDefinition<ThrowableItemEntity> EXPERIENCE_BOTTLE;
-    public static final GeyserEntityDefinition<ExpOrbEntity> EXPERIENCE_ORB;
-    public static final GeyserEntityDefinition<Entity> EYE_OF_ENDER;
-    public static final GeyserEntityDefinition<FallingBlockEntity> FALLING_BLOCK;
-    public static final GeyserEntityDefinition<FireballEntity> FIREBALL;
-    public static final GeyserEntityDefinition<FireworkEntity> FIREWORK_ROCKET;
-    public static final GeyserEntityDefinition<FishingHookEntity> FISHING_BOBBER;
-    public static final GeyserEntityDefinition<FoxEntity> FOX;
-    public static final GeyserEntityDefinition<FrogEntity> FROG;
-    public static final GeyserEntityDefinition<FurnaceMinecartEntity> FURNACE_MINECART; // Not present on Bedrock
-    public static final GeyserEntityDefinition<GhastEntity> GHAST;
-    public static final GeyserEntityDefinition<GiantEntity> GIANT;
-    public static final GeyserEntityDefinition<ItemFrameEntity> GLOW_ITEM_FRAME;
-    public static final GeyserEntityDefinition<GlowSquidEntity> GLOW_SQUID;
-    public static final GeyserEntityDefinition<GoatEntity> GOAT;
-    public static final GeyserEntityDefinition<GuardianEntity> GUARDIAN;
-    public static final GeyserEntityDefinition<HoglinEntity> HOGLIN;
-    public static final GeyserEntityDefinition<MinecartEntity> HOPPER_MINECART;
-    public static final GeyserEntityDefinition<HorseEntity> HORSE;
-    public static final GeyserEntityDefinition<ZombieEntity> HUSK;
-    public static final GeyserEntityDefinition<SpellcasterIllagerEntity> ILLUSIONER; // Not present on Bedrock
-    public static final GeyserEntityDefinition<InteractionEntity> INTERACTION;
-    public static final GeyserEntityDefinition<IronGolemEntity> IRON_GOLEM;
-    public static final GeyserEntityDefinition<ItemEntity> ITEM;
-    public static final GeyserEntityDefinition<ItemFrameEntity> ITEM_FRAME;
-    public static final GeyserEntityDefinition<LeashKnotEntity> LEASH_KNOT;
-    public static final GeyserEntityDefinition<LightningEntity> LIGHTNING_BOLT;
-    public static final GeyserEntityDefinition<LlamaEntity> LLAMA;
-    public static final GeyserEntityDefinition<ThrowableEntity> LLAMA_SPIT;
-    public static final GeyserEntityDefinition<MagmaCubeEntity> MAGMA_CUBE;
-    public static final GeyserEntityDefinition<MinecartEntity> MINECART;
-    public static final GeyserEntityDefinition<MooshroomEntity> MOOSHROOM;
-    public static final GeyserEntityDefinition<ChestedHorseEntity> MULE;
-    public static final GeyserEntityDefinition<OcelotEntity> OCELOT;
-    public static final GeyserEntityDefinition<PaintingEntity> PAINTING;
-    public static final GeyserEntityDefinition<PandaEntity> PANDA;
-    public static final GeyserEntityDefinition<ParrotEntity> PARROT;
-    public static final GeyserEntityDefinition<PhantomEntity> PHANTOM;
-    public static final GeyserEntityDefinition<PigEntity> PIG;
-    public static final GeyserEntityDefinition<PiglinEntity> PIGLIN;
-    public static final GeyserEntityDefinition<BasePiglinEntity> PIGLIN_BRUTE;
-    public static final GeyserEntityDefinition<PillagerEntity> PILLAGER;
-    public static final GeyserEntityDefinition<PlayerEntity> PLAYER;
-    public static final GeyserEntityDefinition<PolarBearEntity> POLAR_BEAR;
-    public static final GeyserEntityDefinition<ThrownPotionEntity> POTION;
-    public static final GeyserEntityDefinition<PufferFishEntity> PUFFERFISH;
-    public static final GeyserEntityDefinition<RabbitEntity> RABBIT;
-    public static final GeyserEntityDefinition<RavagerEntity> RAVAGER;
-    public static final GeyserEntityDefinition<AbstractFishEntity> SALMON;
-    public static final GeyserEntityDefinition<SheepEntity> SHEEP;
-    public static final GeyserEntityDefinition<ShulkerEntity> SHULKER;
-    public static final GeyserEntityDefinition<SnifferEntity> SNIFFER;
-    public static final GeyserEntityDefinition<ThrowableEntity> SHULKER_BULLET;
-    public static final GeyserEntityDefinition<MonsterEntity> SILVERFISH;
-    public static final GeyserEntityDefinition<SkeletonEntity> SKELETON;
-    public static final GeyserEntityDefinition<SkeletonHorseEntity> SKELETON_HORSE;
-    public static final GeyserEntityDefinition<SlimeEntity> SLIME;
-    public static final GeyserEntityDefinition<FireballEntity> SMALL_FIREBALL;
-    public static final GeyserEntityDefinition<ThrowableItemEntity> SNOWBALL;
-    public static final GeyserEntityDefinition<SnowGolemEntity> SNOW_GOLEM;
-    public static final GeyserEntityDefinition<SpawnerMinecartEntity> SPAWNER_MINECART; // Not present on Bedrock
-    public static final GeyserEntityDefinition<AbstractArrowEntity> SPECTRAL_ARROW;
-    public static final GeyserEntityDefinition<SpiderEntity> SPIDER;
-    public static final GeyserEntityDefinition<SquidEntity> SQUID;
-    public static final GeyserEntityDefinition<AbstractSkeletonEntity> STRAY;
-    public static final GeyserEntityDefinition<StriderEntity> STRIDER;
-    public static final GeyserEntityDefinition<TadpoleEntity> TADPOLE;
-    public static final GeyserEntityDefinition<TextDisplayEntity> TEXT_DISPLAY;
-    public static final GeyserEntityDefinition<TNTEntity> TNT;
-    public static final GeyserEntityDefinition<MinecartEntity> TNT_MINECART;
-    public static final GeyserEntityDefinition<TraderLlamaEntity> TRADER_LLAMA;
-    public static final GeyserEntityDefinition<TridentEntity> TRIDENT;
-    public static final GeyserEntityDefinition<TropicalFishEntity> TROPICAL_FISH;
-    public static final GeyserEntityDefinition<TurtleEntity> TURTLE;
-    public static final GeyserEntityDefinition<VexEntity> VEX;
-    public static final GeyserEntityDefinition<VillagerEntity> VILLAGER;
-    public static final GeyserEntityDefinition<VindicatorEntity> VINDICATOR;
-    public static final GeyserEntityDefinition<AbstractMerchantEntity> WANDERING_TRADER;
-    public static final GeyserEntityDefinition<WardenEntity> WARDEN;
-    public static final GeyserEntityDefinition<RaidParticipantEntity> WITCH;
-    public static final GeyserEntityDefinition<WitherEntity> WITHER;
-    public static final GeyserEntityDefinition<AbstractSkeletonEntity> WITHER_SKELETON;
-    public static final GeyserEntityDefinition<WitherSkullEntity> WITHER_SKULL;
-    public static final GeyserEntityDefinition<WolfEntity> WOLF;
-    public static final GeyserEntityDefinition<ZoglinEntity> ZOGLIN;
-    public static final GeyserEntityDefinition<ZombieEntity> ZOMBIE;
-    public static final GeyserEntityDefinition<ZombieHorseEntity> ZOMBIE_HORSE;
-    public static final GeyserEntityDefinition<ZombieVillagerEntity> ZOMBIE_VILLAGER;
-    public static final GeyserEntityDefinition<ZombifiedPiglinEntity> ZOMBIFIED_PIGLIN;
+    public static final EntityDefinition<AllayEntity> ALLAY;
+    public static final EntityDefinition<AreaEffectCloudEntity> AREA_EFFECT_CLOUD;
+    public static final EntityDefinition<ArmadilloEntity> ARMADILLO;
+    public static final EntityDefinition<ArmorStandEntity> ARMOR_STAND;
+    public static final EntityDefinition<ArrowEntity> ARROW;
+    public static final EntityDefinition<AxolotlEntity> AXOLOTL;
+    public static final EntityDefinition<BatEntity> BAT;
+    public static final EntityDefinition<BeeEntity> BEE;
+    public static final EntityDefinition<BlazeEntity> BLAZE;
+    public static final EntityDefinition<BoatEntity> BOAT;
+    public static final EntityDefinition<BoggedEntity> BOGGED;
+    public static final EntityDefinition<BreezeEntity> BREEZE;
+    public static final EntityDefinition<AbstractWindChargeEntity> BREEZE_WIND_CHARGE;
+    public static final EntityDefinition<CamelEntity> CAMEL;
+    public static final EntityDefinition<CatEntity> CAT;
+    public static final EntityDefinition<SpiderEntity> CAVE_SPIDER;
+    public static final EntityDefinition<MinecartEntity> CHEST_MINECART;
+    public static final EntityDefinition<ChickenEntity> CHICKEN;
+    public static final EntityDefinition<ChestBoatEntity> CHEST_BOAT;
+    public static final EntityDefinition<AbstractFishEntity> COD;
+    public static final EntityDefinition<CommandBlockMinecartEntity> COMMAND_BLOCK_MINECART;
+    public static final EntityDefinition<CowEntity> COW;
+    public static final EntityDefinition<CreeperEntity> CREEPER;
+    public static final EntityDefinition<DolphinEntity> DOLPHIN;
+    public static final EntityDefinition<ChestedHorseEntity> DONKEY;
+    public static final EntityDefinition<FireballEntity> DRAGON_FIREBALL;
+    public static final EntityDefinition<ZombieEntity> DROWNED;
+    public static final EntityDefinition<ThrowableItemEntity> EGG;
+    public static final EntityDefinition<ElderGuardianEntity> ELDER_GUARDIAN;
+    public static final EntityDefinition<EndermanEntity> ENDERMAN;
+    public static final EntityDefinition<MonsterEntity> ENDERMITE;
+    public static final EntityDefinition<EnderDragonEntity> ENDER_DRAGON;
+    public static final EntityDefinition<ThrowableItemEntity> ENDER_PEARL;
+    public static final EntityDefinition<EnderCrystalEntity> END_CRYSTAL;
+    public static final EntityDefinition<SpellcasterIllagerEntity> EVOKER;
+    public static final EntityDefinition<EvokerFangsEntity> EVOKER_FANGS;
+    public static final EntityDefinition<ThrowableItemEntity> EXPERIENCE_BOTTLE;
+    public static final EntityDefinition<ExpOrbEntity> EXPERIENCE_ORB;
+    public static final EntityDefinition<Entity> EYE_OF_ENDER;
+    public static final EntityDefinition<FallingBlockEntity> FALLING_BLOCK;
+    public static final EntityDefinition<FireballEntity> FIREBALL;
+    public static final EntityDefinition<FireworkEntity> FIREWORK_ROCKET;
+    public static final EntityDefinition<FishingHookEntity> FISHING_BOBBER;
+    public static final EntityDefinition<FoxEntity> FOX;
+    public static final EntityDefinition<FrogEntity> FROG;
+    public static final EntityDefinition<FurnaceMinecartEntity> FURNACE_MINECART; // Not present on Bedrock
+    public static final EntityDefinition<GhastEntity> GHAST;
+    public static final EntityDefinition<GiantEntity> GIANT;
+    public static final EntityDefinition<ItemFrameEntity> GLOW_ITEM_FRAME;
+    public static final EntityDefinition<GlowSquidEntity> GLOW_SQUID;
+    public static final EntityDefinition<GoatEntity> GOAT;
+    public static final EntityDefinition<GuardianEntity> GUARDIAN;
+    public static final EntityDefinition<HoglinEntity> HOGLIN;
+    public static final EntityDefinition<MinecartEntity> HOPPER_MINECART;
+    public static final EntityDefinition<HorseEntity> HORSE;
+    public static final EntityDefinition<ZombieEntity> HUSK;
+    public static final EntityDefinition<SpellcasterIllagerEntity> ILLUSIONER; // Not present on Bedrock
+    public static final EntityDefinition<InteractionEntity> INTERACTION;
+    public static final EntityDefinition<IronGolemEntity> IRON_GOLEM;
+    public static final EntityDefinition<ItemEntity> ITEM;
+    public static final EntityDefinition<ItemFrameEntity> ITEM_FRAME;
+    public static final EntityDefinition<LeashKnotEntity> LEASH_KNOT;
+    public static final EntityDefinition<LightningEntity> LIGHTNING_BOLT;
+    public static final EntityDefinition<LlamaEntity> LLAMA;
+    public static final EntityDefinition<ThrowableEntity> LLAMA_SPIT;
+    public static final EntityDefinition<MagmaCubeEntity> MAGMA_CUBE;
+    public static final EntityDefinition<MinecartEntity> MINECART;
+    public static final EntityDefinition<MooshroomEntity> MOOSHROOM;
+    public static final EntityDefinition<ChestedHorseEntity> MULE;
+    public static final EntityDefinition<OcelotEntity> OCELOT;
+    public static final EntityDefinition<PaintingEntity> PAINTING;
+    public static final EntityDefinition<PandaEntity> PANDA;
+    public static final EntityDefinition<ParrotEntity> PARROT;
+    public static final EntityDefinition<PhantomEntity> PHANTOM;
+    public static final EntityDefinition<PigEntity> PIG;
+    public static final EntityDefinition<PiglinEntity> PIGLIN;
+    public static final EntityDefinition<BasePiglinEntity> PIGLIN_BRUTE;
+    public static final EntityDefinition<PillagerEntity> PILLAGER;
+    public static final EntityDefinition<PlayerEntity> PLAYER;
+    public static final EntityDefinition<PolarBearEntity> POLAR_BEAR;
+    public static final EntityDefinition<ThrownPotionEntity> POTION;
+    public static final EntityDefinition<PufferFishEntity> PUFFERFISH;
+    public static final EntityDefinition<RabbitEntity> RABBIT;
+    public static final EntityDefinition<RavagerEntity> RAVAGER;
+    public static final EntityDefinition<AbstractFishEntity> SALMON;
+    public static final EntityDefinition<SheepEntity> SHEEP;
+    public static final EntityDefinition<ShulkerEntity> SHULKER;
+    public static final EntityDefinition<SnifferEntity> SNIFFER;
+    public static final EntityDefinition<ThrowableEntity> SHULKER_BULLET;
+    public static final EntityDefinition<MonsterEntity> SILVERFISH;
+    public static final EntityDefinition<SkeletonEntity> SKELETON;
+    public static final EntityDefinition<SkeletonHorseEntity> SKELETON_HORSE;
+    public static final EntityDefinition<SlimeEntity> SLIME;
+    public static final EntityDefinition<FireballEntity> SMALL_FIREBALL;
+    public static final EntityDefinition<ThrowableItemEntity> SNOWBALL;
+    public static final EntityDefinition<SnowGolemEntity> SNOW_GOLEM;
+    public static final EntityDefinition<SpawnerMinecartEntity> SPAWNER_MINECART; // Not present on Bedrock
+    public static final EntityDefinition<AbstractArrowEntity> SPECTRAL_ARROW;
+    public static final EntityDefinition<SpiderEntity> SPIDER;
+    public static final EntityDefinition<SquidEntity> SQUID;
+    public static final EntityDefinition<AbstractSkeletonEntity> STRAY;
+    public static final EntityDefinition<StriderEntity> STRIDER;
+    public static final EntityDefinition<TadpoleEntity> TADPOLE;
+    public static final EntityDefinition<TextDisplayEntity> TEXT_DISPLAY;
+    public static final EntityDefinition<TNTEntity> TNT;
+    public static final EntityDefinition<MinecartEntity> TNT_MINECART;
+    public static final EntityDefinition<TraderLlamaEntity> TRADER_LLAMA;
+    public static final EntityDefinition<TridentEntity> TRIDENT;
+    public static final EntityDefinition<TropicalFishEntity> TROPICAL_FISH;
+    public static final EntityDefinition<TurtleEntity> TURTLE;
+    public static final EntityDefinition<VexEntity> VEX;
+    public static final EntityDefinition<VillagerEntity> VILLAGER;
+    public static final EntityDefinition<VindicatorEntity> VINDICATOR;
+    public static final EntityDefinition<AbstractMerchantEntity> WANDERING_TRADER;
+    public static final EntityDefinition<WardenEntity> WARDEN;
+    public static final EntityDefinition<AbstractWindChargeEntity> WIND_CHARGE;
+    public static final EntityDefinition<RaidParticipantEntity> WITCH;
+    public static final EntityDefinition<WitherEntity> WITHER;
+    public static final EntityDefinition<AbstractSkeletonEntity> WITHER_SKELETON;
+    public static final EntityDefinition<WitherSkullEntity> WITHER_SKULL;
+    public static final EntityDefinition<WolfEntity> WOLF;
+    public static final EntityDefinition<ZoglinEntity> ZOGLIN;
+    public static final EntityDefinition<ZombieEntity> ZOMBIE;
+    public static final EntityDefinition<ZombieHorseEntity> ZOMBIE_HORSE;
+    public static final EntityDefinition<ZombieVillagerEntity> ZOMBIE_VILLAGER;
+    public static final EntityDefinition<ZombifiedPiglinEntity> ZOMBIFIED_PIGLIN;
 
     /**
      * Is not sent over the network
@@ -376,7 +381,19 @@ public final class EntityDefinitions {
                     .heightAndWidth(0.25f)
                     .build();
 
-            GeyserEntityDefinition<AbstractArrowEntity> abstractArrowBase = GeyserEntityDefinition.inherited(AbstractArrowEntity::new, entityBase)
+            EntityFactory<AbstractWindChargeEntity> windChargeSupplier = AbstractWindChargeEntity::new;
+            BREEZE_WIND_CHARGE = EntityDefinition.inherited(windChargeSupplier, entityBase)
+                    .type(EntityType.BREEZE_WIND_CHARGE)
+                    .identifier("minecraft:breeze_wind_charge_projectile")
+                    .heightAndWidth(0.3125f)
+                    .build();
+            WIND_CHARGE = EntityDefinition.inherited(windChargeSupplier, entityBase)
+                    .type(EntityType.WIND_CHARGE)
+                    .identifier("minecraft:wind_charge_projectile")
+                    .heightAndWidth(0.3125f)
+                    .build();
+
+            EntityDefinition<AbstractArrowEntity> abstractArrowBase = EntityDefinition.inherited(AbstractArrowEntity::new, entityBase)
                     .addTranslator(MetadataType.BYTE, AbstractArrowEntity::setArrowFlags)
                     .addTranslator(null) // "Piercing level"
                     .build();
@@ -504,12 +521,21 @@ public final class EntityDefinitions {
                     .height(0.9f).width(0.5f)
                     .addTranslator(MetadataType.BYTE, BatEntity::setBatFlags)
                     .build();
-            BLAZE = GeyserEntityDefinition.inherited(BlazeEntity::new, mobEntityBase)
+            BOGGED = EntityDefinition.inherited(BoggedEntity::new, mobEntityBase)
+                    .type(EntityType.BOGGED)
+                    .height(1.99f).width(0.6f)
+                    .addTranslator(MetadataType.BOOLEAN, BoggedEntity::setSheared)
+                    .build();
+            BLAZE = EntityDefinition.inherited(BlazeEntity::new, mobEntityBase)
                     .type(EntityType.BLAZE)
                     .height(1.8f).width(0.6f)
                     .addTranslator(MetadataType.BYTE, BlazeEntity::setBlazeFlags)
                     .build();
-            CREEPER = GeyserEntityDefinition.inherited(CreeperEntity::new, mobEntityBase)
+            BREEZE = EntityDefinition.inherited(BreezeEntity::new, mobEntityBase)
+                    .type(EntityType.BREEZE)
+                    .height(1.77f).width(0.6f)
+                    .build();
+            CREEPER = EntityDefinition.inherited(CreeperEntity::new, mobEntityBase)
                     .type(EntityType.CREEPER)
                     .height(1.7f).width(0.6f)
                     .offset(1.62f)

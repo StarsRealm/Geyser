@@ -46,12 +46,7 @@ public class ArrowEntity extends AbstractArrowEntity {
         if (potionColor == -1) {
             dirtyMetadata.put(EntityDataTypes.CUSTOM_DISPLAY, (byte) 0);
         } else {
-            TippedArrowPotion potion = TippedArrowPotion.getByJavaColor(potionColor);
-            if (potion != null && potion.getJavaColor() != -1) {
-                dirtyMetadata.put(EntityDataTypes.CUSTOM_DISPLAY, (byte) potion.getBedrockId());
-            } else {
-                dirtyMetadata.put(EntityDataTypes.CUSTOM_DISPLAY, (byte) 0);
-            }
+            dirtyMetadata.put(EntityDataTypes.CUSTOM_DISPLAY, Potion.toTippedArrowId(potionColor));
         }
     }
 }
