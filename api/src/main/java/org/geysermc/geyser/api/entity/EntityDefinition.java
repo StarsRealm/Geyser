@@ -44,6 +44,8 @@ public interface EntityDefinition {
     @NonNull
     EntityIdentifier entityIdentifier();
 
+    String identifier();
+
     /**
      * Gets the width of this entity.
      *
@@ -64,6 +66,8 @@ public interface EntityDefinition {
      * @return the offset of this entity
      */
     float offset();
+
+    boolean custom();
 
     /**
      * Bedrock Entity Property function
@@ -86,6 +90,8 @@ public interface EntityDefinition {
          */
         Builder identifier(@NonNull EntityIdentifier identifier);
 
+        Builder identifier(String identifier);
+
         /**
          * Sets the width of this entity.
          *
@@ -93,6 +99,8 @@ public interface EntityDefinition {
          * @return the builder
          */
         Builder width(float width);
+
+        Builder heightAndWidth(float value);
 
         /**
          * Sets the height of this entity.
@@ -117,7 +125,6 @@ public interface EntityDefinition {
          * @return the builder
          */
         Builder networkId(int networkId);
-
 
         /**
          * Set Bedrock Entity Property function

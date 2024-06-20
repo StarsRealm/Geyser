@@ -27,10 +27,6 @@ package org.geysermc.geyser.entity;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.geysermc.geyser.api.entity.EntityProperties;
-import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
-import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataType;
-import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -39,12 +35,16 @@ import org.cloudburstmc.nbt.NbtType;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.api.entity.EntityDefinition;
 import org.geysermc.geyser.api.entity.EntityIdentifier;
+import org.geysermc.geyser.api.entity.EntityProperties;
 import org.geysermc.geyser.entity.factory.EntityFactory;
 import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
 import org.geysermc.geyser.entity.type.Entity;
 import org.geysermc.geyser.registry.Registries;
 import org.geysermc.geyser.translator.entity.EntityMetadataTranslator;
 import org.geysermc.geyser.util.EntityUtils;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetadata;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataType;
+import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -56,8 +56,13 @@ import java.util.function.BiConsumer;
  *
  * @param <T> the entity type this definition represents
  */
-public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory, EntityType entityType, EntityIdentifier entityIdentifier,
-                                                       float width, float height, float offset, EntityProperties.Builder registeredProperties, List<EntityMetadataTranslator<? super T, ?, ?>> translators, boolean custom) implements EntityDefinition {
+public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory, EntityType entityType,
+                                                       EntityIdentifier entityIdentifier,
+                                                       float width, float height, float offset,
+                                                       EntityProperties.Builder registeredProperties,
+                                                       List<EntityMetadataTranslator<? super T, ?, ?>> translators,
+                                                       boolean custom
+) implements EntityDefinition {
 
     public static final Int2ObjectMap<GeyserEntityDefinition<? extends Entity>> idToDef = new Int2ObjectOpenHashMap<>();
 
@@ -98,7 +103,7 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
     }
 
     public GeyserEntityProperties getProperties() {
-        if(ENTITY_PROPERTIES.containsKey(this)) {
+        if (ENTITY_PROPERTIES.containsKey(this)) {
             return ENTITY_PROPERTIES.get(this);
         } else {
             ENTITY_PROPERTIES.put(this, (GeyserEntityProperties) registeredProperties.build());
@@ -244,7 +249,7 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
                 identifier = this.identifier.identifier();
             }
 
-            if(this.type != null) {
+            if (this.type != null) {
                 this.networkdId = this.type.ordinal();
             } else {
                 // 自定义实体的约定属性注册
@@ -258,7 +263,7 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
                 EntityUtils.registerEntity(identifier, definition);
             }
 
-            if(this.networkdId != 0) {
+            if (this.networkdId != 0) {
                 idToDef.put(this.networkdId, definition);
             }
 

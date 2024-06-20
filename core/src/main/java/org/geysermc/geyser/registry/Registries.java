@@ -25,14 +25,6 @@
 
 package org.geysermc.geyser.registry;
 
-import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
-import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
-import org.geysermc.mcprotocollib.protocol.data.game.level.block.BlockEntityType;
-import org.geysermc.mcprotocollib.protocol.data.game.level.event.LevelEvent;
-import org.geysermc.mcprotocollib.protocol.data.game.level.particle.ParticleType;
-import org.geysermc.mcprotocollib.protocol.data.game.recipe.RecipeType;
-import org.geysermc.mcprotocollib.network.packet.Packet;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -46,14 +38,13 @@ import org.geysermc.geyser.api.entity.EntityDefinition;
 import org.geysermc.geyser.api.event.lifecycle.GeyserDefineEntitiesEvent;
 import org.geysermc.geyser.api.pack.ResourcePack;
 import org.geysermc.geyser.entity.GeyserEntityDefinition;
+import org.geysermc.geyser.entity.properties.GeyserEntityProperties;
 import org.geysermc.geyser.event.type.GeyserDefineEntitiesEventImpl;
-import org.geysermc.geyser.inventory.item.Enchantment.JavaEnchantment;
 import org.geysermc.geyser.inventory.recipe.GeyserRecipe;
 import org.geysermc.geyser.item.type.Item;
 import org.geysermc.geyser.registry.loader.*;
 import org.geysermc.geyser.registry.populator.ItemRegistryPopulator;
 import org.geysermc.geyser.registry.populator.PacketRegistryPopulator;
-import org.geysermc.geyser.registry.loader.RecipeRegistryLoader;
 import org.geysermc.geyser.registry.provider.ProviderSupplier;
 import org.geysermc.geyser.registry.type.ItemMappings;
 import org.geysermc.geyser.registry.type.ParticleMapping;
@@ -62,13 +53,13 @@ import org.geysermc.geyser.translator.level.block.entity.BlockEntityTranslator;
 import org.geysermc.geyser.translator.level.event.LevelEventTranslator;
 import org.geysermc.geyser.translator.sound.SoundInteractionTranslator;
 import org.geysermc.geyser.translator.sound.SoundTranslator;
+import org.geysermc.geyser.util.EntityUtils;
 import org.geysermc.mcprotocollib.network.packet.Packet;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 import org.geysermc.mcprotocollib.protocol.data.game.level.block.BlockEntityType;
 import org.geysermc.mcprotocollib.protocol.data.game.level.event.LevelEvent;
 import org.geysermc.mcprotocollib.protocol.data.game.level.particle.ParticleType;
 import org.geysermc.mcprotocollib.protocol.data.game.recipe.RecipeType;
-import org.geysermc.geyser.util.EntityUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -214,12 +205,11 @@ public final class Registries {
         GeyserDefineEntitiesEvent defineEntitiesEvent = new GeyserDefineEntitiesEventImpl(definitions) {
             @Override
             public boolean register(@NonNull EntityDefinition entityDefinition) {
-                GeyserEntityDefinition<?> geyserDefinition = (GeyserEntityDefinition<?>) entityDefinition;
-                if (!geyserDefinition.custom()) {
+                if (!entityDefinition.custom()) {
                     return false;
                 }
 
-                EntityUtils.registerEntity(geyserDefinition.identifier(), geyserDefinition);
+                EntityUtils.registerEntity(entityDefinition.identifier(), (GeyserEntityDefinition<?>) entityDefinition);
                 return true;
             }
         };
