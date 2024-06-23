@@ -27,7 +27,7 @@ package org.geysermc.geyser.translator.level.block.entity;
 
 import org.cloudburstmc.nbt.NbtMap;
 import org.cloudburstmc.nbt.NbtMapBuilder;
-import org.geysermc.geyser.entity.EntityDefinition;
+import org.geysermc.geyser.entity.GeyserEntityDefinition;
 import org.geysermc.geyser.level.block.type.BlockState;
 import org.geysermc.geyser.registry.Registries;
 import org.geysermc.geyser.session.GeyserSession;
@@ -47,7 +47,7 @@ public class TrialSpawnerBlockEntityTranslator extends BlockEntityTranslator {
             return;
         }
         NbtMapBuilder spawnData = NbtMap.builder();
-        EntityDefinition<?> definition = Registries.JAVA_ENTITY_IDENTIFIERS.get(entityData.getString("id"));
+        GeyserEntityDefinition<?> definition = Registries.JAVA_ENTITY_IDENTIFIERS.get(entityData.getString("id"));
         if (definition != null) {
             spawnData.putString("TypeId", definition.identifier());
         }
