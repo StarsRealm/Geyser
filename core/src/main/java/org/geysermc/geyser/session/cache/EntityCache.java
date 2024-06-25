@@ -37,7 +37,11 @@ import org.geysermc.geyser.entity.type.Tickable;
 import org.geysermc.geyser.entity.type.player.PlayerEntity;
 import org.geysermc.geyser.session.GeyserSession;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -58,7 +62,7 @@ public class EntityCache {
     private final Map<UUID, BossBar> bossBars = new Object2ObjectOpenHashMap<>();
 
     @Getter
-    private final AtomicLong nextEntityId = new AtomicLong(2L);
+    private final AtomicLong nextEntityId = new AtomicLong(1L);
 
     public EntityCache(GeyserSession session) {
         this.session = session;

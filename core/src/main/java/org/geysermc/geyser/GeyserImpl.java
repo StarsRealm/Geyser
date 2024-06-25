@@ -56,7 +56,11 @@ import org.geysermc.geyser.api.GeyserApi;
 import org.geysermc.geyser.api.command.CommandSource;
 import org.geysermc.geyser.api.event.EventBus;
 import org.geysermc.geyser.api.event.EventRegistrar;
-import org.geysermc.geyser.api.event.lifecycle.*;
+import org.geysermc.geyser.api.event.lifecycle.GeyserPostInitializeEvent;
+import org.geysermc.geyser.api.event.lifecycle.GeyserPostReloadEvent;
+import org.geysermc.geyser.api.event.lifecycle.GeyserPreInitializeEvent;
+import org.geysermc.geyser.api.event.lifecycle.GeyserPreReloadEvent;
+import org.geysermc.geyser.api.event.lifecycle.GeyserShutdownEvent;
 import org.geysermc.geyser.api.network.AuthType;
 import org.geysermc.geyser.api.network.BedrockListener;
 import org.geysermc.geyser.api.network.RemoteServer;
@@ -86,7 +90,13 @@ import org.geysermc.geyser.skin.SkinProvider;
 import org.geysermc.geyser.text.GeyserLocale;
 import org.geysermc.geyser.text.MinecraftLocale;
 import org.geysermc.geyser.translator.text.MessageTranslator;
-import org.geysermc.geyser.util.*;
+import org.geysermc.geyser.util.AssetUtils;
+import org.geysermc.geyser.util.CooldownUtils;
+import org.geysermc.geyser.util.DimensionUtils;
+import org.geysermc.geyser.util.Metrics;
+import org.geysermc.geyser.util.NewsHandler;
+import org.geysermc.geyser.util.VersionCheckUtils;
+import org.geysermc.geyser.util.WebUtils;
 import org.geysermc.mcprotocollib.network.tcp.TcpSession;
 
 import java.io.File;
@@ -98,7 +108,15 @@ import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.security.Key;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -837,7 +855,17 @@ public class GeyserImpl implements GeyserApi {
 
     public void broadcastUpstreamPacket(BedrockPacket bedrockPacket) {
         sessionManager.getAllSessions().forEach(s -> {
-            s.sendUpstreamPacket(bedrockPacket);
+            if (s.isSpawned()) {
+                s.sendUpstreamPacket(bedrockPacket);
+            }
+        });
+    }
+
+    public void broadcastUpstreamPacketWithout(Set<GeyserSession> ignores, BedrockPacket bedrockPacket) {
+        sessionManager.getAllSessions().forEach(s -> {
+            if (!ignores.contains(s) && s.isSpawned()) {
+                s.sendUpstreamPacket(bedrockPacket);
+            }
         });
     }
 

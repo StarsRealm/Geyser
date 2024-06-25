@@ -42,7 +42,12 @@ import org.cloudburstmc.protocol.bedrock.data.entity.EntityDataTypes;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityFlag;
 import org.cloudburstmc.protocol.bedrock.data.entity.EntityLinkData;
 import org.cloudburstmc.protocol.bedrock.data.inventory.ItemData;
-import org.cloudburstmc.protocol.bedrock.packet.*;
+import org.cloudburstmc.protocol.bedrock.packet.AddPlayerPacket;
+import org.cloudburstmc.protocol.bedrock.packet.MoveEntityAbsolutePacket;
+import org.cloudburstmc.protocol.bedrock.packet.MovePlayerPacket;
+import org.cloudburstmc.protocol.bedrock.packet.SetEntityDataPacket;
+import org.cloudburstmc.protocol.bedrock.packet.SetEntityLinkPacket;
+import org.cloudburstmc.protocol.bedrock.packet.UpdateAttributesPacket;
 import org.geysermc.geyser.api.entity.type.player.GeyserPlayerEntity;
 import org.geysermc.geyser.entity.EntityDefinitions;
 import org.geysermc.geyser.entity.attribute.GeyserAttributeType;
@@ -76,7 +81,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Getter @Setter
+@Getter
+@Setter
 public class PlayerEntity extends LivingEntity implements GeyserPlayerEntity {
     public static final float SNEAKING_POSE_HEIGHT = 1.5f;
     protected static final List<AbilityLayer> BASE_ABILITY_LAYER;
@@ -244,26 +250,31 @@ public class PlayerEntity extends LivingEntity implements GeyserPlayerEntity {
         setPitch(pitch);
         setHeadYaw(headYaw);
         this.position = Vector3f.from(position.getX() + relX, position.getY() + relY, position.getZ() + relZ);
-
         setOnGround(isOnGround);
 
-        MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
-        movePlayerPacket.setRuntimeEntityId(geyserId);
-        movePlayerPacket.setPosition(position);
-        movePlayerPacket.setRotation(getBedrockRotation());
-        movePlayerPacket.setOnGround(isOnGround);
-        movePlayerPacket.setMode(MovePlayerPacket.Mode.NORMAL);
-        // If the player is moved while sleeping, we have to adjust their y, so it appears
-        // correctly on Bedrock. This fixes GSit's lay.
+        //player move will smooth more than only movePlayerPacket when broadcast the MoveEntityAbsolutePacket
+        var pk = new MoveEntityAbsolutePacket();
+        pk.setRuntimeEntityId(geyserId);
+        pk.setPosition(position);
+        pk.setRotation(getBedrockRotation());
+        pk.setOnGround(isOnGround);
+        pk.setTeleported(false);
+        pk.setForceMove(false);
+        session.sendUpstreamPacket(pk);
         if (getFlag(EntityFlag.SLEEPING)) {
             if (bedPosition != null && (bedPosition.getY() == 0 || bedPosition.distanceSquared(position.toInt()) > 4)) {
                 // Force the player movement by using a teleport
+                MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
                 movePlayerPacket.setPosition(Vector3f.from(position.getX(), position.getY() - definition.offset() + 0.2f, position.getZ()));
+                movePlayerPacket.setRuntimeEntityId(geyserId);
+                movePlayerPacket.setRotation(getBedrockRotation());
+                movePlayerPacket.setOnGround(isOnGround);
                 movePlayerPacket.setMode(MovePlayerPacket.Mode.TELEPORT);
                 movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.UNKNOWN);
+                session.sendUpstreamPacket(movePlayerPacket);
             }
         }
-        session.sendUpstreamPacket(movePlayerPacket);
+
         if (leftParrot != null) {
             leftParrot.moveRelative(relX, relY, relZ, yaw, pitch, headYaw, true);
         }
