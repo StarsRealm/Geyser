@@ -341,6 +341,9 @@ public abstract class GeyserJacksonConfiguration implements GeyserConfiguration 
     @JsonProperty("config-version")
     private int configVersion = 0;
 
+    @JsonProperty("packetLimit")
+    private int packetLimit = 240;
+
     /**
      * Ensure that the port deserializes in the config as a number no matter what.
      */

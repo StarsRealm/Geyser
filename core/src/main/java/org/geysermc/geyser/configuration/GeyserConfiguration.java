@@ -175,6 +175,8 @@ public interface GeyserConfiguration {
 
     int getMtu();
 
+    int getPacketLimit();
+
     boolean isUseDirectConnection();
 
     boolean isDisableCompression();

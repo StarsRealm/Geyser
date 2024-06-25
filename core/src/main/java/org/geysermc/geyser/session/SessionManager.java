@@ -80,6 +80,16 @@ public final class SessionManager {
         return null;
     }
 
+    public @Nullable GeyserSession sessionByPlayerUuid(@NonNull UUID uuid) {
+        Objects.requireNonNull(uuid);
+        for (GeyserSession session : sessions.values()) {
+            if (session.getPlayerEntity().getUuid().equals(uuid)) {
+                return session;
+            }
+        }
+        return null;
+    }
+
     /**
      * Creates a new, immutable list containing all pending and active sessions.
      */

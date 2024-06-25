@@ -76,7 +76,6 @@ import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
 import static org.cloudburstmc.netty.channel.raknet.RakConstants.DEFAULT_GLOBAL_PACKET_LIMIT;
-import static org.cloudburstmc.netty.channel.raknet.RakConstants.DEFAULT_PACKET_LIMIT;
 
 public final class GeyserServer {
     private static final boolean PRINT_DEBUG_PINGS = Boolean.parseBoolean(System.getProperty("Geyser.PrintPingsInDebugMode", "true"));
@@ -222,9 +221,6 @@ public final class GeyserServer {
         playerGroup = serverInitializer.getEventLoopGroup();
         this.geyser.getLogger().debug("Setting MTU to " + this.geyser.getConfig().getMtu());
 
-        int rakPacketLimit = positivePropOrDefault("Geyser.RakPacketLimit", DEFAULT_PACKET_LIMIT);
-        this.geyser.getLogger().debug("Setting RakNet packet limit to " + rakPacketLimit);
-
         int rakGlobalPacketLimit = positivePropOrDefault("Geyser.RakGlobalPacketLimit", DEFAULT_GLOBAL_PACKET_LIMIT);
         this.geyser.getLogger().debug("Setting RakNet global packet limit to " + rakGlobalPacketLimit);
 
@@ -236,9 +232,10 @@ public final class GeyserServer {
                 .group(group, childGroup)
                 .option(RakChannelOption.RAK_HANDLE_PING, true)
                 .option(RakChannelOption.RAK_MAX_MTU, this.geyser.getConfig().getMtu())
-                .option(RakChannelOption.RAK_PACKET_LIMIT, rakPacketLimit)
+                .option(RakChannelOption.RAK_PACKET_LIMIT, this.geyser.getConfig().getPacketLimit())
                 .option(RakChannelOption.RAK_GLOBAL_PACKET_LIMIT, rakGlobalPacketLimit)
                 .option(RakChannelOption.RAK_SEND_COOKIE, rakSendCookie)
+                .childOption(RakChannelOption.RAK_PACKET_LIMIT, this.geyser.getConfig().getPacketLimit())
                 .childHandler(serverInitializer);
     }
 

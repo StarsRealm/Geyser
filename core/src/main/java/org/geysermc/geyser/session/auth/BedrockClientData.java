@@ -30,10 +30,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.cloudburstmc.protocol.bedrock.data.skin.AnimationData;
+import org.cloudburstmc.protocol.bedrock.data.skin.PersonaPieceData;
+import org.cloudburstmc.protocol.bedrock.data.skin.PersonaPieceTintData;
 import org.geysermc.floodgate.util.DeviceOs;
 import org.geysermc.floodgate.util.InputMode;
 import org.geysermc.floodgate.util.UiProfile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -47,33 +52,6 @@ public final class BedrockClientData {
     private String username;
     @JsonProperty(value = "LanguageCode")
     private String languageCode;
-
-    @JsonProperty(value = "SkinId")
-    private String skinId;
-    @JsonProperty(value = "SkinData")
-    private String skinData;
-    @JsonProperty(value = "SkinImageHeight")
-    private int skinImageHeight;
-    @JsonProperty(value = "SkinImageWidth")
-    private int skinImageWidth;
-    @JsonProperty(value = "CapeId")
-    private String capeId;
-    @JsonProperty(value = "CapeData")
-    private byte[] capeData;
-    @JsonProperty(value = "CapeImageHeight")
-    private int capeImageHeight;
-    @JsonProperty(value = "CapeImageWidth")
-    private int capeImageWidth;
-    @JsonProperty(value = "CapeOnClassicSkin")
-    private boolean capeOnClassicSkin;
-    @JsonProperty(value = "SkinResourcePatch")
-    private String geometryName;
-    @JsonProperty(value = "SkinGeometryData")
-    private String geometryData;
-    @JsonProperty(value = "PersonaSkin")
-    private boolean personaSkin;
-    @JsonProperty(value = "PremiumSkin")
-    private boolean premiumSkin;
 
     @JsonProperty(value = "DeviceId")
     private String deviceId;
@@ -95,9 +73,9 @@ public final class BedrockClientData {
     private String platformOfflineId;
     @JsonProperty(value = "SelfSignedId")
     private UUID selfSignedId;
+
     @JsonProperty(value = "ClientRandomId")
     private long clientRandomId;
-
     @JsonProperty(value = "ArmSize")
     private String armSize;
     @JsonProperty(value = "SkinAnimationData")
@@ -108,6 +86,38 @@ public final class BedrockClientData {
     private boolean thirdPartyNameOnly;
     @JsonProperty(value = "PlayFabId")
     private String playFabId;
+    @JsonProperty(value = "SkinId")
+    private String fullSkinId;
+    @JsonProperty(value = "SkinData")
+    private String skinData;
+    @JsonProperty(value = "SkinImageHeight")
+    private int skinImageHeight;
+    @JsonProperty(value = "SkinImageWidth")
+    private int skinImageWidth;
+    @JsonProperty(value = "CapeId")
+    private String capeId;
+    @JsonProperty(value = "CapeData")
+    private String capeData;
+    @JsonProperty(value = "CapeImageHeight")
+    private int capeImageHeight;
+    @JsonProperty(value = "CapeImageWidth")
+    private int capeImageWidth;
+    @JsonProperty(value = "CapeOnClassicSkin")
+    private boolean capeOnClassicSkin;
+    @JsonProperty(value = "SkinResourcePatch")
+    private String skinResourcePatch;
+    @JsonProperty(value = "SkinGeometryData")
+    private String geometryData;
+    @JsonProperty(value = "PersonaSkin")
+    private boolean personaSkin;
+    @JsonProperty(value = "PremiumSkin")
+    private boolean premiumSkin;
+    @JsonProperty(value = "AnimatedImageData")
+    private List<AnimationData> animatedImageData = new ArrayList<>();
+    @JsonProperty(value = "PersonaPieces")
+    private List<PersonaPieceData> personaPieces = new ArrayList<>();
+    @JsonProperty(value = "PieceTintColors")
+    private List<PersonaPieceTintData> pieceTintColors = new ArrayList<>();
 
     @JsonIgnore
     @Setter

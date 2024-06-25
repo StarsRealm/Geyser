@@ -28,7 +28,11 @@ package org.geysermc.geyser.util;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.steveice10.mc.auth.service.MsaAuthenticationService;
+import org.cloudburstmc.protocol.bedrock.data.skin.AnimationData;
+import org.cloudburstmc.protocol.bedrock.data.skin.PersonaPieceData;
+import org.cloudburstmc.protocol.bedrock.data.skin.PersonaPieceTintData;
 import org.cloudburstmc.protocol.bedrock.packet.LoginPacket;
 import org.cloudburstmc.protocol.bedrock.packet.ServerToClientHandshakePacket;
 import org.cloudburstmc.protocol.bedrock.util.ChainValidationResult;
@@ -45,6 +49,9 @@ import org.geysermc.geyser.session.auth.AuthData;
 import org.geysermc.geyser.session.auth.BedrockClientData;
 import org.geysermc.geyser.text.ChatColor;
 import org.geysermc.geyser.text.GeyserLocale;
+import org.geysermc.geyser.util.serialize.AnimationDataDeserialize;
+import org.geysermc.geyser.util.serialize.PersonaPieceDataDeserialize;
+import org.geysermc.geyser.util.serialize.PersonaPieceTintDataDeserialize;
 
 import javax.crypto.SecretKey;
 import java.security.KeyPair;
@@ -55,6 +62,14 @@ import java.util.function.BiConsumer;
 public class LoginEncryptionUtils {
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
+    static {
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(AnimationData.class, new AnimationDataDeserialize());
+        module.addDeserializer(PersonaPieceData.class, new PersonaPieceDataDeserialize());
+        module.addDeserializer(PersonaPieceTintData.class, new PersonaPieceTintDataDeserialize());
+        JSON_MAPPER.registerModule(module);
+    }
+    
     private static boolean HAS_SENT_ENCRYPTION_MESSAGE = false;
 
     public static void encryptPlayerConnection(GeyserSession session, LoginPacket loginPacket) {

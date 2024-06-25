@@ -42,6 +42,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.cloudburstmc.protocol.bedrock.codec.BedrockCodec;
+import org.cloudburstmc.protocol.bedrock.packet.BedrockPacket;
 import org.geysermc.api.Geyser;
 import org.geysermc.cumulus.form.Form;
 import org.geysermc.cumulus.form.util.FormBuilder;
@@ -131,6 +132,7 @@ public class GeyserImpl implements GeyserApi {
 
     private static final String IP_REGEX = "\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b";
 
+    @Getter
     private final SessionManager sessionManager = new SessionManager();
 
     /**
@@ -831,6 +833,12 @@ public class GeyserImpl implements GeyserApi {
         if (!Objects.equals(refreshToken, savedRefreshTokens.put(bedrockName, refreshToken))) {
             scheduleRefreshTokensWrite();
         }
+    }
+
+    public void broadcastUpstreamPacket(BedrockPacket bedrockPacket) {
+        sessionManager.getAllSessions().forEach(s -> {
+            s.sendUpstreamPacket(bedrockPacket);
+        });
     }
 
     private void scheduleRefreshTokensWrite() {

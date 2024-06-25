@@ -190,7 +190,7 @@ public class SkinProvider {
             // Let's see if this player is a Bedrock player, and if so, let's pull their skin.
             GeyserSession session = GeyserImpl.getInstance().connectionByUuid(uuid);
             if (session != null) {
-                String skinId = session.getClientData().getSkinId();
+                String skinId = session.getClientData().getFullSkinId();
                 skin = CACHED_BEDROCK_SKINS.getIfPresent(skinId);
                 String capeId = session.getClientData().getCapeId();
                 cape = CACHED_BEDROCK_CAPES.getIfPresent(capeId);

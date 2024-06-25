@@ -34,6 +34,7 @@ import org.cloudburstmc.protocol.bedrock.data.skin.SerializedSkin;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerListPacket;
 import org.cloudburstmc.protocol.bedrock.packet.PlayerSkinPacket;
 import org.geysermc.geyser.GeyserImpl;
+import org.geysermc.geyser.api.GeyserApi;
 import org.geysermc.geyser.api.skin.Cape;
 import org.geysermc.geyser.api.skin.Skin;
 import org.geysermc.geyser.api.skin.SkinData;
@@ -132,6 +133,117 @@ public class SkinManager {
         return entry;
     }
 
+    public static final String GEOMETRY_CUSTOM = "{\"geometry\" : {\"default\" : \"" + "geometry.humanoid.custom" + "\"}}";
+
+    public static void sendPremiumSkinPacket(GeyserSession session, PlayerEntity entity, Consumer<SkinProvider.SkinAndCape> skinAndCapeConsumer) {
+        if (entity.getUuid().equals(session.getPlayerEntity().getUuid())) {
+            BedrockClientData clientData = session.getClientData();
+            String skinData = clientData.getSkinData();
+            ImageData skin = ImageData.of(clientData.getSkinImageWidth(), clientData.getSkinImageHeight(), Base64.getDecoder().decode(skinData));
+            ImageData cape = ImageData.of(Base64.getDecoder().decode(clientData.getCapeData()));
+
+            SerializedSkin.Builder builder = SerializedSkin.builder()
+                    .skinData(skin)
+                    .capeData(cape)
+                    .fullSkinId(clientData.getFullSkinId())
+                    .skinColor(clientData.getSkinColor())
+                    .playFabId(clientData.getPlayFabId())
+                    .geometryData(new String(Base64.getDecoder().decode(clientData.getGeometryData()), StandardCharsets.UTF_8))
+                    .skinResourcePatch(clientData.getSkinResourcePatch().isBlank() ? GEOMETRY_CUSTOM : new String(Base64.getDecoder().decode(clientData.getSkinResourcePatch()), StandardCharsets.UTF_8))
+                    .animationData(new String(Base64.getDecoder().decode(clientData.getSkinAnimationData()), StandardCharsets.UTF_8))
+                    .animations(clientData.getAnimatedImageData())
+                    .armSize(clientData.getArmSize())
+                    .premium(clientData.isPremiumSkin())
+                    .capeId(clientData.getCapeId())
+                    .capeOnClassic(clientData.isCapeOnClassicSkin())
+                    .personaPieces(clientData.getPersonaPieces())
+                    .tintColors(clientData.getPieceTintColors())
+                    .persona(clientData.isPersonaSkin());
+            String fullSkinId = clientData.getFullSkinId();
+            if (clientData.getCapeId() != null) {
+                builder.skinId(fullSkinId.substring(0, fullSkinId.length() - clientData.getCapeId().length()));
+            } else {
+                builder.skinId(fullSkinId);
+            }
+            SerializedSkin serializedSkin = builder.build();
+            session.setBedrockSkin(serializedSkin);
+
+            PlayerListPacket.Entry entry = new PlayerListPacket.Entry(session.getAuthData().uuid());
+            entry.setName(entity.getUsername());
+            entry.setEntityId(entity.getEntityId());
+            entry.setSkin(serializedSkin);
+            entry.setXuid(session.xuid());
+            entry.setPlatformChatId("");
+            entry.setTeacher(false);
+            entry.setTrustedSkin(true);
+
+            PlayerListPacket packet = new PlayerListPacket();
+            packet.setAction(PlayerListPacket.Action.ADD);
+            packet.getEntries().add(entry);
+            session.sendUpstreamPacket(packet);
+            return;
+        } else {
+            GeyserImpl geyser = (GeyserImpl) GeyserApi.api();
+            GeyserSession otherPlayerSession = geyser.getSessionManager().sessionByPlayerUuid(entity.getUuid());
+            if (otherPlayerSession != null) {
+                BedrockClientData clientData = otherPlayerSession.getClientData();
+                String skinData = clientData.getSkinData();
+                ImageData skin = ImageData.of(clientData.getSkinImageWidth(), clientData.getSkinImageHeight(), Base64.getDecoder().decode(skinData));
+                ImageData cape = ImageData.of(clientData.getCapeImageWidth(), clientData.getCapeImageWidth(), Base64.getDecoder().decode(clientData.getCapeData()));
+
+                SerializedSkin.Builder builder = SerializedSkin.builder()
+                        .skinData(skin)
+                        .capeData(cape)
+                        .fullSkinId(clientData.getFullSkinId())
+                        .skinColor(clientData.getSkinColor())
+                        .playFabId(clientData.getPlayFabId())
+                        .geometryData(new String(Base64.getDecoder().decode(clientData.getGeometryData()), StandardCharsets.UTF_8))
+                        .skinResourcePatch(clientData.getSkinResourcePatch().isBlank() ? GEOMETRY_CUSTOM : new String(Base64.getDecoder().decode(clientData.getSkinResourcePatch()), StandardCharsets.UTF_8))
+                        .animationData(new String(Base64.getDecoder().decode(clientData.getSkinAnimationData()), StandardCharsets.UTF_8))
+                        .animations(clientData.getAnimatedImageData())
+                        .armSize(clientData.getArmSize())
+                        .premium(clientData.isPremiumSkin())
+                        .capeId(clientData.getCapeId())
+                        .capeOnClassic(clientData.isCapeOnClassicSkin())
+                        .personaPieces(clientData.getPersonaPieces())
+                        .tintColors(clientData.getPieceTintColors())
+                        .persona(clientData.isPersonaSkin());
+                String fullSkinId = clientData.getFullSkinId();
+                if (clientData.getCapeId() != null) {
+                    builder.skinId(fullSkinId.substring(0, fullSkinId.length() - clientData.getCapeId().length()));
+                } else {
+                    builder.skinId(fullSkinId);
+                }
+                SerializedSkin serializedSkin = builder.build();
+
+                PlayerSkinPacket packet = new PlayerSkinPacket();
+                packet.setUuid(entity.getUuid());
+                packet.setOldSkinName("");
+                packet.setNewSkinName(serializedSkin.getSkinId());
+                packet.setSkin(serializedSkin);
+                packet.setTrustedSkin(true);
+                session.sendUpstreamPacket(packet);
+                return;
+            }
+        }
+        SkinProvider.requestSkinData(entity, session).whenCompleteAsync((skinData, throwable) -> {
+            if (skinData == null) {
+                if (skinAndCapeConsumer != null) {
+                    skinAndCapeConsumer.accept(null);
+                }
+
+                return;
+            }
+            if (skinData.geometry() != null) {
+                sendSkinPacket(session, entity, skinData);
+            }
+
+            if (skinAndCapeConsumer != null) {
+                skinAndCapeConsumer.accept(new SkinProvider.SkinAndCape(skinData.skin(), skinData.cape()));
+            }
+        });
+    }
+
     public static void sendSkinPacket(GeyserSession session, PlayerEntity entity, SkinData skinData) {
         Skin skin = skinData.skin();
         Cape cape = skinData.cape();
@@ -173,23 +285,8 @@ public class SkinManager {
 
     public static void requestAndHandleSkinAndCape(PlayerEntity entity, GeyserSession session,
                                                    Consumer<SkinProvider.SkinAndCape> skinAndCapeConsumer) {
-        SkinProvider.requestSkinData(entity, session).whenCompleteAsync((skinData, throwable) -> {
-            if (skinData == null) {
-                if (skinAndCapeConsumer != null) {
-                    skinAndCapeConsumer.accept(null);
-                }
-
-                return;
-            }
-
-            if (skinData.geometry() != null) {
-                sendSkinPacket(session, entity, skinData);
-            }
-
-            if (skinAndCapeConsumer != null) {
-                skinAndCapeConsumer.accept(new SkinProvider.SkinAndCape(skinData.skin(), skinData.cape()));
-            }
-        });
+        //only support bedrock player, so we can just use skin from clientData
+        sendPremiumSkinPacket(session, entity, skinAndCapeConsumer);
     }
 
     public static void handleBedrockSkin(PlayerEntity playerEntity, BedrockClientData clientData) {
@@ -200,13 +297,13 @@ public class SkinManager {
 
         try {
             byte[] skinBytes = Base64.getDecoder().decode(clientData.getSkinData().getBytes(StandardCharsets.UTF_8));
-            byte[] capeBytes = clientData.getCapeData();
+            byte[] capeBytes = Base64.getDecoder().decode(clientData.getCapeData());
 
-            byte[] geometryNameBytes = Base64.getDecoder().decode(clientData.getGeometryName().getBytes(StandardCharsets.UTF_8));
+            byte[] geometryNameBytes = Base64.getDecoder().decode(clientData.getSkinResourcePatch().getBytes(StandardCharsets.UTF_8));
             byte[] geometryBytes = Base64.getDecoder().decode(clientData.getGeometryData().getBytes(StandardCharsets.UTF_8));
 
             if (skinBytes.length <= (128 * 128 * 4) && !clientData.isPersonaSkin()) {
-                SkinProvider.storeBedrockSkin(playerEntity.getUuid(), clientData.getSkinId(), skinBytes);
+                SkinProvider.storeBedrockSkin(playerEntity.getUuid(), clientData.getFullSkinId(), skinBytes);
                 SkinProvider.storeBedrockGeometry(playerEntity.getUuid(), geometryNameBytes, geometryBytes);
             } else if (geyser.getConfig().isDebugMode()) {
                 geyser.getLogger().info(GeyserLocale.getLocaleStringLog("geyser.skin.bedrock.fail", playerEntity.getUsername()));
