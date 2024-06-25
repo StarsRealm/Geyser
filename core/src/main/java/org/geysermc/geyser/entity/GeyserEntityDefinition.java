@@ -46,7 +46,12 @@ import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.EntityMetad
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataType;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.type.EntityType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
@@ -252,8 +257,9 @@ public record GeyserEntityDefinition<T extends Entity>(EntityFactory<T> factory,
 
             if (this.type != null) {
                 this.networkdId = this.type.ordinal();
-            } else {
-                // 自定义实体的约定属性注册
+            }
+            if (custom) {
+                // Conventional attribute registration for custom entities
                 this.addTranslator(MetadataType.INT, Entity::setCustomVariant);
                 this.addTranslator(MetadataType.BOOLEAN, Entity::setCustomBaby);
                 this.addTranslator(MetadataType.INT, Entity::setCustomMarkVariant);
