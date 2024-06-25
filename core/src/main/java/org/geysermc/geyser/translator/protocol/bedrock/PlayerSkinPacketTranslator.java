@@ -34,6 +34,8 @@ import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
 
+import java.util.concurrent.TimeUnit;
+
 @Translator(packet = PlayerSkinPacket.class)
 public class PlayerSkinPacketTranslator extends PacketTranslator<PlayerSkinPacket> {
     private static final int skinChangeCooldown = 1;
@@ -50,13 +52,11 @@ public class PlayerSkinPacketTranslator extends PacketTranslator<PlayerSkinPacke
             return;
         }
 
-        /*var tooQuick = System.currentTimeMillis() - session.getLastSkinChange() < TimeUnit.SECONDS.toMillis(skinChangeCooldown);
+        var tooQuick = System.currentTimeMillis() - session.getLastSkinChange() < TimeUnit.SECONDS.toMillis(skinChangeCooldown);
         if (tooQuick) {
             logger.warning("Player " + playerEntity.getUsername() + " change skin too quick!");
             return;
-        }*/
-        session.setLastSkinChange(System.currentTimeMillis());
-
+        }
         SerializedSkin.Builder builder = SerializedSkin.builder()
                 .skinData(skin.getSkinData())
                 .capeData(skin.getCapeData())
@@ -84,6 +84,8 @@ public class PlayerSkinPacketTranslator extends PacketTranslator<PlayerSkinPacke
             builder.skinId(fullSkinId);
         }
         SerializedSkin serializedSkin = builder.build();
+
+        session.setLastSkinChange(System.currentTimeMillis());
         session.setBedrockSkin(serializedSkin);
 
         PlayerSkinPacket pk = new PlayerSkinPacket();
