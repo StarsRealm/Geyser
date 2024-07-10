@@ -46,13 +46,17 @@ import java.util.function.Function;
  */
 public final class GameProtocol {
 
+    // Surprise protocol bump WOW
+    private static final BedrockCodec BEDROCK_V686 = Bedrock_v685.CODEC.toBuilder()
+        .protocolVersion(686)
+        .minecraftVersion("1.21.2")
+        .build();
+
     /**
      * Default Bedrock codec that should act as a fallback. Should represent the latest available
      * release of the game that Geyser supports.
      */
-    public static final BedrockCodec DEFAULT_BEDROCK_CODEC = CodecProcessor.processCodec(Bedrock_v685.CODEC.toBuilder()
-            .minecraftVersion("1.21.1")
-            .build());
+    public static final BedrockCodec DEFAULT_BEDROCK_CODEC = CodecProcessor.processCodec(BEDROCK_V686);
 
     /**
      * A list of all supported Bedrock versions that can join Geyser
@@ -83,8 +87,6 @@ public final class GameProtocol {
                 .helper(() -> helperFunction.apply(Bedrock_v671.CODEC))
                 .build()));
         SUPPORTED_BEDROCK_CODECS.add(CodecProcessor.processCodec(DEFAULT_BEDROCK_CODEC.toBuilder()
-            .minecraftVersion("1.21.0/1.21.1")
-            .build()));
                 .minecraftVersion("1.21.0/1.21.1")
                 .helper(() -> helperFunction.apply(DEFAULT_BEDROCK_CODEC))
                 .build()));
