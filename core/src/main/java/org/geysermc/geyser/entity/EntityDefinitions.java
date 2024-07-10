@@ -302,7 +302,7 @@ public final class EntityDefinitions {
                     .addTranslator(MetadataType.INT, TNTEntity::setFuseLength)
                     .build();
 
-            EntityDefinition<DisplayBaseEntity> displayBase = GeyserEntityDefinition.inherited(DisplayBaseEntity::new, entityBase)
+            GeyserEntityDefinition<DisplayBaseEntity> displayBase = GeyserEntityDefinition.inherited(DisplayBaseEntity::new, entityBase)
                     .addTranslator(null) // Interpolation delay
                     .addTranslator(null) // Transformation interpolation duration
                     .addTranslator(null) // Position/Rotation interpolation duration
