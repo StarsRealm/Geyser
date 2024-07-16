@@ -83,13 +83,17 @@ public final class GameProtocol {
 
     static {
         SUPPORTED_BEDROCK_CODECS.add(CodecProcessor.processCodec(Bedrock_v671.CODEC.toBuilder()
-                .minecraftVersion("1.20.80/1.20.81")
-                .helper(() -> helperFunction.apply(Bedrock_v671.CODEC))
-                .build()));
-        SUPPORTED_BEDROCK_CODECS.add(CodecProcessor.processCodec(DEFAULT_BEDROCK_CODEC.toBuilder()
-                .minecraftVersion("1.21.0/1.21.1")
-                .helper(() -> helperFunction.apply(DEFAULT_BEDROCK_CODEC))
-                .build()));
+            .minecraftVersion("1.20.80/1.20.81")
+            .helper(() -> helperFunction.apply(Bedrock_v671.CODEC))
+            .build()));
+        SUPPORTED_BEDROCK_CODECS.add(CodecProcessor.processCodec(Bedrock_v685.CODEC.toBuilder()
+            .minecraftVersion("1.21.0/1.21.1")
+            .helper(() -> helperFunction.apply(Bedrock_v685.CODEC))
+            .build()));
+        SUPPORTED_BEDROCK_CODECS.add(DEFAULT_BEDROCK_CODEC.toBuilder()
+            .minecraftVersion("1.21.2/1.21.3")
+            .helper(() -> helperFunction.apply(DEFAULT_BEDROCK_CODEC))
+            .build());
     }
 
     /**
