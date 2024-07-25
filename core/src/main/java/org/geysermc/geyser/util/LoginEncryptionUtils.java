@@ -33,6 +33,7 @@ import com.github.steveice10.mc.auth.service.MsaAuthenticationService;
 import org.cloudburstmc.protocol.bedrock.data.skin.AnimationData;
 import org.cloudburstmc.protocol.bedrock.data.skin.PersonaPieceData;
 import org.cloudburstmc.protocol.bedrock.data.skin.PersonaPieceTintData;
+import net.raphimc.minecraftauth.step.msa.StepMsaDeviceCode;
 import org.cloudburstmc.protocol.bedrock.packet.LoginPacket;
 import org.cloudburstmc.protocol.bedrock.packet.ServerToClientHandshakePacket;
 import org.cloudburstmc.protocol.bedrock.util.ChainValidationResult;
@@ -218,7 +219,7 @@ public class LoginEncryptionUtils {
     /**
      * Shows the code that a user must input into their browser
      */
-    public static void buildAndShowMicrosoftCodeWindow(GeyserSession session, MsaAuthenticationService.MsCodeResponse msCode) {
+    public static void buildAndShowMicrosoftCodeWindow(GeyserSession session, StepMsaDeviceCode.MsaDeviceCode msCode) {
         String locale = session.locale();
 
         StringBuilder message = new StringBuilder("%xbox.signin.website\n")
@@ -227,7 +228,7 @@ public class LoginEncryptionUtils {
                 .append(ChatColor.RESET)
                 .append("\n%xbox.signin.enterCode\n")
                 .append(ChatColor.GREEN)
-                .append(msCode.user_code);
+                .append(msCode.getUserCode());
         int timeout = session.getGeyser().getConfig().getPendingAuthenticationTimeout();
         if (timeout != 0) {
             message.append("\n\n")

@@ -322,6 +322,7 @@ public final class EntityDefinitions {
             TEXT_DISPLAY = GeyserEntityDefinition.inherited(TextDisplayEntity::new, displayBase)
                     .type(EntityType.TEXT_DISPLAY)
                     .identifier("minecraft:armor_stand")
+                    .offset(-0.5f)
                     .addTranslator(MetadataType.CHAT, TextDisplayEntity::setText)
                     .addTranslator(null) // Line width
                     .addTranslator(null) // Background color
