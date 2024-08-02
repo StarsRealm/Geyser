@@ -926,15 +926,15 @@ public class GeyserImpl implements GeyserApi, EventRegistrar {
         }
     }
 
-    private void scheduleRefreshTokensWrite() {
+    private void scheduleAuthChainsWrite() {
         scheduledThread.execute(() -> {
             // Ensure all writes are handled on the same thread
             File savedAuthChains = getBootstrap().getSavedUserLoginsFolder().resolve(Constants.SAVED_AUTH_CHAINS_FILE).toFile();
             TypeReference<Map<String, String>> type = new TypeReference<>() { };
             try (FileWriter writer = new FileWriter(savedAuthChains)) {
                 JSON_MAPPER.writerFor(type)
-                        .withDefaultPrettyPrinter()
-                        .writeValue(writer, this.savedAuthChains);
+                    .withDefaultPrettyPrinter()
+                    .writeValue(writer, this.savedAuthChains);
             } catch (IOException e) {
                 getLogger().error("Unable to write saved refresh tokens!", e);
             }

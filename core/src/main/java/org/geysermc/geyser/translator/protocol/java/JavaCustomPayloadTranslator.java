@@ -133,7 +133,7 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
                 spawnParticleEffectPacket.setIdentifier(helper.readString(buffer));
                 spawnParticleEffectPacket.setPosition(Vector3f.from(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
                 spawnParticleEffectPacket.setUniqueEntityId(session.getEntityCache().getEntityByJavaId(helper.readVarInt(buffer)).getGeyserId());
-                spawnParticleEffectPacket.setDimensionId(DimensionUtils.javaToBedrock(session.getDimension()));
+                spawnParticleEffectPacket.setDimensionId(DimensionUtils.javaToBedrock(session));
 
                 if (buffer.readBoolean()) {
                     spawnParticleEffectPacket.setMolangVariablesJson(Optional.of(helper.readString(buffer)));
