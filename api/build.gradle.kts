@@ -1,12 +1,30 @@
 plugins {
+    // Allow blossom to mark sources root of templates
+    idea
     id("geyser.publish-conventions")
     id("maven-publish")
+    alias(libs.plugins.blossom)
 }
 
 dependencies {
     api(libs.base.api)
     api(libs.math)
 }
+
+
+version = property("version")!!
+val apiVersion = (version as String).removeSuffix("-SNAPSHOT")
+
+sourceSets {
+    main {
+        blossom {
+            javaSources {
+                property("version", apiVersion)
+            }
+        }
+    }
+}
+
 
 publishing {
     repositories {
