@@ -28,7 +28,16 @@ package org.geysermc.geyser.translator.protocol.java;
 
 import com.google.common.base.Charsets;
 import org.cloudburstmc.math.vector.Vector3f;
+import org.cloudburstmc.protocol.bedrock.data.entity.EntityEventType;
+import org.cloudburstmc.protocol.bedrock.data.inventory.ItemData;
+import org.cloudburstmc.protocol.bedrock.data.inventory.ItemUseType;
+import org.cloudburstmc.protocol.bedrock.data.inventory.transaction.InventoryActionData;
+import org.cloudburstmc.protocol.bedrock.data.inventory.transaction.InventorySource;
+import org.cloudburstmc.protocol.bedrock.data.inventory.transaction.InventoryTransactionType;
 import org.cloudburstmc.protocol.bedrock.packet.AnimateEntityPacket;
+import org.cloudburstmc.protocol.bedrock.packet.CompletedUsingItemPacket;
+import org.cloudburstmc.protocol.bedrock.packet.EntityEventPacket;
+import org.cloudburstmc.protocol.bedrock.packet.InventoryTransactionPacket;
 import org.cloudburstmc.protocol.bedrock.packet.SpawnParticleEffectPacket;
 import org.cloudburstmc.protocol.bedrock.packet.TransferPacket;
 import org.cloudburstmc.protocol.bedrock.packet.UnknownPacket;
@@ -45,15 +54,17 @@ import org.geysermc.floodgate.pluginmessage.PluginMessageChannels;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.GeyserLogger;
 import org.geysermc.geyser.entity.properties.GeyserEntityPropertyManager;
+import org.geysermc.geyser.item.Items;
 import org.geysermc.geyser.session.GeyserSession;
+import org.geysermc.geyser.translator.item.ItemTranslator;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
 import org.geysermc.geyser.util.DimensionUtils;
 import org.geysermc.mcprotocollib.protocol.codec.MinecraftCodecHelper;
+import org.geysermc.mcprotocollib.protocol.data.game.item.ItemStack;
 import org.geysermc.mcprotocollib.protocol.packet.common.clientbound.ClientboundCustomPayloadPacket;
 import org.geysermc.mcprotocollib.protocol.packet.common.serverbound.ServerboundCustomPayloadPacket;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
@@ -67,6 +78,35 @@ public class JavaCustomPayloadTranslator extends PacketTranslator<ClientboundCus
         String channel = packet.getChannel().asString();
 
         switch (channel) {
+            case PluginMessageChannels.CROSS_BOW_COMPLETED -> {
+                long id = session.getPlayerEntity().getGeyserId();
+                EntityEventPacket entityEventPacket = new EntityEventPacket();
+                entityEventPacket.setRuntimeEntityId(id);
+                entityEventPacket.setType(EntityEventType.FINISHED_CHARGING_ITEM);
+                entityEventPacket.setData(0);
+
+                CompletedUsingItemPacket completedUsingItemPacket = new CompletedUsingItemPacket();
+                completedUsingItemPacket.setItemId(Items.CROSSBOW.toBedrockDefinition(null, session.getItemMappings()).getBedrockDefinition().getRuntimeId());
+                completedUsingItemPacket.setType(ItemUseType.UNKNOWN);
+
+                MinecraftCodecHelper helper = session.getProtocol().createHelper();
+                ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
+                ItemStack from = helper.readOptionalItemStack(buffer);
+                ItemStack to = helper.readOptionalItemStack(buffer);
+                InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
+                ItemData itemInHand = ItemTranslator.translateToBedrock(session, from);
+                inventoryTransactionPacket.getActions().add(new InventoryActionData(InventorySource.fromContainerWindowId(0), session.getPlayerInventory().getHeldItemSlot(),
+                    itemInHand, ItemTranslator.translateToBedrock(session, to)));
+                inventoryTransactionPacket.setTransactionType(InventoryTransactionType.ITEM_RELEASE);
+                inventoryTransactionPacket.setActionType(1);
+                inventoryTransactionPacket.setRuntimeEntityId(id);
+                inventoryTransactionPacket.setHotbarSlot(session.getPlayerInventory().getHeldItemSlot());
+                inventoryTransactionPacket.setItemInHand(itemInHand);
+
+                session.sendUpstreamPacket(entityEventPacket);
+                session.sendUpstreamPacket(completedUsingItemPacket);
+                session.sendUpstreamPacket(inventoryTransactionPacket);
+            }
             case PluginMessageChannels.ENTITY_PROPERTY -> {
                 MinecraftCodecHelper helper = session.getProtocol().createHelper();
                 ByteBuf buffer = Unpooled.wrappedBuffer(packet.getData());
