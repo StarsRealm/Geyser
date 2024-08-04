@@ -33,6 +33,7 @@ public final class PluginMessageChannels {
     public static final String TRANSFER = "floodgate:transfer";
     public static final String PACKET = "floodgate:packet";
 
+    public static final String CROSS_BOW_COMPLETED = "starsrealm:cross_bow_completed";
     public static final String ENTITY_PROPERTY = "starsrealm:entity_properties";
     public static final String BOOLEAN_PROPERTY = "starsrealm:boolean_properties";
     public static final String INTEGER_PROPERTY = "starsrealm:integer_properties";
